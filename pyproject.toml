@@ -1,0 +1,13 @@
+[project]
+name = "gmanifold"
+version = "0.1.0"
+description = "Learn G: R^m -> R^D from real states and sample ~uniformly on the learned manifold near the support"
+requires-python = ">=3.10"
+dependencies = ["torch>=2.1"]
+
+[project.optional-dependencies]
+transformer = ["transformers>=4.40"]
+dev = ["pytest"]
+
+[tool.setuptools]
+packages = ["gmanifold"]
