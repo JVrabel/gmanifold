@@ -86,6 +86,9 @@ pytest tests                # synthetic-sheet tests (exact volume-uniformity che
 python examples/simplestories.py --alpha 0.3 --dst L0.ffn
 ```
 
+End-to-end notebook (clone → install → tests → fit, sample, validate, propagate, next-token check on SimpleStories-11M,
+with outputs): `examples/quickstart_simplestories_11m.ipynb`.
+
 ## Experiments
 
 `experiments/sweep.py --model <hf checkpoint> --out results/<name> [--m 16 32] [--seeds 0 1] [--ablation]` runs the
