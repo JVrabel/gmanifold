@@ -56,6 +56,15 @@ gm.support_report(M_out, Y_sample, X_out_heldout, gm.KernelScore(X_out), gm.Tang
 
   Use 0.3 for anything that must be trusted, 0.5–0.7 to deliberately move away from the observations (and check
   `support_report`), never above 1. Holds for the default global radius; with `radius="local"` only α ≤ 0.3 was safe.
+* **The validators, and how to read them.** All distances are in units of the *local spacing* (distance from a real
+  state to its 8-th real neighbour). `nearest_real`: distance to the closest real state. `recon`: distance to the
+  learned surface, ‖G(E(y)) − y‖. `tangent`: distance to the nearest local tangent chart (`TangentCharts`). `u`: the
+  kernel score (`KernelScore`, Guidotti's kernel signature, arXiv:2404.00427): a smooth field
+  u(y) = (1/N) Σ_j Λ_j exp(−‖y − x_j‖²/2σ²) whose coefficients are solved so that u = 1 on every fitted real state;
+  it decays toward 0 away from the cloud and overshoots above 1 *between* real states, so samples that interpolate
+  neighbours typically score 1.1–1.2. None of these has an absolute threshold: `support_report` prints them next to
+  held-out real states (≈ 1.0 on u) and to real states displaced by 0.5× / 1× their spacing (≈ 0.9 / 0.7 on u), and a
+  sample is on-support when it sits with the first row and away from the last two.
 * `info["ess"]` (effective sample size of the importance resampling) should be a sizeable fraction of
   `8 n` candidates; `M.coverage(X_sample)` says how much of the real cloud the samples reach.
 * `radius="global"` (default) gives every anchor the same latent radius α × median ρ: a uniform-thickness neighbourhood of
