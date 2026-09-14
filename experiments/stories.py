@@ -69,7 +69,7 @@ for k in range(model.config.num_hidden_layers):                                 
         rows = {f"sample α={al}": gm.support_report(M_out, f(M_in.sample(2000, alpha=al, seed=0)[0]), kernel=k_out)["samples"] for al in (0.3, 0.7, 1.0)}
         rows["real held-out images"] = gm.support_report(M_out, f(Xva_in), kernel=k_out)["samples"]
         j = gm.knn(M_in.X, 1, Xva_in)[1][:, 0]; nz = torch.randn(Xva_in.shape, device="cuda", generator=torch.Generator(device="cuda").manual_seed(0))
-        rows["real + 1x noise images"] = gm.support_report(M_out, f(Xva_in + nz / nz.norm(dim=1, keepdim=True) * M_in.spacing[j][:, None]), kernel=k_out)["samples"]
+        rows["real + 1x noise images"] = gm.support_report(M_out, f(Xva_in + nz / nz.norm(dim=1, keepdim=True) * M_in.unit(j)[:, None]), kernel=k_out)["samples"]
         out["propagation"].append(dict(src=src, dst=dst, rows=rows, bands={k_: v for k_, v in gm.support_report(M_out, Xva_out, Xva_out, k_out).items() if k_ != "samples"}))
 out["seconds"] = time.time() - T0
 json.dump(out, open(os.path.join(a.out, "stories.json"), "w"), indent=1); print("saved", f"({out['seconds'] / 60:.1f} min)")

@@ -17,6 +17,8 @@ class TangentCharts:
             raise ValueError(f"K={self.K} neighbours cannot span an m={m} tangent space (need K > m)")
         dist, self.idx = knn(self.X, self.K)
         self.r = dist[:, K_s - 1]                                   # local spacing of each anchor
+        hub = float(self.r[self.idx[:, 0]].median()) < 0.5 * float(self.r.median())   # hub-dominated cloud (see GlobalManifold)
+        self.r_unit = self.r.median().expand_as(self.r) if hub else self.r      # length unit for residuals
 
     @torch.no_grad()
     def bases(self, anchors, chunk=256):
@@ -36,7 +38,7 @@ class TangentCharts:
         U = self.bases(uniq)[inv]
         d = Y - self.X[j]
         u = (d[:, None] @ U)[:, 0]
-        return (d - (U @ u[..., None])[..., 0]).norm(dim=1) / self.r[j]
+        return (d - (U @ u[..., None])[..., 0]).norm(dim=1) / self.r_unit[j]
 
     @torch.no_grad()
     def sample(self, n, alpha=0.3, seed=None):

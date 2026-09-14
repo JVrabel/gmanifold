@@ -86,8 +86,8 @@ pytest tests                # synthetic-sheet tests (exact volume-uniformity che
 python examples/simplestories.py --alpha 0.3 --dst L0.ffn
 ```
 
-End-to-end notebook (clone → install → tests → fit, sample, validate, propagate, next-token check on SimpleStories-11M,
-with outputs): `examples/quickstart_simplestories_11m.ipynb`.
+Quickstart notebook (get the repo, one embedding → layer run with fixed settings, then a short α sweep; outputs included):
+`examples/quickstart_simplestories.ipynb`.
 
 ## Experiments
 

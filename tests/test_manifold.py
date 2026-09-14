@@ -113,3 +113,13 @@ def test_hub_dominated_cloud_uses_global_unit():
     M = gm.GlobalManifold(latent_dim=4, hidden=(64, 32)).fit(X, epochs=5)
     assert M.spacing_unit == "global" and M.hub_share > 0.3
     assert float(M.nearest_real(X[500:600]).median()) < 2                        # not inflated by the hub's tiny spacing
+
+
+def test_hub_rule_applies_to_tangent_and_bands():
+    g = torch.Generator(device="cuda").manual_seed(0)
+    X = torch.randn(1500, 256, device="cuda", generator=g); X = 10 * X / X.norm(dim=1, keepdim=True); X[:12] = 0.02 * torch.randn(12, 256, device="cuda", generator=g)
+    T = gm.TangentCharts(X, m=4)
+    assert float(T.residual(X[500:600] + 0.1 * torch.randn(100, 256, device="cuda", generator=g)).median()) < 2   # global unit, not the hub's
+    M = gm.GlobalManifold(latent_dim=4, hidden=(64, 32)).fit(X, epochs=5)
+    rep = gm.support_report(M, X[600:700], X[500:600])
+    assert rep["real + 1x noise"]["nearest_real"] > 1.2 * rep["held-out real"]["nearest_real"]                     # noise bands still separate

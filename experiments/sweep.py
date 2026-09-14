@@ -124,7 +124,7 @@ if not a.no_propagation and locs[0] == "embed":
         j = gm.knn(M_in.X, 1, Xva_in)[1][:, 0]
         for fac in (0.5, 1.0):
             nz = torch.randn(Xva_in.shape, device="cuda", generator=g)
-            rows[f"real + {fac:g}x noise images"] = gm.support_report(M_out, f(Xva_in + nz / nz.norm(dim=1, keepdim=True) * (fac * M_in.spacing[j])[:, None]), kernel=k_out, tangent=T_out)["samples"]
+            rows[f"real + {fac:g}x noise images"] = gm.support_report(M_out, f(Xva_in + nz / nz.norm(dim=1, keepdim=True) * (fac * M_in.unit(j))[:, None]), kernel=k_out, tangent=T_out)["samples"]
         out["propagation"].append(dict(src="embed", dst=dst, rows=rows, bands=bands))
         print(f"[{time.time() - T0:6.0f}s] propagation embed -> {dst}: " + ", ".join(f"{k}: u={v['u']:.3f}" for k, v in rows.items()), flush=True)
 

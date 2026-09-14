@@ -75,7 +75,7 @@ for alpha in a.alphas:
     out["next_token"][-1]["examples"] = ex
 nz = torch.randn(len(va_i), X_emb.shape[1], device="cuda", generator=torch.Generator(device="cuda").manual_seed(0))
 j1 = gm.knn(Xtr_emb, 1, X_emb[va_i])[1][:, 0]
-noise1 = X_emb[va_i] + nz / nz.norm(dim=1, keepdim=True) * M_in.spacing[j1][:, None]
+noise1 = X_emb[va_i] + nz / nz.norm(dim=1, keepdim=True) * M_in.unit(j1)[:, None]
 lp = logits_at_last(noise1); d2, j2 = gm.knn(Xtr_emb, 2, noise1)
 out["next_token"].append(dict(set="real + 1x noise", js_nearest=float(js(lp, lp_real[j2[:, 0]]).median()), js_second=float(js(lp, lp_real[j2[:, 1]]).median()), js_random=float(js(lp, lp_real[rnd[:len(va_i)]]).median()),
                               entropy=float((-(lp.exp() * lp).sum(-1)).median()), entropy_real=float(ent_real.median()), top1_agree_nearest=float((lp.argmax(-1) == lp_real[j2[:, 0]].argmax(-1)).float().mean()), top1_agree_random=float((lp.argmax(-1) == lp_real[rnd[:len(va_i)]].argmax(-1)).float().mean())))
