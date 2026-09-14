@@ -1,4 +1,4 @@
-"""Optional helpers for Hugging Face Llama-style models: collect real residual states and build `map_fn`s that
+"""Optional helpers for Hugging Face Llama-style (model.model.layers) and GPT-2/GPT-Neo-style (model.transformer.h) models: collect real residual states and build `map_fn`s that
 apply a real sub-block (or a stretch of the network) to arbitrary states. The manifold code never imports this."""
 from __future__ import annotations
 
@@ -9,16 +9,26 @@ import torch
 LOCATIONS_DOC = "'embed', 'L{k}.attn' (residual after the attention sub-layer of block k), 'L{k}.ffn' (block-k output)"
 
 
+def _arch(model):
+    """(embedding module, list of blocks, name of the pre-MLP norm, name of the MLP) for Llama-style and GPT-2/GPT-Neo-style models."""
+    if hasattr(model, "model") and hasattr(model.model, "layers"):                      # Llama, Mistral, Qwen2, ...
+        return model.model.embed_tokens, model.model.layers, "post_attention_layernorm", "mlp"
+    if hasattr(model, "transformer") and hasattr(model.transformer, "h"):              # GPT-2, GPT-Neo, ...
+        return model.transformer.wte, model.transformer.h, "ln_2", "mlp"
+    raise ValueError("unsupported architecture: expected model.model.layers (Llama-style) or model.transformer.h (GPT-style)")
+
+
 def locations(model):
-    return ["embed"] + [f"L{k}.{s}" for k in range(model.config.num_hidden_layers) for s in ("attn", "ffn")]
+    return ["embed"] + [f"L{k}.{s}" for k in range(len(_arch(model)[1])) for s in ("attn", "ffn")]
 
 
 def _target(model, loc):
+    embed, layers, norm2, _ = _arch(model)
     if loc == "embed":
-        return model.model.embed_tokens, "out"
+        return embed, "out"
     k, part = re.fullmatch(r"L(\d+)\.(attn|ffn)", loc).groups()
-    layer = model.model.layers[int(k)]
-    return (layer.post_attention_layernorm, "pre") if part == "attn" else (layer, "out")
+    layer = layers[int(k)]
+    return (getattr(layer, norm2), "pre") if part == "attn" else (layer, "out")
 
 
 class _Hooks:
@@ -58,7 +68,7 @@ class _Hooks:
 def collect_states(model, input_ids, positions, locs, attention_mask=None, batch_size=256):
     """Real residual states {loc: (N, D)} (preallocated on CPU) at `positions` (N,) of the sequences `input_ids` (N, L)."""
     dev = next(model.parameters()).device
-    N, D = len(input_ids), model.config.hidden_size
+    N, D = len(input_ids), _arch(model)[0].weight.shape[1]
     out = {l: torch.empty(N, D) for l in locs}
     for s in range(0, N, batch_size):
         ids, pos = input_ids[s:s + batch_size].to(dev), positions[s:s + batch_size].to(dev)
@@ -72,8 +82,9 @@ def collect_states(model, input_ids, positions, locs, attention_mask=None, batch
 
 def vocab_states(model, tok):
     """The embedding manifold: rows of the (tied) embedding matrix for all non-special tokens, and their ids."""
-    ids = [v for v in range(model.config.vocab_size) if v not in set(tok.all_special_ids)]
-    return model.model.embed_tokens.weight[ids].detach(), ids
+    embed = _arch(model)[0]
+    ids = [v for v in range(embed.weight.shape[0]) if v not in set(tok.all_special_ids)]
+    return embed.weight[ids].detach(), ids
 
 
 def make_map(model, src, dst, context_ids, pos=None, batch_size=2048):
@@ -85,12 +96,13 @@ def make_map(model, src, dst, context_ids, pos=None, batch_size=2048):
     pos = context_ids.shape[-1] - 1 if pos is None else pos
     k = re.fullmatch(r"L(\d+)\.attn", src)
     if k and dst == f"L{k.group(1)}.ffn":
-        layer = model.model.layers[int(k.group(1))]
+        _, layers, norm2, mlp = _arch(model)
+        layer = layers[int(k.group(1))]
 
         @torch.no_grad()
         def ffn(x):
             x = x.to(dev).float()
-            return torch.cat([xb + layer.mlp(layer.post_attention_layernorm(xb)) for xb in x.split(batch_size)])
+            return torch.cat([xb + getattr(layer, mlp)(getattr(layer, norm2)(xb)) for xb in x.split(batch_size)])
         return ffn
 
     @torch.no_grad()

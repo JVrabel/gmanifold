@@ -108,7 +108,7 @@ with calibration bands, sampler/loss ablations, propagation with independent des
 | `TangentCharts(X, m, K=max(4m,32))` | local PCA charts: `.residual(Y)` (normal distance to the nearest chart / spacing) as a second validator, `.sample(n, alpha)` as a conservative cross-check sampler |
 | `support_report(M, samples, X_heldout, kernel, tangent)` | medians of all diagnostics with calibration bands |
 | `intrinsic_dimension(X)`, `degenerate_mask(X)`, `outlier_mask(X)` | TwoNN / MLE estimates (to choose `latent_dim`); near-duplicate and isolated rows to drop |
-| `transformer.vocab_states / collect_states / make_map / locations` | optional Hugging Face Llama helpers (hooks verified exact) |
+| `transformer.vocab_states / collect_states / make_map / locations` | optional Hugging Face helpers for Llama-style (`model.model.layers`) and GPT-2/GPT-Neo-style (`model.transformer.h`) models; hooks verified exact |
 
 **Architecture and hyper-parameters.** A capacity study (`experiments/capacity.py`, §7 of the results) shows the fit at
 fixed m is neither capacity- nor optimisation-limited (widths 256–2048, depth 1–3, lr, batch size, λ_geom and epochs all
