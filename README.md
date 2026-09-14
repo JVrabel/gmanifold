@@ -60,7 +60,7 @@ gm.support_report(M_out, Y_sample, X_out_heldout, gm.KernelScore(X_out), gm.Tang
   `8 n` candidates; `M.coverage(X_sample)` says how much of the real cloud the samples reach.
 * `radius="global"` (default) gives every anchor the same latent radius α × median ρ: a uniform-thickness neighbourhood of
   the data. Samples are uniform in volume *within that tube* (anchors are equalised, unlike the data density), not in the
-  manifold's own volume: sparse regions' large cells are not filled (results summary, item 10). `radius="local"` uses α × ρ_i per anchor as in the original spec; because ball volume scales like ρ^m, the union is
+  manifold's own volume: sparse regions' large cells are not filled (results summary, item 10). `radius="local"` uses α × ρ_i per anchor; because ball volume scales like ρ^m, the union is
   then dominated by the few sparsest anchors (one massive-activation outlier state in TinyLlama takes 100 % of the anchor mass),
   which destroys coverage — see the sampler-variant table in the results.
 * Length unit: distances are divided by the spacing (8-th-neighbour distance) of the nearest fitted state; when a few hub
@@ -127,5 +127,4 @@ under the real model land on independently fitted destination manifolds like rea
 reweighting is exact on a synthetic sheet; the global support radius and the outlier filter are what make the sampler
 robust (per-anchor radii let one massive-activation state absorb all the weight). One cloud fooled us for a while: TinyLlama's 32k-token embedding matrix looked unfittable ("6 spacings") until we found that five hub tokens with tiny spacing dominate the per-anchor length unit; in raw or global-median units it behaves like the others, and the library now detects such hub-dominated clouds (`M.spacing_unit`, `M.hub_share`).
 
-Not included on purpose: injectivity / LLR / EVT analyses, layer-by-layer verification campaigns, quadratic charts, reports.
-The research version with all of that lives in `../manifold_sampler`.
+Out of scope on purpose: anything downstream of the propagated samples; this library produces and validates them.

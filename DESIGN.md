@@ -10,8 +10,8 @@ Given a finite set of real states X ⊂ R^D at one representation location of a 
 residual states of real token occurrences), learn a smooth parameterisation G: R^m → R^D of the set they lie on,
 sample approximately uniformly (with respect to volume on the learned surface) *near the observed support*, and
 optionally push the samples through a real Transformer map. The manifold code never sees the Transformer; the
-optional `transformer.py` helpers only collect states and build `map_fn`s. Injectivity / LLR / EVT analyses,
-layer-by-layer verification campaigns and reports live in the research version (`../manifold_sampler`), not here.
+optional `transformer.py` helpers only collect states and build `map_fn`s. Downstream analyses of the propagated
+samples are left to the user; this library stops at producing and validating them.
 
 ## 2. Implementation choices and their reasons
 
@@ -24,7 +24,7 @@ TinyLlama's 111 byte-fallback tokens sharing one row) make the local spacing zer
 undefined. Isolated rows (nearest-neighbour distance > 10× the median; e.g. TinyLlama's massive-activation state of
 norm 190 vs median 3–9 in deep layers) absorb all the volume weight of the sampler (ESS → 1). Both are dropped as
 tokens, consistently across locations, and counted. Removing the SimpleStories cluster changes dimension estimates
-by ≤ 0.4 (research-version verification).
+by ≤ 0.4.
 
 **Encoder/decoder.** MLPs D → 512 → 256 → m and m → 256 → 512 → D with SiLU. SiLU because the decoder is
 differentiated (Jacobians for the volume element); a shallow net because the capacity study (§4.6) shows nothing
@@ -35,11 +35,11 @@ larger helps. Hidden sizes are configurable.
 * geom = mean over the K = 32 Euclidean neighbours of (‖z_i − z_j‖ − ‖x_i − x_j‖)², divided by mean ‖x_i − x_j‖².
   This ties latent distances to ambient distances so that latent balls of radius α·ρ correspond to ambient
   neighbourhoods and α has a meaning. Without it the latent geometry is arbitrary and the sampler's support
-  collapses (research version: support 0.24 vs 1.00) although reconstruction is unchanged.
+  collapses (an earlier ablation: support 0.24 vs 1.00) although reconstruction is unchanged.
 * curv = second difference ‖G(z+δ) − 2G(z) + G(z−δ)‖²/‖δ‖² along random latent directions of length half the mean
   latent neighbour distance; a weak smoothness prior, measured to be neutral (§4.6) and kept because it is cheap.
-* No KL / VAE prior (§4.7), no tangent-alignment term (the research version has one; it needs K_tan-neighbour local
-  PCA at every step and was neutral for sampling).
+* No KL / VAE prior (§4.7), no tangent-alignment term (tried earlier; it needs K_tan-neighbour local PCA at every
+  step and was neutral for sampling).
 
 **Optimiser.** Adam, one-cycle schedule with peak 2e-3 and 5 % warm-up, batch 512, 300 epochs. The capacity study
 shows lr 1e-3–5e-3, batch 128–2048 and epochs 100–600 change held-out reconstruction by ≤ 0.006 spacings; the best
@@ -49,7 +49,7 @@ validation epoch is ≈ 300 and 600–900 epochs overfit (training error keeps f
 Ω = ∪ B(z_i, R_i). Anchor i ~ P(i) ∝ R_i^m, z uniform in the ball (direction ~ normalised Gaussian, radius R·s^{1/m}),
 importance weight w = √det(J_GᵀJ_G) / q(z) with the exact mixture density q(z) = Σ_{j: z∈B_j} P(j)/R_j^m, multinomial
 resampling of n from 8n candidates, x = G(z). `info` returns ESS, ball multiplicity, anchor participation ratio.
-* `radius="global"` (default): R_i = α·median(ρ). `radius="local"`: R_i = α·ρ_i (the original spec). The local rule
+* `radius="global"` (default): R_i = α·median(ρ). `radius="local"`: R_i = α·ρ_i (the original per-anchor rule). The local rule
   makes the union of balls dominated by the sparsest anchors because ball volume ∝ ρ^m: on SimpleStories-5M `L5.ffn`
   the anchor participation ratio falls from 3546 to ~100; on TinyLlama one outlier took 100 % of the anchor mass and
   99 % of the importance weight (ESS = 1) and every sample collapsed onto it. The global rule defines Ω as a
@@ -65,10 +65,10 @@ resampling of n from 8n candidates, x = G(z). `info` returns ESS, ball multiplic
 * `KernelScore`: Guidotti's kernel signature (arXiv:2404.00427), u(x) = (1/N)Σ Λ_j K_σ(x, x_j) with
   (M + Nλ I)Λ = N·1 solved in fp64 on ≤ 8192 states, σ = median 32-NN distance, λ = 1e-6; u = 1 on fitted states,
   decays away from the cloud. The most sensitive validator below one spacing (AUC 0.93 vs 0.84 for the decoder
-  error at half a spacing, research-version verification); insensitive to λ ≤ 1e-4 and to σ within 0.5–2×.
+  error at half a spacing); insensitive to λ ≤ 1e-4 and to σ within 0.5–2×.
 * `TangentCharts`: local PCA bases from K = max(4m, 32) > m neighbours (a centred K-neighbourhood has rank ≤ K−1);
   `.residual(Y)` is the normal distance to the nearest anchor's chart in units of that anchor's spacing;
-  `.sample(n, α)` is the conservative local sampler of the spec (anchor ∝ r^m, uniform intrinsic ball) used as a
+  `.sample(n, α)` is a conservative local sampler (anchor ∝ r^m, uniform intrinsic ball) used as a
   cross-check. Bases are computed lazily for the anchors queried (a full basis would be 15 GB at D = 2048, m = 64).
 * `GlobalManifold.recon_error` (decoder off-manifold error), `nearest_real`, `coverage`, `jacobian_rank`.
 * `support_report` prints medians of all of these for samples next to two calibration bands: held-out real states,
