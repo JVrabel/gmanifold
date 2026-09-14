@@ -16,7 +16,9 @@ TinyLlama-1.1B (prefix + every real token; also real story occurrences), then sa
 * The fit is limited by the latent dimension, not by the network or the optimiser (63-fit capacity study); a VAE
   would be worse for this purpose.
 * Two robustness rules matter: drop degenerate and isolated states first, and use the global support radius.
-* Negative: a 32k-token embedding matrix in 2048 dimensions is not chartable by one decoder.
+* Retracted negative: the TinyLlama embedding matrix looked "not chartable" (6 spacings) only because five hub
+  tokens with tiny spacing dominate the per-anchor unit; in raw or global-median units it behaves like the small
+  models (details in the last section). The library now detects such hub-dominated clouds.
 * To the model itself, samples behave like blends of their nearest real tokens: their next-token distributions are
   closer to the nearest token's than real tokens are to each other (JS 0.21 vs 0.46 at α = 0.3; random-token baseline
   0.57), with top-1 agreement 32 % (random 6 %); one-spacing noise loses this (JS 0.51, agreement 8 %). Layer by layer,
@@ -106,11 +108,24 @@ rows and 1 massive-activation outlier; plus a second prefix for the 5M model). S
    location (0.64–0.91 vs 0.89–0.96 spacings), keep u ≈ 1, and sit 0.5–0.9 spacings from the segment joining the
    images of their two nearest anchors (real 0.8–0.95, noise 1.1–1.3): they remain interpolations of their neighbours.
 
-**What does not hold.** The TinyLlama *embedding* cloud (31,885 rows in D = 2048, TwoNN ≈ 205) is not chartable by
-one global decoder: held-out reconstruction stays at 6 spacings for m = 16 and m = 64 and samples land 2.6 spacings
-from real rows. Its *contextual* clouds are chartable (TwoNN 8–18, reconstruction 0.66–0.93 spacings) and sample
-normally at all 44 of them (u ≥ 1.13 at α = 0.3, coverage ≥ 0.90), with lower ESS (≈ 100–2400) because the volume element varies more
-in 2048 dimensions. Use `intrinsic_dimension` and the held-out reconstruction before trusting samples on a new cloud.
+**What does not hold, and what we actually tried.** The one cloud that did not behave was the *embedding matrix* of
+TinyLlama-1.1B (31,885 rows after dropping 111 shared byte-fallback rows and 1 massive-activation token; D = 2048).
+What was run: `GlobalManifold` with hidden (512, 256), 150 epochs, m = 16 (two seeds) and m = 64 (one seed), 90/10
+split by token, the same α sweep, plus the eight-location and all-45-location sweeps of the same model. What we saw
+first: held-out reconstruction "6 spacings", samples "2.6 spacings from any real row", TwoNN ≈ 234 — and we called
+the cloud not chartable. What was actually going on: five hub tokens (tight clusters of foreign-script junk tokens
+such as `Архівовано`, `Webachiv`, `IABot`, spacing ≈ 0.1) are the nearest neighbour of 74 % of all held-out rows,
+so "divide by the nearest anchor's spacing" divides by 0.1 for most points. In raw units the decoder reconstructs
+held-out rows at 0.656 and training rows at 0.646, both ≈ the cloud's nearest-neighbour distance (0.678), the same
+regime as the SimpleStories embeddings; in units of the global median spacing held-out real rows sit at 0.99
+(recon 0.96), α = 0.3 samples at 0.46 (recon 0.09) and one-neighbour-distance noise at 1.40 (recon 1.38). The
+library now detects hub-dominated clouds (median spacing of the anchors that points actually land on < half the
+global median) and reports in global units; the TinyLlama tables were regenerated in those units. What remains
+true: this cloud is high-dimensional (TwoNN 234 vs 19–24 for SimpleStories, MLE 32) and its coverage by 2000 samples
+is lower (0.60 vs ≥ 0.97 elsewhere); with the corrected unit all four validators behave normally there (held-out real
+0.99 / 0.95 / 1.00 / 0.98 on nearest / recon / u / tangent, one-spacing noise 1.40 / 1.39 / 0.68 / 1.40, samples at
+α = 0.3 0.44 / 0.09 / 1.35 / 0.43). Not tried: m > 64, more than 150 epochs, frequent-token subsets, other preprocessing.
+Use `intrinsic_dimension`, the held-out reconstruction and the reported hub share before trusting samples on a new cloud.
 
 
 Point clouds: a fixed prefix followed by every real token, residual state at the last position, one cloud per residual location; 90 % of the tokens fit the manifold, 10 % are held out. All distances are in units of the local spacing (distance to the 8-th real neighbour); `u` is the Guidotti kernel score (1 on fitted states); bands = held-out real states and real states displaced by 0.5× / 1× their spacing. Samples: 2000 per setting, 8× candidates, volume reweighting.
@@ -123,9 +138,9 @@ Point clouds: a fixed prefix followed by every real token, residual state at the
 | 35M_seeds | SimpleStories/SimpleStories-35M | 512 | 25 | 3964 | 8 min |
 | 5M | SimpleStories/SimpleStories-5M | 256 | 13 | 3940 | 17 min |
 | 5M_prefix2 | SimpleStories/SimpleStories-5M | 256 | 13 | 3940 | 6 min |
-| TinyLlama | TinyLlama/TinyLlama-1.1B-Chat-v1.0 | 2048 | 8 | 31885 | 15 min |
+| TinyLlama | TinyLlama/TinyLlama-1.1B-Chat-v1.0 | 2048 | 8 | 31885 | 13 min |
 | TinyLlama_all | TinyLlama/TinyLlama-1.1B-Chat-v1.0 | 2048 | 45 | 31885 | 34 min |
-| TinyLlama_m64 | TinyLlama/TinyLlama-1.1B-Chat-v1.0 | 2048 | 5 | 31885 | 8 min |
+| TinyLlama_m64 | TinyLlama/TinyLlama-1.1B-Chat-v1.0 | 2048 | 5 | 31885 | 9 min |
 
 ## 1. Intrinsic dimension and fit quality per location
 
@@ -159,6 +174,7 @@ Point clouds: a fixed prefix followed by every real token, residual state at the
 | L11.attn | 10.139 | 16.805 | 0.714 (rank 16) |
 | L11.ffn | 10.741 | 16.916 | 0.713 (rank 16) |
 
+
 **35M_seeds** (SimpleStories/SimpleStories-35M)
 
 | location | TwoNN | MLE | val recon m=16 |
@@ -189,6 +205,7 @@ Point clouds: a fixed prefix followed by every real token, residual state at the
 | L11.attn | 10.139 | 16.805 | 0.715 (rank 16) |
 | L11.ffn | 10.741 | 16.916 | 0.712 (rank 16) |
 
+
 **5M** (SimpleStories/SimpleStories-5M)
 
 | location | TwoNN | MLE | val recon m=8 | val recon m=16 | val recon m=32 |
@@ -206,6 +223,7 @@ Point clouds: a fixed prefix followed by every real token, residual state at the
 | L4.ffn | 12.731 | 16.964 | 0.776 (rank 8) | 0.715 (rank 16) | 0.637 (rank 32) |
 | L5.attn | 12.667 | 16.941 | 0.767 (rank 8) | 0.705 (rank 16) | 0.620 (rank 32) |
 | L5.ffn | 14.109 | 17.737 | 0.769 (rank 8) | 0.705 (rank 16) | 0.607 (rank 32) |
+
 
 **5M_prefix2** (SimpleStories/SimpleStories-5M)
 
@@ -225,12 +243,13 @@ Point clouds: a fixed prefix followed by every real token, residual state at the
 | L5.attn | 13.386 | 16.850 | 0.709 (rank 16) |
 | L5.ffn | 14.251 | 17.093 | 0.705 (rank 16) |
 
+
 **TinyLlama** (TinyLlama/TinyLlama-1.1B-Chat-v1.0)
 
 | location | TwoNN | MLE | val recon m=16 |
 |---|---|---|---|
-| embed | 234 | 32.065 | 6.084 (rank 16) |
-| L0.attn | 94.784 | 37.765 | 4.286 (rank 16) |
+| embed | 234 | 32.065 | 0.953 (rank 16) † |
+| L0.attn | 94.784 | 37.765 | 0.930 (rank 16) † |
 | L0.ffn | 18.079 | 31.489 | 0.976 (rank 16) |
 | L3.ffn | 11.911 | 26.038 | 0.789 (rank 16) |
 | L7.ffn | 10.327 | 22.550 | 0.764 (rank 16) |
@@ -238,12 +257,14 @@ Point clouds: a fixed prefix followed by every real token, residual state at the
 | L15.ffn | 8.481 | 16.980 | 0.774 (rank 16) |
 | L21.ffn | 9.465 | 18.466 | 0.761 (rank 16) |
 
+† hub-dominated cloud (a few anchors are the nearest neighbour of most points): distances in units of the global median spacing.
+
 **TinyLlama_all** (TinyLlama/TinyLlama-1.1B-Chat-v1.0)
 
 | location | TwoNN | MLE | val recon m=16 |
 |---|---|---|---|
-| embed | 234 | 32.065 | 6.084 (rank 16) |
-| L0.attn | 94.784 | 37.765 | 4.282 (rank 16) |
+| embed | 234 | 32.065 | 0.953 (rank 16) † |
+| L0.attn | 94.784 | 37.765 | 0.930 (rank 16) † |
 | L0.ffn | 18.079 | 31.489 | 0.974 (rank 16) |
 | L1.attn | 16.461 | 30.534 | 0.915 (rank 16) |
 | L1.ffn | 14.716 | 27.207 | 0.838 (rank 16) |
@@ -288,15 +309,19 @@ Point clouds: a fixed prefix followed by every real token, residual state at the
 | L21.attn | 8.449 | 17.337 | 0.781 (rank 16) |
 | L21.ffn | 9.465 | 18.466 | 0.761 (rank 16) |
 
+† hub-dominated cloud (a few anchors are the nearest neighbour of most points): distances in units of the global median spacing.
+
 **TinyLlama_m64** (TinyLlama/TinyLlama-1.1B-Chat-v1.0)
 
 | location | TwoNN | MLE | val recon m=64 |
 |---|---|---|---|
-| embed | 234 | 32.065 | 5.959 (rank 64) |
+| embed | 234 | 32.065 | 0.934 (rank 64) † |
 | L0.ffn | 18.079 | 31.489 | 0.934 (rank 64) |
 | L3.ffn | 11.911 | 26.038 | 0.730 (rank 64) |
 | L11.ffn | 12.867 | 23.396 | 0.658 (rank 64) |
 | L21.ffn | 9.465 | 18.466 | 0.681 (rank 64) |
+
+† hub-dominated cloud (a few anchors are the nearest neighbour of most points): distances in units of the global median spacing.
 
 ## 2. Samples versus α (mean over locations; bands in the last rows)
 
@@ -364,46 +389,46 @@ Point clouds: a fixed prefix followed by every real token, residual state at the
 
 | α / band | nearest real | recon | tangent resid | u (mean) | u (min over loc) | coverage | ESS | ball multiplicity |
 |---|---|---|---|---|---|---|---|---|
-| 0.100 | 1.135 | 0.167 | 1.042 | 1.225 | 1.135 | 0.985 | 789 | 1.000 |
-| 0.200 | 1.143 | 0.173 | 1.050 | 1.223 | 1.131 | 0.983 | 796 | 1.000 |
-| 0.300 | 1.162 | 0.184 | 1.068 | 1.218 | 1.125 | 0.983 | 806 | 1.001 |
-| 0.500 | 1.214 | 0.223 | 1.121 | 1.206 | 1.110 | 0.977 | 849 | 1.016 |
-| 0.700 | 1.281 | 0.277 | 1.187 | 1.190 | 1.085 | 0.969 | 888 | 1.066 |
-| 1.000 | 1.419 | 0.398 | 1.318 | 1.144 | 1.005 | 0.894 | 835 | 1.281 |
-| 1.500 | 1.744 | 0.739 | 1.633 | 1.015 | 0.764 | 0.424 | 497 | 2.075 |
-| held-out real | 2.035 | 1.901 | 1.970 | 0.998 | 0.996 | – | – | – |
-| real + 0.5x noise | 2.141 | 2.021 | 2.084 | 0.932 | 0.907 | – | – | – |
-| real + 1x noise | 2.403 | 2.300 | 2.355 | 0.767 | 0.675 | – | – | – |
+| 0.100 | 0.671 | 0.080 | 0.588 | 1.225 | 1.135 | 0.898 | 789 | 1.000 |
+| 0.200 | 0.678 | 0.085 | 0.595 | 1.223 | 1.131 | 0.897 | 796 | 1.000 |
+| 0.300 | 0.690 | 0.092 | 0.606 | 1.218 | 1.125 | 0.896 | 806 | 1.001 |
+| 0.500 | 0.725 | 0.114 | 0.642 | 1.206 | 1.110 | 0.890 | 849 | 1.016 |
+| 0.700 | 0.771 | 0.144 | 0.687 | 1.190 | 1.085 | 0.880 | 888 | 1.066 |
+| 1.000 | 0.860 | 0.205 | 0.771 | 1.144 | 1.005 | 0.817 | 835 | 1.281 |
+| 1.500 | 1.067 | 0.374 | 0.968 | 1.015 | 0.764 | 0.443 | 497 | 2.075 |
+| held-out real | 0.920 | 0.840 | 0.865 | 0.998 | 0.996 | – | – | – |
+| real + 0.5x noise | 1.048 | 0.981 | 0.999 | 0.912 | 0.904 | – | – | – |
+| real + 1x noise | 1.361 | 1.315 | 1.321 | 0.693 | 0.675 | – | – | – |
 
 **TinyLlama_all**, m = 16
 
 | α / band | nearest real | recon | tangent resid | u (mean) | u (min over loc) | coverage | ESS | ball multiplicity |
 |---|---|---|---|---|---|---|---|---|
-| 0.100 | 0.824 | 0.091 | 0.715 | 1.192 | 1.139 | 0.981 | 762 | 1.000 |
-| 0.200 | 0.832 | 0.096 | 0.723 | 1.190 | 1.134 | 0.981 | 778 | 1.000 |
-| 0.300 | 0.846 | 0.104 | 0.738 | 1.185 | 1.131 | 0.979 | 807 | 1.002 |
-| 0.500 | 0.887 | 0.128 | 0.780 | 1.170 | 1.112 | 0.975 | 901 | 1.018 |
-| 0.700 | 0.939 | 0.159 | 0.833 | 1.146 | 1.085 | 0.964 | 1025 | 1.077 |
-| 1.000 | 1.044 | 0.225 | 0.934 | 1.086 | 1.024 | 0.891 | 1085 | 1.315 |
-| 1.500 | 1.300 | 0.410 | 1.176 | 0.910 | 0.778 | 0.419 | 654 | 2.260 |
-| held-out real | 1.077 | 0.981 | 1.002 | 0.999 | 0.996 | – | – | – |
-| real + 0.5x noise | 1.205 | 1.124 | 1.140 | 0.914 | 0.904 | – | – | – |
-| real + 1x noise | 1.514 | 1.456 | 1.463 | 0.700 | 0.666 | – | – | – |
+| 0.100 | 0.741 | 0.076 | 0.633 | 1.192 | 1.139 | 0.966 | 762 | 1.000 |
+| 0.200 | 0.748 | 0.081 | 0.641 | 1.190 | 1.134 | 0.966 | 778 | 1.000 |
+| 0.300 | 0.761 | 0.088 | 0.655 | 1.185 | 1.131 | 0.964 | 807 | 1.002 |
+| 0.500 | 0.799 | 0.108 | 0.694 | 1.170 | 1.112 | 0.960 | 901 | 1.018 |
+| 0.700 | 0.847 | 0.135 | 0.744 | 1.146 | 1.086 | 0.948 | 1025 | 1.077 |
+| 1.000 | 0.944 | 0.191 | 0.837 | 1.086 | 1.024 | 0.878 | 1085 | 1.315 |
+| 1.500 | 1.179 | 0.348 | 1.058 | 0.910 | 0.778 | 0.422 | 654 | 2.267 |
+| held-out real | 0.879 | 0.793 | 0.806 | 0.999 | 0.996 | – | – | – |
+| real + 0.5x noise | 1.011 | 0.939 | 0.947 | 0.911 | 0.904 | – | – | – |
+| real + 1x noise | 1.329 | 1.281 | 1.280 | 0.687 | 0.666 | – | – | – |
 
 **TinyLlama_m64**, m = 64
 
 | α / band | nearest real | recon | tangent resid | u (mean) | u (min over loc) | coverage | ESS | ball multiplicity |
 |---|---|---|---|---|---|---|---|---|
-| 0.100 | 1.168 | 0.085 | 1.046 | 1.226 | 1.114 | 0.874 | 1718 | 1.000 |
-| 0.200 | 1.191 | 0.089 | 1.069 | 1.223 | 1.108 | 0.848 | 1667 | 1.000 |
-| 0.300 | 1.225 | 0.095 | 1.096 | 1.216 | 1.094 | 0.839 | 1596 | 1.000 |
-| 0.500 | 1.327 | 0.115 | 1.185 | 1.194 | 1.059 | 0.724 | 1419 | 1.000 |
-| 0.700 | 1.470 | 0.145 | 1.308 | 1.160 | 1.011 | 0.526 | 1234 | 1.001 |
-| 1.000 | 1.707 | 0.206 | 1.513 | 1.093 | 0.916 | 0.199 | 991 | 1.002 |
-| 1.500 | 2.029 | 0.348 | 1.790 | 0.924 | 0.667 | 0.001 | 646 | 1.057 |
-| held-out real | 2.006 | 1.792 | 1.872 | 0.998 | 0.996 | – | – | – |
-| real + 0.5x noise | 2.113 | 1.921 | 1.992 | 0.931 | 0.909 | – | – | – |
-| real + 1x noise | 2.383 | 2.219 | 2.277 | 0.760 | 0.678 | – | – | – |
+| 0.100 | 0.742 | 0.062 | 0.639 | 1.226 | 1.114 | 0.793 | 1718 | 1.000 |
+| 0.200 | 0.757 | 0.066 | 0.653 | 1.223 | 1.108 | 0.770 | 1667 | 1.000 |
+| 0.300 | 0.776 | 0.070 | 0.668 | 1.216 | 1.094 | 0.769 | 1596 | 1.000 |
+| 0.500 | 0.838 | 0.088 | 0.719 | 1.194 | 1.059 | 0.709 | 1419 | 1.000 |
+| 0.700 | 0.923 | 0.111 | 0.788 | 1.160 | 1.011 | 0.576 | 1234 | 1.001 |
+| 1.000 | 1.056 | 0.156 | 0.894 | 1.093 | 0.916 | 0.270 | 991 | 1.002 |
+| 1.500 | 1.182 | 0.254 | 0.986 | 0.924 | 0.667 | 0.035 | 646 | 1.057 |
+| held-out real | 0.938 | 0.788 | 0.824 | 0.998 | 0.996 | – | – | – |
+| real + 0.5x noise | 1.064 | 0.935 | 0.962 | 0.915 | 0.905 | – | – | – |
+| real + 1x noise | 1.376 | 1.277 | 1.289 | 0.700 | 0.678 | – | – | – |
 
 ![alpha](figs/alpha.png)
 
@@ -451,9 +476,9 @@ Point clouds: a fixed prefix followed by every real token, residual state at the
 
 | m | α | u mean | u range (loc × seed) | nearest real | coverage | ESS | val recon range |
 |---|---|---|---|---|---|---|---|
-| 16 | 0.300 | 1.218 | 1.125–1.375 | 1.162 | 0.983 | 806 | 0.761–6.084 |
-| 16 | 0.500 | 1.206 | 1.110–1.388 | 1.214 | 0.977 | 849 | 0.761–6.084 |
-| 16 | 1.000 | 1.144 | 1.005–1.418 | 1.419 | 0.894 | 835 | 0.761–6.084 |
+| 16 | 0.300 | 1.218 | 1.125–1.375 | 0.690 | 0.896 | 806 | 0.761–0.978 |
+| 16 | 0.500 | 1.206 | 1.110–1.388 | 0.725 | 0.890 | 849 | 0.761–0.978 |
+| 16 | 1.000 | 1.144 | 1.005–1.418 | 0.860 | 0.817 | 835 | 0.761–0.978 |
 
 ## 4. Sampler variants and loss ablation (5M, α = 0.3)
 
@@ -679,15 +704,15 @@ Samples at the embedding are pushed through the real Transformer stretch `embed 
 
 | set | nearest real | recon | tangent resid | u |
 |---|---|---|---|---|
-| sample α=0.25 | 3.115 | 2.530 | 3.032 | 1.158 |
-| sample α=0.5 | 3.129 | 2.544 | 3.054 | 1.160 |
-| sample α=1.0 | 3.231 | 2.547 | 3.157 | 1.191 |
-| real held-out images | 4.556 | 4.282 | 4.502 | 0.996 |
-| real + 0.5x noise images | 4.597 | 4.324 | 4.537 | 0.986 |
-| real + 1x noise images | 4.658 | 4.395 | 4.605 | 0.978 |
-| band: held-out real | 4.556 | 4.282 | 4.502 | 0.996 |
-| band: real + 0.5x noise | 4.601 | 4.332 | 4.547 | 0.981 |
-| band: real + 1x noise | 4.701 | 4.442 | 4.644 | 0.967 |
+| sample α=0.25 | 0.691 | 0.582 | 0.681 | 1.158 |
+| sample α=0.5 | 0.705 | 0.595 | 0.694 | 1.160 |
+| sample α=1.0 | 0.758 | 0.637 | 0.741 | 1.191 |
+| real held-out images | 0.978 | 0.930 | 0.969 | 0.996 |
+| real + 0.5x noise images | 1.090 | 1.052 | 1.081 | 0.901 |
+| real + 1x noise images | 1.376 | 1.351 | 1.367 | 0.674 |
+| band: held-out real | 0.978 | 0.930 | 0.969 | 0.996 |
+| band: real + 0.5x noise | 1.099 | 1.058 | 1.089 | 0.904 |
+| band: real + 1x noise | 1.398 | 1.369 | 1.388 | 0.677 |
 
 **TinyLlama: embed → L0.ffn**
 
@@ -697,8 +722,8 @@ Samples at the embedding are pushed through the real Transformer stretch `embed 
 | sample α=0.5 | 1.778 | 1.417 | 1.670 | 1.018 |
 | sample α=1.0 | 1.828 | 1.483 | 1.715 | 1.038 |
 | real held-out images | 1.053 | 0.974 | 1.016 | 0.998 |
-| real + 0.5x noise images | 1.062 | 0.995 | 1.025 | 0.994 |
-| real + 1x noise images | 1.160 | 1.133 | 1.121 | 0.989 |
+| real + 0.5x noise images | 1.281 | 1.183 | 1.232 | 0.954 |
+| real + 1x noise images | 2.772 | 2.603 | 2.710 | 0.795 |
 | band: held-out real | 1.053 | 0.974 | 1.016 | 0.998 |
 | band: real + 0.5x noise | 1.170 | 1.107 | 1.138 | 0.940 |
 | band: real + 1x noise | 1.484 | 1.431 | 1.446 | 0.773 |
@@ -711,8 +736,8 @@ Samples at the embedding are pushed through the real Transformer stretch `embed 
 | sample α=0.5 | 0.968 | 0.735 | 0.877 | 1.007 |
 | sample α=1.0 | 0.980 | 0.741 | 0.883 | 1.002 |
 | real held-out images | 0.858 | 0.764 | 0.798 | 0.999 |
-| real + 0.5x noise images | 0.863 | 0.763 | 0.803 | 1.000 |
-| real + 1x noise images | 0.879 | 0.764 | 0.819 | 1.002 |
+| real + 0.5x noise images | 0.891 | 0.761 | 0.833 | 1.006 |
+| real + 1x noise images | 0.985 | 0.780 | 0.938 | 1.020 |
 | band: held-out real | 0.858 | 0.764 | 0.798 | 0.999 |
 | band: real + 0.5x noise | 0.992 | 0.914 | 0.938 | 0.907 |
 | band: real + 1x noise | 1.313 | 1.262 | 1.272 | 0.675 |
@@ -725,8 +750,8 @@ Samples at the embedding are pushed through the real Transformer stretch `embed 
 | sample α=0.5 | 0.879 | 0.686 | 0.744 | 1.014 |
 | sample α=1.0 | 0.887 | 0.678 | 0.752 | 1.014 |
 | real held-out images | 0.864 | 0.761 | 0.755 | 0.998 |
-| real + 0.5x noise images | 0.866 | 0.762 | 0.759 | 0.998 |
-| real + 1x noise images | 0.873 | 0.761 | 0.770 | 0.999 |
+| real + 0.5x noise images | 0.880 | 0.763 | 0.778 | 1.000 |
+| real + 1x noise images | 0.935 | 0.758 | 0.838 | 1.007 |
 | band: held-out real | 0.864 | 0.761 | 0.755 | 0.998 |
 | band: real + 0.5x noise | 0.997 | 0.913 | 0.904 | 0.910 |
 | band: real + 1x noise | 1.318 | 1.261 | 1.247 | 0.689 |

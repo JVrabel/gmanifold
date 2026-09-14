@@ -119,7 +119,8 @@ regime as the SimpleStories embeddings; in units of the global median spacing he
 (recon 0.96), α = 0.3 samples at 0.46 (recon 0.09) and one-neighbour-distance noise at 1.40 (recon 1.38). The
 library now detects hub-dominated clouds (median spacing of the anchors that points actually land on < half the
 global median) and reports in global units; the TinyLlama tables were regenerated in those units. What remains
-true: this cloud is high-dimensional (TwoNN 234 vs 19–24 for SimpleStories, MLE 32) and the kernel score cannot
-separate it from one-neighbour-distance noise (u 0.98 vs 1.00), so the sampling claims there rest on nearest-real
-and reconstruction only. Not tried: m > 64, more than 150 epochs, frequent-token subsets, other preprocessing.
+true: this cloud is high-dimensional (TwoNN 234 vs 19–24 for SimpleStories, MLE 32) and its coverage by 2000 samples
+is lower (0.60 vs ≥ 0.97 elsewhere); with the corrected unit all four validators behave normally there (held-out real
+0.99 / 0.95 / 1.00 / 0.98 on nearest / recon / u / tangent, one-spacing noise 1.40 / 1.39 / 0.68 / 1.40, samples at
+α = 0.3 0.44 / 0.09 / 1.35 / 0.43). Not tried: m > 64, more than 150 epochs, frequent-token subsets, other preprocessing.
 Use `intrinsic_dimension`, the held-out reconstruction and the reported hub share before trusting samples on a new cloud.
