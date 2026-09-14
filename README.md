@@ -22,14 +22,15 @@ push the samples through a real Transformer map.** Plain PyTorch; the manifold c
       validation: nearest-real / spacing, recon error, kernel score u (Guidotti), tangent-chart residual — vs held-out-real and noise bands
 ```
 
-> **Limitations, stated up front.** This is a parameterisation of a finite set of observed states, not the true manifold.
-> It builds in assumptions we consider likely: that the states near each other lie on a smooth low-dimensional surface,
-> that interpolating within about one local spacing of observed states stays on it, and that a global chart of
-> dimension m is adequate. The samples are uniform within a tube around the observations, not in the manifold's own
-> volume; regions without nearby observations are not represented; the learned surface passes ~0.7 local spacings
-> from unseen real states; and the validators encode the same interpolation assumption rather than testing it
-> independently. The true shape of the set stays hidden; this is our best-supported approximation to it, with every
-> claim tied to a calibration band you can inspect. Details in `DESIGN.md` §6.
+> **Limitations.** This parameterises a finite set of observed states, not the true manifold, and its shape reflects
+> the biases built into the fit: a low latent dimension m (the set is assumed low-dimensional), a local-distance
+> penalty that makes latent distances match ambient distances (the surface is assumed smooth and near-isometric, and
+> interpolating between neighbouring states is assumed legitimate), and a weak curvature penalty (no fine wiggles
+> below the inter-point scale). Samples are drawn on that surface within about one local spacing of observed states:
+> uniform in that tube, not in the manifold's own volume, and silent about regions without observations. The surface
+> passes ~0.7 spacings from unseen real states, and the validators share the interpolation assumption rather than
+> testing it. The true shape stays hidden; this is the best-supported approximation, with every number reported next
+> to a calibration band. Details: `DESIGN.md` §6.
 
 ## TL;DR
 
