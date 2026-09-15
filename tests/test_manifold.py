@@ -123,3 +123,12 @@ def test_hub_rule_applies_to_tangent_and_bands():
     M = gm.GlobalManifold(latent_dim=4, hidden=(64, 32)).fit(X, epochs=5)
     rep = gm.support_report(M, X[600:700], X[500:600])
     assert rep["real + 1x noise"]["nearest_real"] > 1.2 * rep["held-out real"]["nearest_real"]                     # noise bands still separate
+
+
+def test_tempering_restores_ess(sheet, sheet_model):
+    """Degenerate volume weights are tempered (tau < 1) only when needed, and never on a well-behaved cloud."""
+    M = sheet_model
+    x, info = M.sample(2000, alpha=0.5, seed=0)
+    assert info["tau"] == 1.0 and info["ess"] >= 0.05 * info["n_candidates"]
+    x, info = M.sample(2000, alpha=0.5, seed=0, min_ess_frac=0.9)           # an unreachable floor forces tau -> 0 (proposal only)
+    assert info["tau"] < 0.05 and info["ess"] >= 0.5 * info["n_candidates"]

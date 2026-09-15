@@ -1,0 +1,938 @@
+[32mActivated conda/uv virtual environment at [36m/venv/main[0m
+[ 0.00h] synthetic {'m': 2, 'D': 64, 'N': 5000, 'seed': 0} -> PASS (6s)
+Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
+Loading weights:   0%|          | 0/56 [00:00<?, ?it/s]Loading weights: 100%|██████████| 56/56 [00:00<00:00, 27131.92it/s]
+/workspace/projects/gmanifold/experiments/campaign.py:94: UserWarning: Converting a tensor with requires_grad=True to a scalar may lead to unexpected behavior.
+Consider using tensor.detach() first. (Triggered internally at /pytorch/torch/csrc/autograd/generated/python_variable_methods.cpp:836.)
+  r = dict(param_diff=float((p[0] - p[1]).abs().max()), sample_diff=float((x1 - x2).abs().max()), saveload_diff=float((x1 - x3).abs().max()))
+[ 0.00h] determinism {'name': 'SimpleStories/SimpleStories-5M', 'prefix': 'Once upon a time, there was a little', 'seed': 0} -> PASS (9s)
+[ 0.02h] real_alpha {'name': 'SimpleStories/SimpleStories-5M', 'prefix': 'Once upon a time, there was a little', 'seed': 0} -> PASS (60s)
+[ 0.03h] propagation {'name': 'SimpleStories/SimpleStories-5M', 'prefix': 'Once upon a time, there was a little', 'seed': 0} -> PASS (50s)
+[ 0.04h] next_token {'name': 'SimpleStories/SimpleStories-5M', 'prefix': 'Once upon a time, there was a little', 'seed': 0} -> PASS (4s)
+[ 0.04h] scaling {'name': 'SimpleStories/SimpleStories-5M', 'prefix': 'Once upon a time, there was a little', 'seed': 0} -> PASS (4s)
+[ 0.05h] hyper {'name': 'SimpleStories/SimpleStories-5M', 'prefix': 'Once upon a time, there was a little', 'seed': 0} -> PASS (32s)
+[ 0.05h] memory {'name': 'SimpleStories/SimpleStories-5M', 'prefix': 'Once upon a time, there was a little', 'seed': 0} -> PASS (6s)
+[ 0.06h] stories {'name': 'SimpleStories/SimpleStories-5M', 'seed': 0} -> FAIL (31s)
+[ 0.06h] synthetic {'m': 3, 'D': 64, 'N': 8000, 'seed': 2} -> PASS (8s)
+[ 0.06h] synthetic {'m': 4, 'D': 128, 'N': 12000, 'seed': 3} -> PASS (12s)
+[ 0.06h] synthetic {'m': 2, 'D': 256, 'N': 5000, 'seed': 4} -> PASS (5s)
+[ 0.06h] synthetic {'m': 2, 'D': 64, 'N': 1500, 'seed': 5} -> PASS (2s)
+[ 0.07h] synthetic {'m': 2, 'D': 64, 'N': 20000, 'seed': 6} -> PASS (19s)
+[ 0.07h] synthetic {'m': 8, 'D': 128, 'N': 20000, 'seed': 7} -> PASS (19s)
+[ 0.08h] synthetic {'m': 6, 'D': 512, 'N': 15000, 'seed': 8} -> FAIL (14s)
+[ 0.09h] real_alpha {'name': 'SimpleStories/SimpleStories-5M', 'prefix': 'Once upon a time, there was a little', 'seed': 0} -> PASS (60s)
+[ 0.11h] propagation {'name': 'SimpleStories/SimpleStories-5M', 'prefix': 'Once upon a time, there was a little', 'seed': 0} -> PASS (50s)
+[ 0.11h] next_token {'name': 'SimpleStories/SimpleStories-5M', 'prefix': 'Once upon a time, there was a little', 'seed': 0} -> PASS (4s)
+Loading weights:   0%|          | 0/56 [00:00<?, ?it/s]Loading weights: 100%|██████████| 56/56 [00:00<00:00, 3299.45it/s]
+[ 0.13h] real_alpha {'name': 'SimpleStories/SimpleStories-11M', 'prefix': 'Once upon a time, there was a little', 'seed': 0} -> PASS (67s)
+[ 0.13h] determinism {'name': 'SimpleStories/SimpleStories-11M', 'prefix': 'Once upon a time, there was a little', 'seed': 0} -> PASS (8s)
+Loading weights:   0%|          | 0/92 [00:00<?, ?it/s]Loading weights: 100%|██████████| 92/92 [00:00<00:00, 15108.69it/s]
+[ 0.16h] real_alpha {'name': 'SimpleStories/SimpleStories-30M', 'prefix': 'Once upon a time, there was a little', 'seed': 0} -> PASS (93s)
+[ 0.18h] propagation {'name': 'SimpleStories/SimpleStories-30M', 'prefix': 'Once upon a time, there was a little', 'seed': 0} -> PASS (87s)
+[ 0.19h] stories {'name': 'SimpleStories/SimpleStories-30M', 'seed': 0} -> FAIL (32s)
+Loading weights:   0%|          | 0/110 [00:00<?, ?it/s]Loading weights: 100%|██████████| 110/110 [00:00<00:00, 3587.16it/s]
+[ 0.21h] real_alpha {'name': 'SimpleStories/SimpleStories-35M', 'prefix': 'Once upon a time, there was a little', 'seed': 0} -> PASS (68s)
+[ 0.21h] next_token {'name': 'SimpleStories/SimpleStories-35M', 'prefix': 'Once upon a time, there was a little', 'seed': 0} -> PASS (4s)
+[ 0.22h] hyper {'name': 'SimpleStories/SimpleStories-35M', 'prefix': 'Once upon a time, there was a little', 'seed': 0, 'loc': 'L2.ffn'} -> PASS (33s)
+Loading weights:   0%|          | 0/56 [00:00<?, ?it/s]Loading weights: 100%|██████████| 56/56 [00:00<00:00, 15987.00it/s]
+[ 0.24h] real_alpha {'name': 'SimpleStories/SimpleStories-V2-5M', 'prefix': 'Once upon a time, there was a little', 'seed': 0} -> PASS (77s)
+[ 0.25h] propagation {'name': 'SimpleStories/SimpleStories-V2-5M', 'prefix': 'Once upon a time, there was a little', 'seed': 0} -> PASS (51s)
+[ 0.25h] scaling {'name': 'SimpleStories/SimpleStories-V2-5M', 'prefix': 'Once upon a time, there was a little', 'seed': 0} -> PASS (4s)
+Loading weights:   0%|          | 0/110 [00:00<?, ?it/s]Loading weights: 100%|██████████| 110/110 [00:00<00:00, 16864.30it/s]
+[ 0.28h] real_alpha {'name': 'SimpleStories/SimpleStories-V2-35M', 'prefix': 'Once upon a time, there was a little', 'seed': 0} -> PASS (96s)
+[ 0.28h] determinism {'name': 'SimpleStories/SimpleStories-V2-35M', 'prefix': 'Once upon a time, there was a little', 'seed': 0} -> PASS (8s)
+[ 0.29h] memory {'name': 'SimpleStories/SimpleStories-V2-35M', 'prefix': 'Once upon a time, there was a little', 'seed': 0} -> PASS (6s)
+Loading weights:   0%|          | 0/38 [00:00<?, ?it/s]Loading weights: 100%|██████████| 38/38 [00:00<00:00, 16089.60it/s]
+[ 0.31h] real_alpha {'name': 'SimpleStories/SimpleStories-1.25M', 'prefix': 'Once upon a time, there was a little', 'seed': 0} -> PASS (96s)
+[ 0.32h] propagation {'name': 'SimpleStories/SimpleStories-1.25M', 'prefix': 'Once upon a time, there was a little', 'seed': 0} -> PASS (37s)
+[ 0.32h] next_token {'name': 'SimpleStories/SimpleStories-1.25M', 'prefix': 'Once upon a time, there was a little', 'seed': 0} -> PASS (4s)
+[ 0.33h] synthetic {'m': 3, 'D': 64, 'N': 8000, 'seed': 106} -> PASS (8s)
+Loading weights:   0%|          | 0/56 [00:00<?, ?it/s]Loading weights: 100%|██████████| 56/56 [00:00<00:00, 14284.56it/s]
+[ 0.34h] real_alpha {'name': 'SimpleStories/SimpleStories-5M', 'prefix': 'The', 'seed': 0} -> PASS (67s)
+[ 0.36h] stories {'name': 'SimpleStories/SimpleStories-5M', 'seed': 0} -> FAIL (45s)
+Loading weights:   0%|          | 0/56 [00:00<?, ?it/s]Loading weights: 100%|██████████| 56/56 [00:00<00:00, 18095.61it/s]
+[ 0.38h] real_alpha {'name': 'SimpleStories/SimpleStories-11M', 'prefix': 'The', 'seed': 0} -> PASS (72s)
+[ 0.39h] propagation {'name': 'SimpleStories/SimpleStories-11M', 'prefix': 'The', 'seed': 0} -> PASS (52s)
+Loading weights:   0%|          | 0/92 [00:00<?, ?it/s]Loading weights: 100%|██████████| 92/92 [00:00<00:00, 17021.44it/s]
+[ 0.41h] real_alpha {'name': 'SimpleStories/SimpleStories-30M', 'prefix': 'The', 'seed': 0} -> PASS (77s)
+[ 0.41h] next_token {'name': 'SimpleStories/SimpleStories-30M', 'prefix': 'The', 'seed': 0} -> PASS (4s)
+[ 0.42h] determinism {'name': 'SimpleStories/SimpleStories-30M', 'prefix': 'The', 'seed': 0} -> PASS (8s)
+[ 0.43h] hyper {'name': 'SimpleStories/SimpleStories-30M', 'prefix': 'The', 'seed': 0, 'loc': 'L2.ffn'} -> PASS (33s)
+Loading weights:   0%|          | 0/110 [00:00<?, ?it/s]Loading weights: 100%|██████████| 110/110 [00:00<00:00, 15000.11it/s]
+[ 0.44h] real_alpha {'name': 'SimpleStories/SimpleStories-35M', 'prefix': 'The', 'seed': 0} -> PASS (67s)
+[ 0.47h] propagation {'name': 'SimpleStories/SimpleStories-35M', 'prefix': 'The', 'seed': 0} -> PASS (103s)
+Loading weights:   0%|          | 0/56 [00:00<?, ?it/s]Loading weights: 100%|██████████| 56/56 [00:00<00:00, 16316.85it/s]
+[ 0.49h] real_alpha {'name': 'SimpleStories/SimpleStories-V2-5M', 'prefix': 'The', 'seed': 0} -> PASS (63s)
+[ 0.49h] scaling {'name': 'SimpleStories/SimpleStories-V2-5M', 'prefix': 'The', 'seed': 0} -> PASS (4s)
+Loading weights:   0%|          | 0/110 [00:00<?, ?it/s]Loading weights: 100%|██████████| 110/110 [00:00<00:00, 15565.91it/s]
+[ 0.51h] real_alpha {'name': 'SimpleStories/SimpleStories-V2-35M', 'prefix': 'The', 'seed': 0} -> PASS (77s)
+[ 0.54h] propagation {'name': 'SimpleStories/SimpleStories-V2-35M', 'prefix': 'The', 'seed': 0} -> PASS (103s)
+[ 0.54h] next_token {'name': 'SimpleStories/SimpleStories-V2-35M', 'prefix': 'The', 'seed': 0} -> PASS (4s)
+[transformers] Token indices sequence length is longer than the specified maximum sequence length for this model (547 > 512). Running this sequence through the model will result in indexing errors
+[ 0.55h] stories {'name': 'SimpleStories/SimpleStories-V2-35M', 'seed': 0} -> FAIL (28s)
+Loading weights:   0%|          | 0/38 [00:00<?, ?it/s]Loading weights: 100%|██████████| 38/38 [00:00<00:00, 16372.22it/s]
+[ 0.57h] real_alpha {'name': 'SimpleStories/SimpleStories-1.25M', 'prefix': 'The', 'seed': 0} -> PASS (73s)
+[ 0.57h] determinism {'name': 'SimpleStories/SimpleStories-1.25M', 'prefix': 'The', 'seed': 0} -> PASS (8s)
+[ 0.57h] memory {'name': 'SimpleStories/SimpleStories-1.25M', 'prefix': 'The', 'seed': 0} -> PASS (6s)
+Loading weights:   0%|          | 0/56 [00:00<?, ?it/s]Loading weights: 100%|██████████| 56/56 [00:00<00:00, 18013.73it/s]
+[ 0.59h] real_alpha {'name': 'SimpleStories/SimpleStories-5M', 'prefix': 'One day, a big dog named Max saw a', 'seed': 0} -> PASS (62s)
+[ 0.61h] propagation {'name': 'SimpleStories/SimpleStories-5M', 'prefix': 'One day, a big dog named Max saw a', 'seed': 0} -> PASS (51s)
+Loading weights:   0%|          | 0/56 [00:00<?, ?it/s]Loading weights: 100%|██████████| 56/56 [00:00<00:00, 17187.25it/s]
+[ 0.63h] real_alpha {'name': 'SimpleStories/SimpleStories-11M', 'prefix': 'One day, a big dog named Max saw a', 'seed': 0} -> PASS (77s)
+[ 0.63h] next_token {'name': 'SimpleStories/SimpleStories-11M', 'prefix': 'One day, a big dog named Max saw a', 'seed': 0} -> PASS (4s)
+[ 0.64h] hyper {'name': 'SimpleStories/SimpleStories-11M', 'prefix': 'One day, a big dog named Max saw a', 'seed': 0, 'loc': 'L2.ffn'} -> PASS (33s)
+[ 0.64h] synthetic {'m': 2, 'D': 64, 'N': 10000, 'seed': 115} -> PASS (10s)
+Loading weights:   0%|          | 0/92 [00:00<?, ?it/s]Loading weights: 100%|██████████| 92/92 [00:00<00:00, 16500.30it/s]
+[ 0.66h] real_alpha {'name': 'SimpleStories/SimpleStories-30M', 'prefix': 'One day, a big dog named Max saw a', 'seed': 0} -> PASS (72s)
+[ 0.68h] propagation {'name': 'SimpleStories/SimpleStories-30M', 'prefix': 'One day, a big dog named Max saw a', 'seed': 0} -> PASS (87s)
+Loading weights:   0%|          | 0/110 [00:00<?, ?it/s]Loading weights: 100%|██████████| 110/110 [00:00<00:00, 16809.00it/s]
+[ 0.70h] real_alpha {'name': 'SimpleStories/SimpleStories-35M', 'prefix': 'One day, a big dog named Max saw a', 'seed': 0} -> PASS (67s)
+[ 0.70h] determinism {'name': 'SimpleStories/SimpleStories-35M', 'prefix': 'One day, a big dog named Max saw a', 'seed': 0} -> PASS (8s)
+[ 0.72h] stories {'name': 'SimpleStories/SimpleStories-35M', 'seed': 0} -> FAIL (73s)
+Loading weights:   0%|          | 0/56 [00:00<?, ?it/s]Loading weights: 100%|██████████| 56/56 [00:00<00:00, 17806.16it/s]
+[ 0.74h] real_alpha {'name': 'SimpleStories/SimpleStories-V2-5M', 'prefix': 'One day, a big dog named Max saw a', 'seed': 0} -> PASS (68s)
+[ 0.76h] propagation {'name': 'SimpleStories/SimpleStories-V2-5M', 'prefix': 'One day, a big dog named Max saw a', 'seed': 0} -> PASS (51s)
+[ 0.76h] next_token {'name': 'SimpleStories/SimpleStories-V2-5M', 'prefix': 'One day, a big dog named Max saw a', 'seed': 0} -> PASS (4s)
+[ 0.76h] scaling {'name': 'SimpleStories/SimpleStories-V2-5M', 'prefix': 'One day, a big dog named Max saw a', 'seed': 0} -> PASS (4s)
+Loading weights:   0%|          | 0/110 [00:00<?, ?it/s]Loading weights: 100%|██████████| 110/110 [00:00<00:00, 17913.94it/s]
+[ 0.78h] real_alpha {'name': 'SimpleStories/SimpleStories-V2-35M', 'prefix': 'One day, a big dog named Max saw a', 'seed': 0} -> PASS (68s)
+Loading weights:   0%|          | 0/38 [00:00<?, ?it/s]Loading weights: 100%|██████████| 38/38 [00:00<00:00, 17772.47it/s]
+[ 0.80h] real_alpha {'name': 'SimpleStories/SimpleStories-1.25M', 'prefix': 'One day, a big dog named Max saw a', 'seed': 0} -> PASS (67s)
+[ 0.81h] propagation {'name': 'SimpleStories/SimpleStories-1.25M', 'prefix': 'One day, a big dog named Max saw a', 'seed': 0} -> PASS (37s)
+Loading weights:   0%|          | 0/56 [00:00<?, ?it/s]Loading weights: 100%|██████████| 56/56 [00:00<00:00, 18041.40it/s]
+[ 0.82h] real_alpha {'name': 'SimpleStories/SimpleStories-5M', 'prefix': 'Lily and her mom went to the park. It was a sunny day and they saw a', 'seed': 0} -> PASS (62s)
+[ 0.83h] next_token {'name': 'SimpleStories/SimpleStories-5M', 'prefix': 'Lily and her mom went to the park. It was a sunny day and they saw a', 'seed': 0} -> PASS (4s)
+[ 0.83h] determinism {'name': 'SimpleStories/SimpleStories-5M', 'prefix': 'Lily and her mom went to the park. It was a sunny day and they saw a', 'seed': 0} -> PASS (8s)
+[ 0.84h] hyper {'name': 'SimpleStories/SimpleStories-5M', 'prefix': 'Lily and her mom went to the park. It was a sunny day and they saw a', 'seed': 0, 'loc': 'L2.ffn'} -> PASS (32s)
+[ 0.84h] memory {'name': 'SimpleStories/SimpleStories-5M', 'prefix': 'Lily and her mom went to the park. It was a sunny day and they saw a', 'seed': 0} -> PASS (6s)
+Loading weights:   0%|          | 0/56 [00:00<?, ?it/s]Loading weights: 100%|██████████| 56/56 [00:00<00:00, 14495.25it/s]
+[ 0.86h] real_alpha {'name': 'SimpleStories/SimpleStories-11M', 'prefix': 'Lily and her mom went to the park. It was a sunny day and they saw a', 'seed': 0} -> PASS (71s)
+[ 0.87h] propagation {'name': 'SimpleStories/SimpleStories-11M', 'prefix': 'Lily and her mom went to the park. It was a sunny day and they saw a', 'seed': 0} -> PASS (53s)
+[ 0.89h] stories {'name': 'SimpleStories/SimpleStories-11M', 'seed': 0} -> FAIL (73s)
+Loading weights:   0%|          | 0/92 [00:00<?, ?it/s]Loading weights: 100%|██████████| 92/92 [00:00<00:00, 16508.77it/s]
+[ 0.91h] real_alpha {'name': 'SimpleStories/SimpleStories-30M', 'prefix': 'Lily and her mom went to the park. It was a sunny day and they saw a', 'seed': 0} -> PASS (71s)
+Loading weights:   0%|          | 0/110 [00:00<?, ?it/s]Loading weights: 100%|██████████| 110/110 [00:00<00:00, 16859.37it/s]
+[ 0.93h] real_alpha {'name': 'SimpleStories/SimpleStories-35M', 'prefix': 'Lily and her mom went to the park. It was a sunny day and they saw a', 'seed': 0} -> PASS (66s)
+[ 0.96h] propagation {'name': 'SimpleStories/SimpleStories-35M', 'prefix': 'Lily and her mom went to the park. It was a sunny day and they saw a', 'seed': 0} -> PASS (105s)
+[ 0.96h] next_token {'name': 'SimpleStories/SimpleStories-35M', 'prefix': 'Lily and her mom went to the park. It was a sunny day and they saw a', 'seed': 0} -> PASS (4s)
+[ 0.96h] synthetic {'m': 6, 'D': 64, 'N': 4000, 'seed': 124} -> FAIL (4s)
+Loading weights:   0%|          | 0/56 [00:00<?, ?it/s]Loading weights: 100%|██████████| 56/56 [00:00<00:00, 16616.98it/s]
+[ 0.98h] real_alpha {'name': 'SimpleStories/SimpleStories-V2-5M', 'prefix': 'Lily and her mom went to the park. It was a sunny day and they saw a', 'seed': 0} -> PASS (76s)
+[ 0.99h] determinism {'name': 'SimpleStories/SimpleStories-V2-5M', 'prefix': 'Lily and her mom went to the park. It was a sunny day and they saw a', 'seed': 0} -> PASS (8s)
+[ 0.99h] scaling {'name': 'SimpleStories/SimpleStories-V2-5M', 'prefix': 'Lily and her mom went to the park. It was a sunny day and they saw a', 'seed': 0} -> PASS (4s)
+Loading weights:   0%|          | 0/110 [00:00<?, ?it/s]Loading weights: 100%|██████████| 110/110 [00:00<00:00, 17002.89it/s]
+[ 1.01h] real_alpha {'name': 'SimpleStories/SimpleStories-V2-35M', 'prefix': 'Lily and her mom went to the park. It was a sunny day and they saw a', 'seed': 0} -> PASS (68s)
+[ 1.04h] propagation {'name': 'SimpleStories/SimpleStories-V2-35M', 'prefix': 'Lily and her mom went to the park. It was a sunny day and they saw a', 'seed': 0} -> PASS (105s)
+Loading weights:   0%|          | 0/38 [00:00<?, ?it/s]Loading weights: 100%|██████████| 38/38 [00:00<00:00, 18301.02it/s]
+[ 1.06h] real_alpha {'name': 'SimpleStories/SimpleStories-1.25M', 'prefix': 'Lily and her mom went to the park. It was a sunny day and they saw a', 'seed': 0} -> PASS (73s)
+[ 1.06h] next_token {'name': 'SimpleStories/SimpleStories-1.25M', 'prefix': 'Lily and her mom went to the park. It was a sunny day and they saw a', 'seed': 0} -> PASS (4s)
+[ 1.07h] stories {'name': 'SimpleStories/SimpleStories-1.25M', 'seed': 0} -> FAIL (40s)
+[ 1.08h] hyper {'name': 'SimpleStories/SimpleStories-1.25M', 'prefix': 'Lily and her mom went to the park. It was a sunny day and they saw a', 'seed': 0, 'loc': 'L2.ffn'} -> PASS (32s)
+Loading weights:   0%|          | 0/56 [00:00<?, ?it/s]Loading weights: 100%|██████████| 56/56 [00:00<00:00, 16150.80it/s]
+[ 1.09h] real_alpha {'name': 'SimpleStories/SimpleStories-5M', 'prefix': 'In the morning, the', 'seed': 0} -> PASS (62s)
+[ 1.11h] propagation {'name': 'SimpleStories/SimpleStories-5M', 'prefix': 'In the morning, the', 'seed': 0} -> PASS (51s)
+Loading weights:   0%|          | 0/56 [00:00<?, ?it/s]Loading weights: 100%|██████████| 56/56 [00:00<00:00, 16058.04it/s]
+[ 1.13h] real_alpha {'name': 'SimpleStories/SimpleStories-11M', 'prefix': 'In the morning, the', 'seed': 0} -> PASS (71s)
+[ 1.13h] determinism {'name': 'SimpleStories/SimpleStories-11M', 'prefix': 'In the morning, the', 'seed': 0} -> PASS (8s)
+[ 1.13h] memory {'name': 'SimpleStories/SimpleStories-11M', 'prefix': 'In the morning, the', 'seed': 0} -> PASS (6s)
+Loading weights:   0%|          | 0/92 [00:00<?, ?it/s]Loading weights: 100%|██████████| 92/92 [00:00<00:00, 17113.53it/s]
+[ 1.15h] real_alpha {'name': 'SimpleStories/SimpleStories-30M', 'prefix': 'In the morning, the', 'seed': 0} -> PASS (67s)
+[ 1.17h] propagation {'name': 'SimpleStories/SimpleStories-30M', 'prefix': 'In the morning, the', 'seed': 0} -> PASS (86s)
+[ 1.18h] next_token {'name': 'SimpleStories/SimpleStories-30M', 'prefix': 'In the morning, the', 'seed': 0} -> PASS (4s)
+Loading weights:   0%|          | 0/110 [00:00<?, ?it/s]Loading weights: 100%|██████████| 110/110 [00:00<00:00, 16915.00it/s]
+[ 1.19h] real_alpha {'name': 'SimpleStories/SimpleStories-35M', 'prefix': 'In the morning, the', 'seed': 0} -> PASS (66s)
+Loading weights:   0%|          | 0/56 [00:00<?, ?it/s]Loading weights: 100%|██████████| 56/56 [00:00<00:00, 17490.58it/s]
+[ 1.21h] real_alpha {'name': 'SimpleStories/SimpleStories-V2-5M', 'prefix': 'In the morning, the', 'seed': 0} -> PASS (62s)
+[ 1.23h] propagation {'name': 'SimpleStories/SimpleStories-V2-5M', 'prefix': 'In the morning, the', 'seed': 0} -> PASS (51s)
+[transformers] Token indices sequence length is longer than the specified maximum sequence length for this model (547 > 512). Running this sequence through the model will result in indexing errors
+[ 1.23h] stories {'name': 'SimpleStories/SimpleStories-V2-5M', 'seed': 0} -> FAIL (20s)
+[ 1.23h] scaling {'name': 'SimpleStories/SimpleStories-V2-5M', 'prefix': 'In the morning, the', 'seed': 0} -> PASS (4s)
+Loading weights:   0%|          | 0/110 [00:00<?, ?it/s]Loading weights: 100%|██████████| 110/110 [00:00<00:00, 16906.94it/s]
+[ 1.25h] real_alpha {'name': 'SimpleStories/SimpleStories-V2-35M', 'prefix': 'In the morning, the', 'seed': 0} -> PASS (67s)
+[ 1.25h] next_token {'name': 'SimpleStories/SimpleStories-V2-35M', 'prefix': 'In the morning, the', 'seed': 0} -> PASS (4s)
+[ 1.25h] determinism {'name': 'SimpleStories/SimpleStories-V2-35M', 'prefix': 'In the morning, the', 'seed': 0} -> PASS (8s)
+[ 1.26h] hyper {'name': 'SimpleStories/SimpleStories-V2-35M', 'prefix': 'In the morning, the', 'seed': 0, 'loc': 'L2.ffn'} -> PASS (33s)
+[ 1.26h] synthetic {'m': 5, 'D': 64, 'N': 6000, 'seed': 133} -> FAIL (6s)
+Loading weights:   0%|          | 0/38 [00:00<?, ?it/s]Loading weights: 100%|██████████| 38/38 [00:00<00:00, 17557.12it/s]
+[ 1.28h] real_alpha {'name': 'SimpleStories/SimpleStories-1.25M', 'prefix': 'In the morning, the', 'seed': 0} -> PASS (67s)
+[ 1.29h] propagation {'name': 'SimpleStories/SimpleStories-1.25M', 'prefix': 'In the morning, the', 'seed': 0} -> PASS (37s)
+Loading weights:   0%|          | 0/56 [00:00<?, ?it/s]Loading weights: 100%|██████████| 56/56 [00:00<00:00, 17102.16it/s]
+[ 1.31h] real_alpha {'name': 'SimpleStories/SimpleStories-5M', 'prefix': 'She opened the box and found a', 'seed': 0} -> PASS (62s)
+Loading weights:   0%|          | 0/56 [00:00<?, ?it/s]Loading weights: 100%|██████████| 56/56 [00:00<00:00, 14129.03it/s]
+[ 1.33h] real_alpha {'name': 'SimpleStories/SimpleStories-11M', 'prefix': 'She opened the box and found a', 'seed': 0} -> PASS (66s)
+[ 1.34h] propagation {'name': 'SimpleStories/SimpleStories-11M', 'prefix': 'She opened the box and found a', 'seed': 0} -> PASS (53s)
+[ 1.34h] next_token {'name': 'SimpleStories/SimpleStories-11M', 'prefix': 'She opened the box and found a', 'seed': 0} -> PASS (4s)
+Loading weights:   0%|          | 0/92 [00:00<?, ?it/s]Loading weights: 100%|██████████| 92/92 [00:00<00:00, 15815.24it/s]
+[ 1.37h] real_alpha {'name': 'SimpleStories/SimpleStories-30M', 'prefix': 'She opened the box and found a', 'seed': 0} -> PASS (75s)
+[ 1.37h] determinism {'name': 'SimpleStories/SimpleStories-30M', 'prefix': 'She opened the box and found a', 'seed': 0} -> PASS (8s)
+[ 1.38h] stories {'name': 'SimpleStories/SimpleStories-30M', 'seed': 0} -> FAIL (29s)
+[ 1.38h] memory {'name': 'SimpleStories/SimpleStories-30M', 'prefix': 'She opened the box and found a', 'seed': 0} -> PASS (6s)
+Loading weights:   0%|          | 0/110 [00:00<?, ?it/s]Loading weights: 100%|██████████| 110/110 [00:00<00:00, 16002.69it/s]
+[ 1.40h] real_alpha {'name': 'SimpleStories/SimpleStories-35M', 'prefix': 'She opened the box and found a', 'seed': 0} -> PASS (72s)
+[ 1.43h] propagation {'name': 'SimpleStories/SimpleStories-35M', 'prefix': 'She opened the box and found a', 'seed': 0} -> PASS (103s)
+Loading weights:   0%|          | 0/56 [00:00<?, ?it/s]Loading weights: 100%|██████████| 56/56 [00:00<00:00, 17019.13it/s]
+[ 1.44h] real_alpha {'name': 'SimpleStories/SimpleStories-V2-5M', 'prefix': 'She opened the box and found a', 'seed': 0} -> PASS (62s)
+[ 1.44h] next_token {'name': 'SimpleStories/SimpleStories-V2-5M', 'prefix': 'She opened the box and found a', 'seed': 0} -> PASS (4s)
+[ 1.45h] hyper {'name': 'SimpleStories/SimpleStories-V2-5M', 'prefix': 'She opened the box and found a', 'seed': 0, 'loc': 'L2.ffn'} -> PASS (32s)
+[ 1.45h] scaling {'name': 'SimpleStories/SimpleStories-V2-5M', 'prefix': 'She opened the box and found a', 'seed': 0} -> PASS (4s)
+Loading weights:   0%|          | 0/110 [00:00<?, ?it/s]Loading weights: 100%|██████████| 110/110 [00:00<00:00, 17933.43it/s]
+[ 1.48h] real_alpha {'name': 'SimpleStories/SimpleStories-V2-35M', 'prefix': 'She opened the box and found a', 'seed': 0} -> PASS (78s)
+[ 1.51h] propagation {'name': 'SimpleStories/SimpleStories-V2-35M', 'prefix': 'She opened the box and found a', 'seed': 0} -> PASS (104s)
+Loading weights:   0%|          | 0/38 [00:00<?, ?it/s]Loading weights: 100%|██████████| 38/38 [00:00<00:00, 14361.47it/s]
+[ 1.52h] real_alpha {'name': 'SimpleStories/SimpleStories-1.25M', 'prefix': 'She opened the box and found a', 'seed': 0} -> PASS (68s)
+[ 1.53h] determinism {'name': 'SimpleStories/SimpleStories-1.25M', 'prefix': 'She opened the box and found a', 'seed': 0} -> PASS (8s)
+Loading weights:   0%|          | 0/56 [00:00<?, ?it/s]Loading weights: 100%|██████████| 56/56 [00:00<00:00, 18094.22it/s]
+[ 1.54h] real_alpha {'name': 'SimpleStories/SimpleStories-5M', 'prefix': 'Once upon a time, there was a little', 'seed': 1} -> PASS (62s)
+[ 1.56h] propagation {'name': 'SimpleStories/SimpleStories-5M', 'prefix': 'Once upon a time, there was a little', 'seed': 1} -> PASS (51s)
+[ 1.56h] next_token {'name': 'SimpleStories/SimpleStories-5M', 'prefix': 'Once upon a time, there was a little', 'seed': 1} -> PASS (4s)
+[ 1.57h] stories {'name': 'SimpleStories/SimpleStories-5M', 'seed': 1} -> FAIL (39s)
+[ 1.57h] synthetic {'m': 4, 'D': 64, 'N': 8000, 'seed': 142} -> PASS (8s)
+Loading weights:   0%|          | 0/56 [00:00<?, ?it/s]Loading weights: 100%|██████████| 56/56 [00:00<00:00, 15875.70it/s]
+[ 1.59h] real_alpha {'name': 'SimpleStories/SimpleStories-11M', 'prefix': 'Once upon a time, there was a little', 'seed': 1} -> PASS (69s)
+Loading weights:   0%|          | 0/92 [00:00<?, ?it/s]Loading weights: 100%|██████████| 92/92 [00:00<00:00, 16830.63it/s]
+[ 1.61h] real_alpha {'name': 'SimpleStories/SimpleStories-30M', 'prefix': 'Once upon a time, there was a little', 'seed': 1} -> PASS (72s)
+[ 1.64h] propagation {'name': 'SimpleStories/SimpleStories-30M', 'prefix': 'Once upon a time, there was a little', 'seed': 1} -> PASS (87s)
+Loading weights:   0%|          | 0/110 [00:00<?, ?it/s]Loading weights: 100%|██████████| 110/110 [00:00<00:00, 17772.47it/s]
+[ 1.65h] real_alpha {'name': 'SimpleStories/SimpleStories-35M', 'prefix': 'Once upon a time, there was a little', 'seed': 1} -> PASS (67s)
+[ 1.65h] next_token {'name': 'SimpleStories/SimpleStories-35M', 'prefix': 'Once upon a time, there was a little', 'seed': 1} -> PASS (4s)
+[ 1.66h] determinism {'name': 'SimpleStories/SimpleStories-35M', 'prefix': 'Once upon a time, there was a little', 'seed': 1} -> PASS (8s)
+[ 1.67h] hyper {'name': 'SimpleStories/SimpleStories-35M', 'prefix': 'Once upon a time, there was a little', 'seed': 1, 'loc': 'L2.ffn'} -> PASS (33s)
+[ 1.67h] memory {'name': 'SimpleStories/SimpleStories-35M', 'prefix': 'Once upon a time, there was a little', 'seed': 1} -> PASS (6s)
+Loading weights:   0%|          | 0/56 [00:00<?, ?it/s]Loading weights: 100%|██████████| 56/56 [00:00<00:00, 13791.38it/s]
+[ 1.69h] real_alpha {'name': 'SimpleStories/SimpleStories-V2-5M', 'prefix': 'Once upon a time, there was a little', 'seed': 1} -> PASS (68s)
+[ 1.70h] propagation {'name': 'SimpleStories/SimpleStories-V2-5M', 'prefix': 'Once upon a time, there was a little', 'seed': 1} -> PASS (51s)
+[ 1.70h] scaling {'name': 'SimpleStories/SimpleStories-V2-5M', 'prefix': 'Once upon a time, there was a little', 'seed': 1} -> PASS (4s)
+Loading weights:   0%|          | 0/110 [00:00<?, ?it/s]Loading weights: 100%|██████████| 110/110 [00:00<00:00, 16216.42it/s]
+[ 1.72h] real_alpha {'name': 'SimpleStories/SimpleStories-V2-35M', 'prefix': 'Once upon a time, there was a little', 'seed': 1} -> PASS (67s)
+[transformers] Token indices sequence length is longer than the specified maximum sequence length for this model (547 > 512). Running this sequence through the model will result in indexing errors
+[ 1.74h] stories {'name': 'SimpleStories/SimpleStories-V2-35M', 'seed': 1} -> FAIL (52s)
+Loading weights:   0%|          | 0/38 [00:00<?, ?it/s]Loading weights: 100%|██████████| 38/38 [00:00<00:00, 15400.87it/s]
+[ 1.75h] real_alpha {'name': 'SimpleStories/SimpleStories-1.25M', 'prefix': 'Once upon a time, there was a little', 'seed': 1} -> PASS (68s)
+[ 1.76h] propagation {'name': 'SimpleStories/SimpleStories-1.25M', 'prefix': 'Once upon a time, there was a little', 'seed': 1} -> PASS (37s)
+[ 1.77h] next_token {'name': 'SimpleStories/SimpleStories-1.25M', 'prefix': 'Once upon a time, there was a little', 'seed': 1} -> PASS (4s)
+Loading weights:   0%|          | 0/56 [00:00<?, ?it/s]Loading weights: 100%|██████████| 56/56 [00:00<00:00, 17035.18it/s]
+[ 1.78h] real_alpha {'name': 'SimpleStories/SimpleStories-5M', 'prefix': 'The', 'seed': 1} -> PASS (69s)
+[ 1.79h] determinism {'name': 'SimpleStories/SimpleStories-5M', 'prefix': 'The', 'seed': 1} -> PASS (8s)
+Loading weights:   0%|          | 0/56 [00:00<?, ?it/s]Loading weights: 100%|██████████| 56/56 [00:00<00:00, 15611.90it/s]
+[ 1.81h] real_alpha {'name': 'SimpleStories/SimpleStories-11M', 'prefix': 'The', 'seed': 1} -> PASS (67s)
+[ 1.82h] propagation {'name': 'SimpleStories/SimpleStories-11M', 'prefix': 'The', 'seed': 1} -> PASS (53s)
+Loading weights:   0%|          | 0/92 [00:00<?, ?it/s]Loading weights: 100%|██████████| 92/92 [00:00<00:00, 15443.69it/s]
+[ 1.84h] real_alpha {'name': 'SimpleStories/SimpleStories-30M', 'prefix': 'The', 'seed': 1} -> PASS (67s)
+[ 1.84h] next_token {'name': 'SimpleStories/SimpleStories-30M', 'prefix': 'The', 'seed': 1} -> PASS (4s)
+[ 1.85h] hyper {'name': 'SimpleStories/SimpleStories-30M', 'prefix': 'The', 'seed': 1, 'loc': 'L2.ffn'} -> PASS (33s)
+[ 1.85h] synthetic {'m': 3, 'D': 64, 'N': 10000, 'seed': 151} -> PASS (10s)
+Loading weights:   0%|          | 0/110 [00:00<?, ?it/s]Loading weights: 100%|██████████| 110/110 [00:00<00:00, 15585.89it/s]
+[ 1.87h] real_alpha {'name': 'SimpleStories/SimpleStories-35M', 'prefix': 'The', 'seed': 1} -> PASS (68s)
+[ 1.90h] propagation {'name': 'SimpleStories/SimpleStories-35M', 'prefix': 'The', 'seed': 1} -> PASS (103s)
+[ 1.91h] stories {'name': 'SimpleStories/SimpleStories-35M', 'seed': 1} -> FAIL (41s)
+Loading weights:   0%|          | 0/56 [00:00<?, ?it/s]Loading weights: 100%|██████████| 56/56 [00:00<00:00, 16705.62it/s]
+[ 1.93h] real_alpha {'name': 'SimpleStories/SimpleStories-V2-5M', 'prefix': 'The', 'seed': 1} -> PASS (63s)
+[ 1.93h] determinism {'name': 'SimpleStories/SimpleStories-V2-5M', 'prefix': 'The', 'seed': 1} -> PASS (8s)
+[ 1.93h] scaling {'name': 'SimpleStories/SimpleStories-V2-5M', 'prefix': 'The', 'seed': 1} -> PASS (4s)
+[ 1.93h] memory {'name': 'SimpleStories/SimpleStories-V2-5M', 'prefix': 'The', 'seed': 1} -> PASS (6s)
+Loading weights:   0%|          | 0/110 [00:00<?, ?it/s]Loading weights: 100%|██████████| 110/110 [00:00<00:00, 17832.93it/s]
+[ 1.95h] real_alpha {'name': 'SimpleStories/SimpleStories-V2-35M', 'prefix': 'The', 'seed': 1} -> PASS (66s)
+[ 1.98h] propagation {'name': 'SimpleStories/SimpleStories-V2-35M', 'prefix': 'The', 'seed': 1} -> PASS (103s)
+[ 1.98h] next_token {'name': 'SimpleStories/SimpleStories-V2-35M', 'prefix': 'The', 'seed': 1} -> PASS (4s)
+Loading weights:   0%|          | 0/38 [00:00<?, ?it/s]Loading weights: 100%|██████████| 38/38 [00:00<00:00, 13968.76it/s]
+[ 2.00h] real_alpha {'name': 'SimpleStories/SimpleStories-1.25M', 'prefix': 'The', 'seed': 1} -> PASS (67s)
+Loading weights:   0%|          | 0/56 [00:00<?, ?it/s]Loading weights: 100%|██████████| 56/56 [00:00<00:00, 16934.46it/s]
+[ 2.02h] real_alpha {'name': 'SimpleStories/SimpleStories-5M', 'prefix': 'One day, a big dog named Max saw a', 'seed': 1} -> PASS (69s)
+[ 2.03h] propagation {'name': 'SimpleStories/SimpleStories-5M', 'prefix': 'One day, a big dog named Max saw a', 'seed': 1} -> PASS (51s)
+Loading weights:   0%|          | 0/56 [00:00<?, ?it/s]Loading weights: 100%|██████████| 56/56 [00:00<00:00, 16137.48it/s]
+[ 2.05h] real_alpha {'name': 'SimpleStories/SimpleStories-11M', 'prefix': 'One day, a big dog named Max saw a', 'seed': 1} -> PASS (68s)
+[ 2.05h] next_token {'name': 'SimpleStories/SimpleStories-11M', 'prefix': 'One day, a big dog named Max saw a', 'seed': 1} -> PASS (4s)
+[ 2.06h] determinism {'name': 'SimpleStories/SimpleStories-11M', 'prefix': 'One day, a big dog named Max saw a', 'seed': 1} -> PASS (8s)
+[ 2.07h] stories {'name': 'SimpleStories/SimpleStories-11M', 'seed': 1} -> FAIL (40s)
+[ 2.08h] hyper {'name': 'SimpleStories/SimpleStories-11M', 'prefix': 'One day, a big dog named Max saw a', 'seed': 1, 'loc': 'L2.ffn'} -> PASS (33s)
+Loading weights:   0%|          | 0/92 [00:00<?, ?it/s]Loading weights: 100%|██████████| 92/92 [00:00<00:00, 16877.75it/s]
+[ 2.09h] real_alpha {'name': 'SimpleStories/SimpleStories-30M', 'prefix': 'One day, a big dog named Max saw a', 'seed': 1} -> PASS (67s)
+[ 2.12h] propagation {'name': 'SimpleStories/SimpleStories-30M', 'prefix': 'One day, a big dog named Max saw a', 'seed': 1} -> PASS (87s)
+Loading weights:   0%|          | 0/110 [00:00<?, ?it/s]Loading weights: 100%|██████████| 110/110 [00:00<00:00, 15887.52it/s]
+[ 2.14h] real_alpha {'name': 'SimpleStories/SimpleStories-35M', 'prefix': 'One day, a big dog named Max saw a', 'seed': 1} -> PASS (69s)
+Loading weights:   0%|          | 0/56 [00:00<?, ?it/s]Loading weights: 100%|██████████| 56/56 [00:00<00:00, 16350.92it/s]
+[ 2.16h] real_alpha {'name': 'SimpleStories/SimpleStories-V2-5M', 'prefix': 'One day, a big dog named Max saw a', 'seed': 1} -> PASS (62s)
+[ 2.17h] propagation {'name': 'SimpleStories/SimpleStories-V2-5M', 'prefix': 'One day, a big dog named Max saw a', 'seed': 1} -> PASS (51s)
+[ 2.17h] next_token {'name': 'SimpleStories/SimpleStories-V2-5M', 'prefix': 'One day, a big dog named Max saw a', 'seed': 1} -> PASS (4s)
+[ 2.17h] scaling {'name': 'SimpleStories/SimpleStories-V2-5M', 'prefix': 'One day, a big dog named Max saw a', 'seed': 1} -> PASS (4s)
+[ 2.17h] synthetic {'m': 2, 'D': 64, 'N': 4000, 'seed': 160} -> PASS (4s)
+Loading weights:   0%|          | 0/110 [00:00<?, ?it/s]Loading weights: 100%|██████████| 110/110 [00:00<00:00, 15732.57it/s]
+[ 2.19h] real_alpha {'name': 'SimpleStories/SimpleStories-V2-35M', 'prefix': 'One day, a big dog named Max saw a', 'seed': 1} -> PASS (77s)
+[ 2.20h] determinism {'name': 'SimpleStories/SimpleStories-V2-35M', 'prefix': 'One day, a big dog named Max saw a', 'seed': 1} -> PASS (8s)
+[ 2.20h] memory {'name': 'SimpleStories/SimpleStories-V2-35M', 'prefix': 'One day, a big dog named Max saw a', 'seed': 1} -> PASS (6s)
+Loading weights:   0%|          | 0/38 [00:00<?, ?it/s]Loading weights: 100%|██████████| 38/38 [00:00<00:00, 17634.83it/s]
+[ 2.22h] real_alpha {'name': 'SimpleStories/SimpleStories-1.25M', 'prefix': 'One day, a big dog named Max saw a', 'seed': 1} -> PASS (67s)
+[ 2.23h] propagation {'name': 'SimpleStories/SimpleStories-1.25M', 'prefix': 'One day, a big dog named Max saw a', 'seed': 1} -> PASS (37s)
+[ 2.24h] stories {'name': 'SimpleStories/SimpleStories-1.25M', 'seed': 1} -> FAIL (40s)
+Loading weights:   0%|          | 0/56 [00:00<?, ?it/s]Loading weights: 100%|██████████| 56/56 [00:00<00:00, 16173.04it/s]
+[ 2.26h] real_alpha {'name': 'SimpleStories/SimpleStories-5M', 'prefix': 'Lily and her mom went to the park. It was a sunny day and they saw a', 'seed': 1} -> PASS (68s)
+[ 2.26h] next_token {'name': 'SimpleStories/SimpleStories-5M', 'prefix': 'Lily and her mom went to the park. It was a sunny day and they saw a', 'seed': 1} -> PASS (4s)
+[ 2.27h] hyper {'name': 'SimpleStories/SimpleStories-5M', 'prefix': 'Lily and her mom went to the park. It was a sunny day and they saw a', 'seed': 1, 'loc': 'L2.ffn'} -> PASS (32s)
+Loading weights:   0%|          | 0/56 [00:00<?, ?it/s]Loading weights: 100%|██████████| 56/56 [00:00<00:00, 17669.53it/s]
+[ 2.29h] real_alpha {'name': 'SimpleStories/SimpleStories-11M', 'prefix': 'Lily and her mom went to the park. It was a sunny day and they saw a', 'seed': 1} -> PASS (66s)
+[ 2.30h] propagation {'name': 'SimpleStories/SimpleStories-11M', 'prefix': 'Lily and her mom went to the park. It was a sunny day and they saw a', 'seed': 1} -> PASS (53s)
+Loading weights:   0%|          | 0/92 [00:00<?, ?it/s]Loading weights: 100%|██████████| 92/92 [00:00<00:00, 16053.42it/s]
+[ 2.32h] real_alpha {'name': 'SimpleStories/SimpleStories-30M', 'prefix': 'Lily and her mom went to the park. It was a sunny day and they saw a', 'seed': 1} -> PASS (72s)
+[ 2.32h] determinism {'name': 'SimpleStories/SimpleStories-30M', 'prefix': 'Lily and her mom went to the park. It was a sunny day and they saw a', 'seed': 1} -> PASS (8s)
+Loading weights:   0%|          | 0/110 [00:00<?, ?it/s]Loading weights: 100%|██████████| 110/110 [00:00<00:00, 15344.33it/s]
+[ 2.34h] real_alpha {'name': 'SimpleStories/SimpleStories-35M', 'prefix': 'Lily and her mom went to the park. It was a sunny day and they saw a', 'seed': 1} -> PASS (66s)
+[ 2.37h] propagation {'name': 'SimpleStories/SimpleStories-35M', 'prefix': 'Lily and her mom went to the park. It was a sunny day and they saw a', 'seed': 1} -> PASS (105s)
+[ 2.37h] next_token {'name': 'SimpleStories/SimpleStories-35M', 'prefix': 'Lily and her mom went to the park. It was a sunny day and they saw a', 'seed': 1} -> PASS (4s)
+Loading weights:   0%|          | 0/56 [00:00<?, ?it/s]Loading weights: 100%|██████████| 56/56 [00:00<00:00, 15868.20it/s]
+[ 2.39h] real_alpha {'name': 'SimpleStories/SimpleStories-V2-5M', 'prefix': 'Lily and her mom went to the park. It was a sunny day and they saw a', 'seed': 1} -> PASS (63s)
+[transformers] Token indices sequence length is longer than the specified maximum sequence length for this model (547 > 512). Running this sequence through the model will result in indexing errors
+[ 2.40h] stories {'name': 'SimpleStories/SimpleStories-V2-5M', 'seed': 1} -> FAIL (51s)
+[ 2.40h] scaling {'name': 'SimpleStories/SimpleStories-V2-5M', 'prefix': 'Lily and her mom went to the park. It was a sunny day and they saw a', 'seed': 1} -> PASS (4s)
+Loading weights:   0%|          | 0/110 [00:00<?, ?it/s]Loading weights: 100%|██████████| 110/110 [00:00<00:00, 16088.06it/s]
+[ 2.42h] real_alpha {'name': 'SimpleStories/SimpleStories-V2-35M', 'prefix': 'Lily and her mom went to the park. It was a sunny day and they saw a', 'seed': 1} -> PASS (67s)
+[ 2.45h] propagation {'name': 'SimpleStories/SimpleStories-V2-35M', 'prefix': 'Lily and her mom went to the park. It was a sunny day and they saw a', 'seed': 1} -> PASS (105s)
+Loading weights:   0%|          | 0/38 [00:00<?, ?it/s]Loading weights: 100%|██████████| 38/38 [00:00<00:00, 16207.40it/s]
+[ 2.47h] real_alpha {'name': 'SimpleStories/SimpleStories-1.25M', 'prefix': 'Lily and her mom went to the park. It was a sunny day and they saw a', 'seed': 1} -> PASS (68s)
+[ 2.47h] next_token {'name': 'SimpleStories/SimpleStories-1.25M', 'prefix': 'Lily and her mom went to the park. It was a sunny day and they saw a', 'seed': 1} -> PASS (4s)
+[ 2.47h] determinism {'name': 'SimpleStories/SimpleStories-1.25M', 'prefix': 'Lily and her mom went to the park. It was a sunny day and they saw a', 'seed': 1} -> PASS (8s)
+[ 2.48h] hyper {'name': 'SimpleStories/SimpleStories-1.25M', 'prefix': 'Lily and her mom went to the park. It was a sunny day and they saw a', 'seed': 1, 'loc': 'L2.ffn'} -> PASS (32s)
+[ 2.48h] memory {'name': 'SimpleStories/SimpleStories-1.25M', 'prefix': 'Lily and her mom went to the park. It was a sunny day and they saw a', 'seed': 1} -> PASS (6s)
+[ 2.49h] synthetic {'m': 6, 'D': 64, 'N': 6000, 'seed': 169} -> FAIL (6s)
+Loading weights:   0%|          | 0/56 [00:00<?, ?it/s]Loading weights: 100%|██████████| 56/56 [00:00<00:00, 14304.57it/s]
+[ 2.51h] real_alpha {'name': 'SimpleStories/SimpleStories-5M', 'prefix': 'In the morning, the', 'seed': 1} -> PASS (67s)
+[ 2.52h] propagation {'name': 'SimpleStories/SimpleStories-5M', 'prefix': 'In the morning, the', 'seed': 1} -> PASS (51s)
+Loading weights:   0%|          | 0/56 [00:00<?, ?it/s]Loading weights: 100%|██████████| 56/56 [00:00<00:00, 15545.77it/s]
+[ 2.54h] real_alpha {'name': 'SimpleStories/SimpleStories-11M', 'prefix': 'In the morning, the', 'seed': 1} -> PASS (66s)
+Loading weights:   0%|          | 0/92 [00:00<?, ?it/s]Loading weights: 100%|██████████| 92/92 [00:00<00:00, 16314.73it/s]
+[ 2.56h] real_alpha {'name': 'SimpleStories/SimpleStories-30M', 'prefix': 'In the morning, the', 'seed': 1} -> PASS (67s)
+[ 2.58h] propagation {'name': 'SimpleStories/SimpleStories-30M', 'prefix': 'In the morning, the', 'seed': 1} -> PASS (87s)
+[ 2.58h] next_token {'name': 'SimpleStories/SimpleStories-30M', 'prefix': 'In the morning, the', 'seed': 1} -> PASS (4s)
+[ 2.59h] stories {'name': 'SimpleStories/SimpleStories-30M', 'seed': 1} -> FAIL (33s)
+Loading weights:   0%|          | 0/110 [00:00<?, ?it/s]Loading weights: 100%|██████████| 110/110 [00:00<00:00, 15963.37it/s]
+[ 2.61h] real_alpha {'name': 'SimpleStories/SimpleStories-35M', 'prefix': 'In the morning, the', 'seed': 1} -> PASS (73s)
+[ 2.61h] determinism {'name': 'SimpleStories/SimpleStories-35M', 'prefix': 'In the morning, the', 'seed': 1} -> PASS (8s)
+Loading weights:   0%|          | 0/56 [00:00<?, ?it/s]Loading weights: 100%|██████████| 56/56 [00:00<00:00, 17658.90it/s]
+[ 2.63h] real_alpha {'name': 'SimpleStories/SimpleStories-V2-5M', 'prefix': 'In the morning, the', 'seed': 1} -> PASS (63s)
+[ 2.65h] propagation {'name': 'SimpleStories/SimpleStories-V2-5M', 'prefix': 'In the morning, the', 'seed': 1} -> PASS (51s)
+[ 2.65h] scaling {'name': 'SimpleStories/SimpleStories-V2-5M', 'prefix': 'In the morning, the', 'seed': 1} -> PASS (4s)
+Loading weights:   0%|          | 0/110 [00:00<?, ?it/s]Loading weights: 100%|██████████| 110/110 [00:00<00:00, 16480.57it/s]
+[ 2.67h] real_alpha {'name': 'SimpleStories/SimpleStories-V2-35M', 'prefix': 'In the morning, the', 'seed': 1} -> PASS (71s)
+[ 2.67h] next_token {'name': 'SimpleStories/SimpleStories-V2-35M', 'prefix': 'In the morning, the', 'seed': 1} -> PASS (4s)
+[ 2.68h] hyper {'name': 'SimpleStories/SimpleStories-V2-35M', 'prefix': 'In the morning, the', 'seed': 1, 'loc': 'L2.ffn'} -> PASS (33s)
+Loading weights:   0%|          | 0/38 [00:00<?, ?it/s]Loading weights: 100%|██████████| 38/38 [00:00<00:00, 17104.91it/s]
+[ 2.70h] real_alpha {'name': 'SimpleStories/SimpleStories-1.25M', 'prefix': 'In the morning, the', 'seed': 1} -> PASS (73s)
+[ 2.71h] propagation {'name': 'SimpleStories/SimpleStories-1.25M', 'prefix': 'In the morning, the', 'seed': 1} -> PASS (37s)
+Loading weights:   0%|          | 0/56 [00:00<?, ?it/s]Loading weights: 100%|██████████| 56/56 [00:00<00:00, 13815.72it/s]
+[ 2.73h] real_alpha {'name': 'SimpleStories/SimpleStories-5M', 'prefix': 'She opened the box and found a', 'seed': 1} -> PASS (68s)
+[ 2.73h] determinism {'name': 'SimpleStories/SimpleStories-5M', 'prefix': 'She opened the box and found a', 'seed': 1} -> PASS (8s)
+[ 2.74h] stories {'name': 'SimpleStories/SimpleStories-5M', 'seed': 1} -> FAIL (33s)
+[ 2.74h] memory {'name': 'SimpleStories/SimpleStories-5M', 'prefix': 'She opened the box and found a', 'seed': 1} -> PASS (6s)
+Loading weights:   0%|          | 0/56 [00:00<?, ?it/s]Loading weights: 100%|██████████| 56/56 [00:00<00:00, 15694.31it/s]
+[ 2.76h] real_alpha {'name': 'SimpleStories/SimpleStories-11M', 'prefix': 'She opened the box and found a', 'seed': 1} -> PASS (82s)
+[ 2.78h] propagation {'name': 'SimpleStories/SimpleStories-11M', 'prefix': 'She opened the box and found a', 'seed': 1} -> PASS (53s)
+[ 2.78h] next_token {'name': 'SimpleStories/SimpleStories-11M', 'prefix': 'She opened the box and found a', 'seed': 1} -> PASS (4s)
+[ 2.78h] synthetic {'m': 5, 'D': 64, 'N': 8000, 'seed': 178} -> FAIL (8s)
+Loading weights:   0%|          | 0/92 [00:00<?, ?it/s]Loading weights: 100%|██████████| 92/92 [00:00<00:00, 15839.26it/s]
+[ 2.80h] real_alpha {'name': 'SimpleStories/SimpleStories-30M', 'prefix': 'She opened the box and found a', 'seed': 1} -> PASS (67s)
+Loading weights:   0%|          | 0/110 [00:00<?, ?it/s]Loading weights: 100%|██████████| 110/110 [00:00<00:00, 16017.69it/s]
+[ 2.82h] real_alpha {'name': 'SimpleStories/SimpleStories-35M', 'prefix': 'She opened the box and found a', 'seed': 1} -> PASS (72s)
+[ 2.85h] propagation {'name': 'SimpleStories/SimpleStories-35M', 'prefix': 'She opened the box and found a', 'seed': 1} -> PASS (103s)
+Loading weights:   0%|          | 0/56 [00:00<?, ?it/s]Loading weights: 100%|██████████| 56/56 [00:00<00:00, 17752.33it/s]
+[ 2.86h] real_alpha {'name': 'SimpleStories/SimpleStories-V2-5M', 'prefix': 'She opened the box and found a', 'seed': 1} -> PASS (62s)
+[ 2.87h] next_token {'name': 'SimpleStories/SimpleStories-V2-5M', 'prefix': 'She opened the box and found a', 'seed': 1} -> PASS (4s)
+[ 2.87h] determinism {'name': 'SimpleStories/SimpleStories-V2-5M', 'prefix': 'She opened the box and found a', 'seed': 1} -> PASS (8s)
+[ 2.88h] hyper {'name': 'SimpleStories/SimpleStories-V2-5M', 'prefix': 'She opened the box and found a', 'seed': 1, 'loc': 'L2.ffn'} -> PASS (32s)
+[ 2.88h] scaling {'name': 'SimpleStories/SimpleStories-V2-5M', 'prefix': 'She opened the box and found a', 'seed': 1} -> PASS (4s)
+Loading weights:   0%|          | 0/110 [00:00<?, ?it/s]Loading weights: 100%|██████████| 110/110 [00:00<00:00, 16139.84it/s]
+[ 2.90h] real_alpha {'name': 'SimpleStories/SimpleStories-V2-35M', 'prefix': 'She opened the box and found a', 'seed': 1} -> PASS (82s)
+[ 2.93h] propagation {'name': 'SimpleStories/SimpleStories-V2-35M', 'prefix': 'She opened the box and found a', 'seed': 1} -> PASS (103s)
+[transformers] Token indices sequence length is longer than the specified maximum sequence length for this model (547 > 512). Running this sequence through the model will result in indexing errors
+[ 2.95h] stories {'name': 'SimpleStories/SimpleStories-V2-35M', 'seed': 1} -> FAIL (60s)
+Loading weights:   0%|          | 0/38 [00:00<?, ?it/s]Loading weights: 100%|██████████| 38/38 [00:00<00:00, 17908.26it/s]
+[ 2.97h] real_alpha {'name': 'SimpleStories/SimpleStories-1.25M', 'prefix': 'She opened the box and found a', 'seed': 1} -> PASS (74s)
+Loading weights:   0%|          | 0/56 [00:00<?, ?it/s]Loading weights: 100%|██████████| 56/56 [00:00<00:00, 14120.54it/s]
+[ 2.98h] real_alpha {'name': 'SimpleStories/SimpleStories-5M', 'prefix': 'Once upon a time, there was a little', 'seed': 2} -> PASS (63s)
+[ 3.00h] propagation {'name': 'SimpleStories/SimpleStories-5M', 'prefix': 'Once upon a time, there was a little', 'seed': 2} -> PASS (51s)
+[ 3.00h] next_token {'name': 'SimpleStories/SimpleStories-5M', 'prefix': 'Once upon a time, there was a little', 'seed': 2} -> PASS (4s)
+Loading weights:   0%|          | 0/56 [00:00<?, ?it/s]Loading weights: 100%|██████████| 56/56 [00:00<00:00, 15205.61it/s]
+[ 3.02h] real_alpha {'name': 'SimpleStories/SimpleStories-11M', 'prefix': 'Once upon a time, there was a little', 'seed': 2} -> PASS (67s)
+[ 3.02h] determinism {'name': 'SimpleStories/SimpleStories-11M', 'prefix': 'Once upon a time, there was a little', 'seed': 2} -> PASS (8s)
+[ 3.02h] memory {'name': 'SimpleStories/SimpleStories-11M', 'prefix': 'Once upon a time, there was a little', 'seed': 2} -> PASS (6s)
+Loading weights:   0%|          | 0/92 [00:00<?, ?it/s]Loading weights: 100%|██████████| 92/92 [00:00<00:00, 16919.93it/s]
+[ 3.04h] real_alpha {'name': 'SimpleStories/SimpleStories-30M', 'prefix': 'Once upon a time, there was a little', 'seed': 2} -> PASS (74s)
+[ 3.07h] propagation {'name': 'SimpleStories/SimpleStories-30M', 'prefix': 'Once upon a time, there was a little', 'seed': 2} -> PASS (87s)
+Loading weights:   0%|          | 0/110 [00:00<?, ?it/s]Loading weights: 100%|██████████| 110/110 [00:00<00:00, 16202.75it/s]
+[ 3.09h] real_alpha {'name': 'SimpleStories/SimpleStories-35M', 'prefix': 'Once upon a time, there was a little', 'seed': 2} -> PASS (68s)
+[ 3.09h] next_token {'name': 'SimpleStories/SimpleStories-35M', 'prefix': 'Once upon a time, there was a little', 'seed': 2} -> PASS (4s)
+[ 3.10h] stories {'name': 'SimpleStories/SimpleStories-35M', 'seed': 2} -> FAIL (34s)
+[ 3.10h] hyper {'name': 'SimpleStories/SimpleStories-35M', 'prefix': 'Once upon a time, there was a little', 'seed': 2, 'loc': 'L2.ffn'} -> PASS (33s)
+[ 3.11h] synthetic {'m': 4, 'D': 64, 'N': 10000, 'seed': 187} -> PASS (10s)
+Loading weights:   0%|          | 0/56 [00:00<?, ?it/s]Loading weights: 100%|██████████| 56/56 [00:00<00:00, 16557.24it/s]
+[ 3.13h] real_alpha {'name': 'SimpleStories/SimpleStories-V2-5M', 'prefix': 'Once upon a time, there was a little', 'seed': 2} -> PASS (65s)
+[ 3.14h] propagation {'name': 'SimpleStories/SimpleStories-V2-5M', 'prefix': 'Once upon a time, there was a little', 'seed': 2} -> PASS (51s)
+[ 3.14h] scaling {'name': 'SimpleStories/SimpleStories-V2-5M', 'prefix': 'Once upon a time, there was a little', 'seed': 2} -> PASS (4s)
+Loading weights:   0%|          | 0/110 [00:00<?, ?it/s]Loading weights: 100%|██████████| 110/110 [00:00<00:00, 15709.00it/s]
+[ 3.16h] real_alpha {'name': 'SimpleStories/SimpleStories-V2-35M', 'prefix': 'Once upon a time, there was a little', 'seed': 2} -> PASS (69s)
+[ 3.16h] determinism {'name': 'SimpleStories/SimpleStories-V2-35M', 'prefix': 'Once upon a time, there was a little', 'seed': 2} -> PASS (8s)
+Loading weights:   0%|          | 0/38 [00:00<?, ?it/s]Loading weights: 100%|██████████| 38/38 [00:00<00:00, 17566.80it/s]
+[ 3.18h] real_alpha {'name': 'SimpleStories/SimpleStories-1.25M', 'prefix': 'Once upon a time, there was a little', 'seed': 2} -> PASS (73s)
+[ 3.19h] propagation {'name': 'SimpleStories/SimpleStories-1.25M', 'prefix': 'Once upon a time, there was a little', 'seed': 2} -> PASS (37s)
+[ 3.19h] next_token {'name': 'SimpleStories/SimpleStories-1.25M', 'prefix': 'Once upon a time, there was a little', 'seed': 2} -> PASS (4s)
+Loading weights:   0%|          | 0/56 [00:00<?, ?it/s]Loading weights: 100%|██████████| 56/56 [00:00<00:00, 18105.37it/s]
+[ 3.21h] real_alpha {'name': 'SimpleStories/SimpleStories-5M', 'prefix': 'The', 'seed': 2} -> PASS (62s)
+Loading weights:   0%|          | 0/56 [00:00<?, ?it/s]Loading weights: 100%|██████████| 56/56 [00:00<00:00, 15061.30it/s]
+[ 3.23h] real_alpha {'name': 'SimpleStories/SimpleStories-11M', 'prefix': 'The', 'seed': 2} -> PASS (78s)
+[ 3.25h] propagation {'name': 'SimpleStories/SimpleStories-11M', 'prefix': 'The', 'seed': 2} -> PASS (53s)
+[ 3.26h] stories {'name': 'SimpleStories/SimpleStories-11M', 'seed': 2} -> FAIL (35s)
+Loading weights:   0%|          | 0/92 [00:00<?, ?it/s]Loading weights: 100%|██████████| 92/92 [00:00<00:00, 13636.16it/s]
+[ 3.28h] real_alpha {'name': 'SimpleStories/SimpleStories-30M', 'prefix': 'The', 'seed': 2} -> PASS (73s)
+[ 3.28h] next_token {'name': 'SimpleStories/SimpleStories-30M', 'prefix': 'The', 'seed': 2} -> PASS (4s)
+[ 3.28h] determinism {'name': 'SimpleStories/SimpleStories-30M', 'prefix': 'The', 'seed': 2} -> PASS (8s)
+[ 3.29h] hyper {'name': 'SimpleStories/SimpleStories-30M', 'prefix': 'The', 'seed': 2, 'loc': 'L2.ffn'} -> PASS (33s)
+[ 3.29h] memory {'name': 'SimpleStories/SimpleStories-30M', 'prefix': 'The', 'seed': 2} -> PASS (6s)
+Loading weights:   0%|          | 0/110 [00:00<?, ?it/s]Loading weights: 100%|██████████| 110/110 [00:00<00:00, 17314.27it/s]
+[ 3.31h] real_alpha {'name': 'SimpleStories/SimpleStories-35M', 'prefix': 'The', 'seed': 2} -> PASS (68s)
+[ 3.34h] propagation {'name': 'SimpleStories/SimpleStories-35M', 'prefix': 'The', 'seed': 2} -> PASS (103s)
+Loading weights:   0%|          | 0/56 [00:00<?, ?it/s]Loading weights: 100%|██████████| 56/56 [00:00<00:00, 14996.87it/s]
+[ 3.36h] real_alpha {'name': 'SimpleStories/SimpleStories-V2-5M', 'prefix': 'The', 'seed': 2} -> PASS (72s)
+[ 3.36h] scaling {'name': 'SimpleStories/SimpleStories-V2-5M', 'prefix': 'The', 'seed': 2} -> PASS (4s)
+Loading weights:   0%|          | 0/110 [00:00<?, ?it/s]Loading weights: 100%|██████████| 110/110 [00:00<00:00, 17910.46it/s]
+[ 3.38h] real_alpha {'name': 'SimpleStories/SimpleStories-V2-35M', 'prefix': 'The', 'seed': 2} -> PASS (67s)
+[ 3.41h] propagation {'name': 'SimpleStories/SimpleStories-V2-35M', 'prefix': 'The', 'seed': 2} -> PASS (103s)
+[ 3.41h] next_token {'name': 'SimpleStories/SimpleStories-V2-35M', 'prefix': 'The', 'seed': 2} -> PASS (4s)
+[ 3.41h] synthetic {'m': 3, 'D': 64, 'N': 4000, 'seed': 196} -> PASS (4s)
+Loading weights:   0%|          | 0/38 [00:00<?, ?it/s]Loading weights: 100%|██████████| 38/38 [00:00<00:00, 17723.07it/s]
+[ 3.43h] real_alpha {'name': 'SimpleStories/SimpleStories-1.25M', 'prefix': 'The', 'seed': 2} -> PASS (68s)
+[ 3.43h] determinism {'name': 'SimpleStories/SimpleStories-1.25M', 'prefix': 'The', 'seed': 2} -> PASS (8s)
+[ 3.45h] stories {'name': 'SimpleStories/SimpleStories-1.25M', 'seed': 2} -> FAIL (59s)
+Loading weights:   0%|          | 0/56 [00:00<?, ?it/s]Loading weights: 100%|██████████| 56/56 [00:00<00:00, 17202.36it/s]
+[ 3.46h] real_alpha {'name': 'SimpleStories/SimpleStories-5M', 'prefix': 'One day, a big dog named Max saw a', 'seed': 2} -> PASS (62s)
+[ 3.48h] propagation {'name': 'SimpleStories/SimpleStories-5M', 'prefix': 'One day, a big dog named Max saw a', 'seed': 2} -> PASS (51s)
+Loading weights:   0%|          | 0/56 [00:00<?, ?it/s]Loading weights: 100%|██████████| 56/56 [00:00<00:00, 16297.60it/s]
+[ 3.50h] real_alpha {'name': 'SimpleStories/SimpleStories-11M', 'prefix': 'One day, a big dog named Max saw a', 'seed': 2} -> PASS (67s)
+[ 3.50h] next_token {'name': 'SimpleStories/SimpleStories-11M', 'prefix': 'One day, a big dog named Max saw a', 'seed': 2} -> PASS (4s)
+[ 3.51h] hyper {'name': 'SimpleStories/SimpleStories-11M', 'prefix': 'One day, a big dog named Max saw a', 'seed': 2, 'loc': 'L2.ffn'} -> PASS (33s)
+Loading weights:   0%|          | 0/92 [00:00<?, ?it/s]Loading weights: 100%|██████████| 92/92 [00:00<00:00, 16042.07it/s]
+[ 3.53h] real_alpha {'name': 'SimpleStories/SimpleStories-30M', 'prefix': 'One day, a big dog named Max saw a', 'seed': 2} -> PASS (73s)
+[ 3.55h] propagation {'name': 'SimpleStories/SimpleStories-30M', 'prefix': 'One day, a big dog named Max saw a', 'seed': 2} -> PASS (87s)
+Loading weights:   0%|          | 0/110 [00:00<?, ?it/s]Loading weights: 100%|██████████| 110/110 [00:00<00:00, 16966.63it/s]
+[ 3.57h] real_alpha {'name': 'SimpleStories/SimpleStories-35M', 'prefix': 'One day, a big dog named Max saw a', 'seed': 2} -> PASS (68s)
+[ 3.57h] determinism {'name': 'SimpleStories/SimpleStories-35M', 'prefix': 'One day, a big dog named Max saw a', 'seed': 2} -> PASS (8s)
+[ 3.57h] memory {'name': 'SimpleStories/SimpleStories-35M', 'prefix': 'One day, a big dog named Max saw a', 'seed': 2} -> PASS (6s)
+Loading weights:   0%|          | 0/56 [00:00<?, ?it/s]Loading weights: 100%|██████████| 56/56 [00:00<00:00, 17278.29it/s]
+[ 3.59h] real_alpha {'name': 'SimpleStories/SimpleStories-V2-5M', 'prefix': 'One day, a big dog named Max saw a', 'seed': 2} -> PASS (62s)
+[ 3.61h] propagation {'name': 'SimpleStories/SimpleStories-V2-5M', 'prefix': 'One day, a big dog named Max saw a', 'seed': 2} -> PASS (51s)
+[ 3.61h] next_token {'name': 'SimpleStories/SimpleStories-V2-5M', 'prefix': 'One day, a big dog named Max saw a', 'seed': 2} -> PASS (4s)
+[transformers] Token indices sequence length is longer than the specified maximum sequence length for this model (547 > 512). Running this sequence through the model will result in indexing errors
+[ 3.63h] stories {'name': 'SimpleStories/SimpleStories-V2-5M', 'seed': 2} -> FAIL (65s)
+[ 3.63h] scaling {'name': 'SimpleStories/SimpleStories-V2-5M', 'prefix': 'One day, a big dog named Max saw a', 'seed': 2} -> PASS (4s)
+Loading weights:   0%|          | 0/110 [00:00<?, ?it/s]Loading weights: 100%|██████████| 110/110 [00:00<00:00, 15141.89it/s]
+[ 3.65h] real_alpha {'name': 'SimpleStories/SimpleStories-V2-35M', 'prefix': 'One day, a big dog named Max saw a', 'seed': 2} -> PASS (68s)
+Loading weights:   0%|          | 0/38 [00:00<?, ?it/s]Loading weights: 100%|██████████| 38/38 [00:00<00:00, 16703.37it/s]
+[ 3.67h] real_alpha {'name': 'SimpleStories/SimpleStories-1.25M', 'prefix': 'One day, a big dog named Max saw a', 'seed': 2} -> PASS (73s)
+[ 3.68h] propagation {'name': 'SimpleStories/SimpleStories-1.25M', 'prefix': 'One day, a big dog named Max saw a', 'seed': 2} -> PASS (37s)
+Loading weights:   0%|          | 0/56 [00:00<?, ?it/s]Loading weights: 100%|██████████| 56/56 [00:00<00:00, 15984.83it/s]
+[ 3.69h] real_alpha {'name': 'SimpleStories/SimpleStories-5M', 'prefix': 'Lily and her mom went to the park. It was a sunny day and they saw a', 'seed': 2} -> PASS (62s)
+[ 3.69h] next_token {'name': 'SimpleStories/SimpleStories-5M', 'prefix': 'Lily and her mom went to the park. It was a sunny day and they saw a', 'seed': 2} -> PASS (4s)
+[ 3.70h] determinism {'name': 'SimpleStories/SimpleStories-5M', 'prefix': 'Lily and her mom went to the park. It was a sunny day and they saw a', 'seed': 2} -> PASS (8s)
+[ 3.71h] hyper {'name': 'SimpleStories/SimpleStories-5M', 'prefix': 'Lily and her mom went to the park. It was a sunny day and they saw a', 'seed': 2, 'loc': 'L2.ffn'} -> PASS (32s)
+[ 3.71h] synthetic {'m': 2, 'D': 64, 'N': 6000, 'seed': 205} -> PASS (6s)
+Loading weights:   0%|          | 0/56 [00:00<?, ?it/s]Loading weights: 100%|██████████| 56/56 [00:00<00:00, 15668.14it/s]
+[ 3.73h] real_alpha {'name': 'SimpleStories/SimpleStories-11M', 'prefix': 'Lily and her mom went to the park. It was a sunny day and they saw a', 'seed': 2} -> PASS (67s)
+[ 3.74h] propagation {'name': 'SimpleStories/SimpleStories-11M', 'prefix': 'Lily and her mom went to the park. It was a sunny day and they saw a', 'seed': 2} -> PASS (53s)
+Loading weights:   0%|          | 0/92 [00:00<?, ?it/s]Loading weights: 100%|██████████| 92/92 [00:00<00:00, 17418.68it/s]
+[ 3.76h] real_alpha {'name': 'SimpleStories/SimpleStories-30M', 'prefix': 'Lily and her mom went to the park. It was a sunny day and they saw a', 'seed': 2} -> PASS (67s)
+[ 3.77h] stories {'name': 'SimpleStories/SimpleStories-30M', 'seed': 2} -> FAIL (29s)
+Loading weights:   0%|          | 0/110 [00:00<?, ?it/s]Loading weights: 100%|██████████| 110/110 [00:00<00:00, 15938.56it/s]
+[ 3.79h] real_alpha {'name': 'SimpleStories/SimpleStories-35M', 'prefix': 'Lily and her mom went to the park. It was a sunny day and they saw a', 'seed': 2} -> PASS (67s)
+[ 3.81h] propagation {'name': 'SimpleStories/SimpleStories-35M', 'prefix': 'Lily and her mom went to the park. It was a sunny day and they saw a', 'seed': 2} -> PASS (105s)
+[ 3.82h] next_token {'name': 'SimpleStories/SimpleStories-35M', 'prefix': 'Lily and her mom went to the park. It was a sunny day and they saw a', 'seed': 2} -> PASS (4s)
+Loading weights:   0%|          | 0/56 [00:00<?, ?it/s]Loading weights: 100%|██████████| 56/56 [00:00<00:00, 16514.17it/s]
+[ 3.84h] real_alpha {'name': 'SimpleStories/SimpleStories-V2-5M', 'prefix': 'Lily and her mom went to the park. It was a sunny day and they saw a', 'seed': 2} -> PASS (71s)
+[ 3.84h] determinism {'name': 'SimpleStories/SimpleStories-V2-5M', 'prefix': 'Lily and her mom went to the park. It was a sunny day and they saw a', 'seed': 2} -> PASS (8s)
+[ 3.84h] scaling {'name': 'SimpleStories/SimpleStories-V2-5M', 'prefix': 'Lily and her mom went to the park. It was a sunny day and they saw a', 'seed': 2} -> PASS (4s)
+[ 3.84h] memory {'name': 'SimpleStories/SimpleStories-V2-5M', 'prefix': 'Lily and her mom went to the park. It was a sunny day and they saw a', 'seed': 2} -> PASS (6s)
+Loading weights:   0%|          | 0/110 [00:00<?, ?it/s]Loading weights: 100%|██████████| 110/110 [00:00<00:00, 16543.20it/s]
+[ 3.86h] real_alpha {'name': 'SimpleStories/SimpleStories-V2-35M', 'prefix': 'Lily and her mom went to the park. It was a sunny day and they saw a', 'seed': 2} -> PASS (67s)
+[ 3.89h] propagation {'name': 'SimpleStories/SimpleStories-V2-35M', 'prefix': 'Lily and her mom went to the park. It was a sunny day and they saw a', 'seed': 2} -> PASS (105s)
+Loading weights:   0%|          | 0/38 [00:00<?, ?it/s]Loading weights: 100%|██████████| 38/38 [00:00<00:00, 17420.87it/s]
+[ 3.91h] real_alpha {'name': 'SimpleStories/SimpleStories-1.25M', 'prefix': 'Lily and her mom went to the park. It was a sunny day and they saw a', 'seed': 2} -> PASS (68s)
+[ 3.91h] next_token {'name': 'SimpleStories/SimpleStories-1.25M', 'prefix': 'Lily and her mom went to the park. It was a sunny day and they saw a', 'seed': 2} -> PASS (4s)
+[ 3.92h] hyper {'name': 'SimpleStories/SimpleStories-1.25M', 'prefix': 'Lily and her mom went to the park. It was a sunny day and they saw a', 'seed': 2, 'loc': 'L2.ffn'} -> PASS (32s)
+Loading weights:   0%|          | 0/56 [00:00<?, ?it/s]Loading weights: 100%|██████████| 56/56 [00:00<00:00, 15135.06it/s]
+[ 3.93h] real_alpha {'name': 'SimpleStories/SimpleStories-5M', 'prefix': 'In the morning, the', 'seed': 2} -> PASS (62s)
+[ 3.95h] propagation {'name': 'SimpleStories/SimpleStories-5M', 'prefix': 'In the morning, the', 'seed': 2} -> PASS (51s)
+[ 3.96h] stories {'name': 'SimpleStories/SimpleStories-5M', 'seed': 2} -> FAIL (26s)
+Loading weights:   0%|          | 0/56 [00:00<?, ?it/s]Loading weights: 100%|██████████| 56/56 [00:00<00:00, 17644.31it/s]
+[ 3.97h] real_alpha {'name': 'SimpleStories/SimpleStories-11M', 'prefix': 'In the morning, the', 'seed': 2} -> PASS (67s)
+[ 3.98h] determinism {'name': 'SimpleStories/SimpleStories-11M', 'prefix': 'In the morning, the', 'seed': 2} -> PASS (8s)
+Loading weights:   0%|          | 0/92 [00:00<?, ?it/s]Loading weights: 100%|██████████| 92/92 [00:00<00:00, 15024.57it/s]
+[ 4.00h] real_alpha {'name': 'SimpleStories/SimpleStories-30M', 'prefix': 'In the morning, the', 'seed': 2} -> PASS (73s)
+[ 4.02h] propagation {'name': 'SimpleStories/SimpleStories-30M', 'prefix': 'In the morning, the', 'seed': 2} -> PASS (87s)
+[ 4.02h] next_token {'name': 'SimpleStories/SimpleStories-30M', 'prefix': 'In the morning, the', 'seed': 2} -> PASS (4s)
+[ 4.02h] synthetic {'m': 6, 'D': 64, 'N': 8000, 'seed': 214} -> FAIL (8s)
+Loading weights:   0%|          | 0/110 [00:00<?, ?it/s]Loading weights: 100%|██████████| 110/110 [00:00<00:00, 16894.56it/s]
+[ 4.04h] real_alpha {'name': 'SimpleStories/SimpleStories-35M', 'prefix': 'In the morning, the', 'seed': 2} -> PASS (67s)
+Loading weights:   0%|          | 0/56 [00:00<?, ?it/s]Loading weights: 100%|██████████| 56/56 [00:00<00:00, 15602.57it/s]
+[ 4.06h] real_alpha {'name': 'SimpleStories/SimpleStories-V2-5M', 'prefix': 'In the morning, the', 'seed': 2} -> PASS (67s)
+[ 4.08h] propagation {'name': 'SimpleStories/SimpleStories-V2-5M', 'prefix': 'In the morning, the', 'seed': 2} -> PASS (51s)
+[ 4.08h] scaling {'name': 'SimpleStories/SimpleStories-V2-5M', 'prefix': 'In the morning, the', 'seed': 2} -> PASS (4s)
+Loading weights:   0%|          | 0/110 [00:00<?, ?it/s]Loading weights: 100%|██████████| 110/110 [00:00<00:00, 18605.27it/s]
+[ 4.10h] real_alpha {'name': 'SimpleStories/SimpleStories-V2-35M', 'prefix': 'In the morning, the', 'seed': 2} -> PASS (67s)
+[ 4.10h] next_token {'name': 'SimpleStories/SimpleStories-V2-35M', 'prefix': 'In the morning, the', 'seed': 2} -> PASS (4s)
+[ 4.10h] determinism {'name': 'SimpleStories/SimpleStories-V2-35M', 'prefix': 'In the morning, the', 'seed': 2} -> PASS (8s)
+[transformers] Token indices sequence length is longer than the specified maximum sequence length for this model (547 > 512). Running this sequence through the model will result in indexing errors
+[ 4.11h] stories {'name': 'SimpleStories/SimpleStories-V2-35M', 'seed': 2} -> FAIL (33s)
+[ 4.12h] hyper {'name': 'SimpleStories/SimpleStories-V2-35M', 'prefix': 'In the morning, the', 'seed': 2, 'loc': 'L2.ffn'} -> PASS (33s)
+[ 4.12h] memory {'name': 'SimpleStories/SimpleStories-V2-35M', 'prefix': 'In the morning, the', 'seed': 2} -> PASS (6s)
+Loading weights:   0%|          | 0/38 [00:00<?, ?it/s]Loading weights: 100%|██████████| 38/38 [00:00<00:00, 16125.41it/s]
+[ 4.14h] real_alpha {'name': 'SimpleStories/SimpleStories-1.25M', 'prefix': 'In the morning, the', 'seed': 2} -> PASS (67s)
+[ 4.15h] propagation {'name': 'SimpleStories/SimpleStories-1.25M', 'prefix': 'In the morning, the', 'seed': 2} -> PASS (37s)
+Loading weights:   0%|          | 0/56 [00:00<?, ?it/s]Loading weights: 100%|██████████| 56/56 [00:00<00:00, 15977.21it/s]
+[ 4.17h] real_alpha {'name': 'SimpleStories/SimpleStories-5M', 'prefix': 'She opened the box and found a', 'seed': 2} -> PASS (72s)
+Loading weights:   0%|          | 0/56 [00:00<?, ?it/s]Loading weights: 100%|██████████| 56/56 [00:00<00:00, 17022.83it/s]
+[ 4.19h] real_alpha {'name': 'SimpleStories/SimpleStories-11M', 'prefix': 'She opened the box and found a', 'seed': 2} -> PASS (67s)
+[ 4.20h] propagation {'name': 'SimpleStories/SimpleStories-11M', 'prefix': 'She opened the box and found a', 'seed': 2} -> PASS (53s)
+[ 4.20h] next_token {'name': 'SimpleStories/SimpleStories-11M', 'prefix': 'She opened the box and found a', 'seed': 2} -> PASS (4s)
+Loading weights:   0%|          | 0/92 [00:00<?, ?it/s]Loading weights: 100%|██████████| 92/92 [00:00<00:00, 17228.91it/s]
+[ 4.22h] real_alpha {'name': 'SimpleStories/SimpleStories-30M', 'prefix': 'She opened the box and found a', 'seed': 2} -> PASS (73s)
+[ 4.23h] determinism {'name': 'SimpleStories/SimpleStories-30M', 'prefix': 'She opened the box and found a', 'seed': 2} -> PASS (8s)
+Loading weights:   0%|          | 0/110 [00:00<?, ?it/s]Loading weights: 100%|██████████| 110/110 [00:00<00:00, 17027.36it/s]
+[ 4.25h] real_alpha {'name': 'SimpleStories/SimpleStories-35M', 'prefix': 'She opened the box and found a', 'seed': 2} -> PASS (72s)
+[ 4.27h] propagation {'name': 'SimpleStories/SimpleStories-35M', 'prefix': 'She opened the box and found a', 'seed': 2} -> PASS (103s)
+[ 4.28h] stories {'name': 'SimpleStories/SimpleStories-35M', 'seed': 2} -> FAIL (39s)
+Loading weights:   0%|          | 0/56 [00:00<?, ?it/s]Loading weights: 100%|██████████| 56/56 [00:00<00:00, 17661.56it/s]
+[ 4.30h] real_alpha {'name': 'SimpleStories/SimpleStories-V2-5M', 'prefix': 'She opened the box and found a', 'seed': 2} -> PASS (62s)
+[ 4.30h] next_token {'name': 'SimpleStories/SimpleStories-V2-5M', 'prefix': 'She opened the box and found a', 'seed': 2} -> PASS (4s)
+[ 4.31h] hyper {'name': 'SimpleStories/SimpleStories-V2-5M', 'prefix': 'She opened the box and found a', 'seed': 2, 'loc': 'L2.ffn'} -> PASS (32s)
+[ 4.31h] scaling {'name': 'SimpleStories/SimpleStories-V2-5M', 'prefix': 'She opened the box and found a', 'seed': 2} -> PASS (4s)
+[ 4.32h] synthetic {'m': 5, 'D': 64, 'N': 10000, 'seed': 223} -> PASS (10s)
+Loading weights:   0%|          | 0/110 [00:00<?, ?it/s]Loading weights: 100%|██████████| 110/110 [00:00<00:00, 17639.30it/s]
+[ 4.33h] real_alpha {'name': 'SimpleStories/SimpleStories-V2-35M', 'prefix': 'She opened the box and found a', 'seed': 2} -> PASS (67s)
+[ 4.36h] propagation {'name': 'SimpleStories/SimpleStories-V2-35M', 'prefix': 'She opened the box and found a', 'seed': 2} -> PASS (103s)
+Loading weights:   0%|          | 0/38 [00:00<?, ?it/s]Loading weights: 100%|██████████| 38/38 [00:00<00:00, 19585.10it/s]
+[ 4.38h] real_alpha {'name': 'SimpleStories/SimpleStories-1.25M', 'prefix': 'She opened the box and found a', 'seed': 2} -> PASS (67s)
+[ 4.38h] determinism {'name': 'SimpleStories/SimpleStories-1.25M', 'prefix': 'She opened the box and found a', 'seed': 2} -> PASS (8s)
+[ 4.39h] memory {'name': 'SimpleStories/SimpleStories-1.25M', 'prefix': 'She opened the box and found a', 'seed': 2} -> PASS (6s)
+Loading weights:   0%|          | 0/56 [00:00<?, ?it/s]Loading weights: 100%|██████████| 56/56 [00:00<00:00, 18195.14it/s]
+[ 4.40h] real_alpha {'name': 'SimpleStories/SimpleStories-5M', 'prefix': 'Once upon a time, there was a little', 'seed': 3} -> PASS (62s)
+[ 4.42h] propagation {'name': 'SimpleStories/SimpleStories-5M', 'prefix': 'Once upon a time, there was a little', 'seed': 3} -> PASS (51s)
+[ 4.42h] next_token {'name': 'SimpleStories/SimpleStories-5M', 'prefix': 'Once upon a time, there was a little', 'seed': 3} -> PASS (4s)
+Loading weights:   0%|          | 0/56 [00:00<?, ?it/s]Loading weights: 100%|██████████| 56/56 [00:00<00:00, 15720.57it/s]
+[ 4.44h] real_alpha {'name': 'SimpleStories/SimpleStories-11M', 'prefix': 'Once upon a time, there was a little', 'seed': 3} -> PASS (75s)
+[ 4.45h] stories {'name': 'SimpleStories/SimpleStories-11M', 'seed': 3} -> PASS (43s)
+Loading weights:   0%|          | 0/92 [00:00<?, ?it/s]Loading weights: 100%|██████████| 92/92 [00:00<00:00, 15173.45it/s]
+[ 4.47h] real_alpha {'name': 'SimpleStories/SimpleStories-30M', 'prefix': 'Once upon a time, there was a little', 'seed': 3} -> FAIL (75s)
+[ 4.50h] propagation {'name': 'SimpleStories/SimpleStories-30M', 'prefix': 'Once upon a time, there was a little', 'seed': 3} -> FAIL (87s)
+Loading weights:   0%|          | 0/110 [00:00<?, ?it/s]Loading weights: 100%|██████████| 110/110 [00:00<00:00, 14001.38it/s]
+[ 4.51h] real_alpha {'name': 'SimpleStories/SimpleStories-35M', 'prefix': 'Once upon a time, there was a little', 'seed': 3} -> PASS (67s)
+[ 4.52h] next_token {'name': 'SimpleStories/SimpleStories-35M', 'prefix': 'Once upon a time, there was a little', 'seed': 3} -> PASS (4s)
+[ 4.52h] determinism {'name': 'SimpleStories/SimpleStories-35M', 'prefix': 'Once upon a time, there was a little', 'seed': 3} -> PASS (8s)
+[ 4.53h] hyper {'name': 'SimpleStories/SimpleStories-35M', 'prefix': 'Once upon a time, there was a little', 'seed': 3, 'loc': 'L2.ffn'} -> PASS (33s)
+Loading weights:   0%|          | 0/56 [00:00<?, ?it/s]Loading weights: 100%|██████████| 56/56 [00:00<00:00, 17664.21it/s]
+[ 4.54h] real_alpha {'name': 'SimpleStories/SimpleStories-V2-5M', 'prefix': 'Once upon a time, there was a little', 'seed': 3} -> PASS (62s)
+[ 4.56h] propagation {'name': 'SimpleStories/SimpleStories-V2-5M', 'prefix': 'Once upon a time, there was a little', 'seed': 3} -> PASS (51s)
+[ 4.56h] scaling {'name': 'SimpleStories/SimpleStories-V2-5M', 'prefix': 'Once upon a time, there was a little', 'seed': 3} -> PASS (4s)
+Loading weights:   0%|          | 0/110 [00:00<?, ?it/s]Loading weights: 100%|██████████| 110/110 [00:00<00:00, 16987.24it/s]
+[ 4.58h] real_alpha {'name': 'SimpleStories/SimpleStories-V2-35M', 'prefix': 'Once upon a time, there was a little', 'seed': 3} -> PASS (80s)
+Loading weights:   0%|          | 0/38 [00:00<?, ?it/s]Loading weights: 100%|██████████| 38/38 [00:00<00:00, 17592.00it/s]
+[ 4.60h] real_alpha {'name': 'SimpleStories/SimpleStories-1.25M', 'prefix': 'Once upon a time, there was a little', 'seed': 3} -> PASS (82s)
+[ 4.61h] propagation {'name': 'SimpleStories/SimpleStories-1.25M', 'prefix': 'Once upon a time, there was a little', 'seed': 3} -> PASS (37s)
+[ 4.62h] next_token {'name': 'SimpleStories/SimpleStories-1.25M', 'prefix': 'Once upon a time, there was a little', 'seed': 3} -> PASS (4s)
+[ 4.63h] stories {'name': 'SimpleStories/SimpleStories-1.25M', 'seed': 3} -> FAIL (49s)
+[ 4.63h] synthetic {'m': 4, 'D': 64, 'N': 4000, 'seed': 232} -> FAIL (4s)
+Loading weights:   0%|          | 0/56 [00:00<?, ?it/s]Loading weights: 100%|██████████| 56/56 [00:00<00:00, 19145.83it/s]
+[ 4.65h] real_alpha {'name': 'SimpleStories/SimpleStories-5M', 'prefix': 'The', 'seed': 3} -> PASS (62s)
+[ 4.65h] determinism {'name': 'SimpleStories/SimpleStories-5M', 'prefix': 'The', 'seed': 3} -> PASS (8s)
+[ 4.65h] memory {'name': 'SimpleStories/SimpleStories-5M', 'prefix': 'The', 'seed': 3} -> PASS (6s)
+Loading weights:   0%|          | 0/56 [00:00<?, ?it/s]Loading weights: 100%|██████████| 56/56 [00:00<00:00, 14661.74it/s]
+[ 4.67h] real_alpha {'name': 'SimpleStories/SimpleStories-11M', 'prefix': 'The', 'seed': 3} -> PASS (72s)
+[ 4.69h] propagation {'name': 'SimpleStories/SimpleStories-11M', 'prefix': 'The', 'seed': 3} -> PASS (53s)
+Loading weights:   0%|          | 0/92 [00:00<?, ?it/s]Loading weights: 100%|██████████| 92/92 [00:00<00:00, 14541.05it/s]
+[ 4.71h] real_alpha {'name': 'SimpleStories/SimpleStories-30M', 'prefix': 'The', 'seed': 3} -> FAIL (73s)
+[ 4.71h] next_token {'name': 'SimpleStories/SimpleStories-30M', 'prefix': 'The', 'seed': 3} -> PASS (4s)
+[ 4.72h] hyper {'name': 'SimpleStories/SimpleStories-30M', 'prefix': 'The', 'seed': 3, 'loc': 'L2.ffn'} -> PASS (33s)
+Loading weights:   0%|          | 0/110 [00:00<?, ?it/s]Loading weights: 100%|██████████| 110/110 [00:00<00:00, 16354.96it/s]
+[ 4.74h] real_alpha {'name': 'SimpleStories/SimpleStories-35M', 'prefix': 'The', 'seed': 3} -> PASS (67s)
+[ 4.76h] propagation {'name': 'SimpleStories/SimpleStories-35M', 'prefix': 'The', 'seed': 3} -> PASS (103s)
+Loading weights:   0%|          | 0/56 [00:00<?, ?it/s]Loading weights: 100%|██████████| 56/56 [00:00<00:00, 15114.61it/s]
+[ 4.78h] real_alpha {'name': 'SimpleStories/SimpleStories-V2-5M', 'prefix': 'The', 'seed': 3} -> PASS (62s)
+[ 4.78h] determinism {'name': 'SimpleStories/SimpleStories-V2-5M', 'prefix': 'The', 'seed': 3} -> PASS (8s)
+[transformers] Token indices sequence length is longer than the specified maximum sequence length for this model (547 > 512). Running this sequence through the model will result in indexing errors
+[ 4.80h] stories {'name': 'SimpleStories/SimpleStories-V2-5M', 'seed': 3} -> FAIL (58s)
+[ 4.80h] scaling {'name': 'SimpleStories/SimpleStories-V2-5M', 'prefix': 'The', 'seed': 3} -> PASS (4s)
+Loading weights:   0%|          | 0/110 [00:00<?, ?it/s]Loading weights: 100%|██████████| 110/110 [00:00<00:00, 17125.96it/s]
+[ 4.82h] real_alpha {'name': 'SimpleStories/SimpleStories-V2-35M', 'prefix': 'The', 'seed': 3} -> PASS (67s)
+[ 4.85h] propagation {'name': 'SimpleStories/SimpleStories-V2-35M', 'prefix': 'The', 'seed': 3} -> PASS (103s)
+[ 4.85h] next_token {'name': 'SimpleStories/SimpleStories-V2-35M', 'prefix': 'The', 'seed': 3} -> PASS (4s)
+Loading weights:   0%|          | 0/38 [00:00<?, ?it/s]Loading weights: 100%|██████████| 38/38 [00:00<00:00, 16923.29it/s]
+[ 4.87h] real_alpha {'name': 'SimpleStories/SimpleStories-1.25M', 'prefix': 'The', 'seed': 3} -> PASS (67s)
+Loading weights:   0%|          | 0/56 [00:00<?, ?it/s]Loading weights: 100%|██████████| 56/56 [00:00<00:00, 16932.02it/s]
+[ 4.88h] real_alpha {'name': 'SimpleStories/SimpleStories-5M', 'prefix': 'One day, a big dog named Max saw a', 'seed': 3} -> PASS (62s)
+[ 4.90h] propagation {'name': 'SimpleStories/SimpleStories-5M', 'prefix': 'One day, a big dog named Max saw a', 'seed': 3} -> PASS (51s)
+Loading weights:   0%|          | 0/56 [00:00<?, ?it/s]Loading weights: 100%|██████████| 56/56 [00:00<00:00, 16549.08it/s]
+[ 4.92h] real_alpha {'name': 'SimpleStories/SimpleStories-11M', 'prefix': 'One day, a big dog named Max saw a', 'seed': 3} -> PASS (72s)
+[ 4.92h] next_token {'name': 'SimpleStories/SimpleStories-11M', 'prefix': 'One day, a big dog named Max saw a', 'seed': 3} -> PASS (4s)
+[ 4.92h] determinism {'name': 'SimpleStories/SimpleStories-11M', 'prefix': 'One day, a big dog named Max saw a', 'seed': 3} -> PASS (8s)
+[ 4.93h] hyper {'name': 'SimpleStories/SimpleStories-11M', 'prefix': 'One day, a big dog named Max saw a', 'seed': 3, 'loc': 'L2.ffn'} -> PASS (33s)
+[ 4.93h] memory {'name': 'SimpleStories/SimpleStories-11M', 'prefix': 'One day, a big dog named Max saw a', 'seed': 3} -> PASS (6s)
+[ 4.93h] synthetic {'m': 3, 'D': 64, 'N': 6000, 'seed': 241} -> PASS (6s)
+Loading weights:   0%|          | 0/92 [00:00<?, ?it/s]Loading weights: 100%|██████████| 92/92 [00:00<00:00, 15924.89it/s]
+[ 4.96h] real_alpha {'name': 'SimpleStories/SimpleStories-30M', 'prefix': 'One day, a big dog named Max saw a', 'seed': 3} -> FAIL (73s)
+[ 4.98h] propagation {'name': 'SimpleStories/SimpleStories-30M', 'prefix': 'One day, a big dog named Max saw a', 'seed': 3} -> FAIL (87s)
+[ 5.00h] stories {'name': 'SimpleStories/SimpleStories-30M', 'seed': 3} -> FAIL (70s)
+Loading weights:   0%|          | 0/110 [00:00<?, ?it/s]Loading weights: 100%|██████████| 110/110 [00:00<00:00, 17445.21it/s]
+[ 5.02h] real_alpha {'name': 'SimpleStories/SimpleStories-35M', 'prefix': 'One day, a big dog named Max saw a', 'seed': 3} -> PASS (68s)
+Loading weights:   0%|          | 0/56 [00:00<?, ?it/s]Loading weights: 100%|██████████| 56/56 [00:00<00:00, 17402.46it/s]
+[ 5.03h] real_alpha {'name': 'SimpleStories/SimpleStories-V2-5M', 'prefix': 'One day, a big dog named Max saw a', 'seed': 3} -> PASS (63s)
+[ 5.05h] propagation {'name': 'SimpleStories/SimpleStories-V2-5M', 'prefix': 'One day, a big dog named Max saw a', 'seed': 3} -> PASS (51s)
+[ 5.05h] next_token {'name': 'SimpleStories/SimpleStories-V2-5M', 'prefix': 'One day, a big dog named Max saw a', 'seed': 3} -> PASS (4s)
+[ 5.05h] scaling {'name': 'SimpleStories/SimpleStories-V2-5M', 'prefix': 'One day, a big dog named Max saw a', 'seed': 3} -> PASS (4s)
+Loading weights:   0%|          | 0/110 [00:00<?, ?it/s]Loading weights: 100%|██████████| 110/110 [00:00<00:00, 14617.54it/s]
+[ 5.07h] real_alpha {'name': 'SimpleStories/SimpleStories-V2-35M', 'prefix': 'One day, a big dog named Max saw a', 'seed': 3} -> PASS (72s)
+[ 5.07h] determinism {'name': 'SimpleStories/SimpleStories-V2-35M', 'prefix': 'One day, a big dog named Max saw a', 'seed': 3} -> PASS (8s)
+Loading weights:   0%|          | 0/38 [00:00<?, ?it/s]Loading weights: 100%|██████████| 38/38 [00:00<00:00, 15513.29it/s]
+[ 5.09h] real_alpha {'name': 'SimpleStories/SimpleStories-1.25M', 'prefix': 'One day, a big dog named Max saw a', 'seed': 3} -> PASS (67s)
+[ 5.10h] propagation {'name': 'SimpleStories/SimpleStories-1.25M', 'prefix': 'One day, a big dog named Max saw a', 'seed': 3} -> PASS (37s)
+Loading weights:   0%|          | 0/56 [00:00<?, ?it/s]Loading weights: 100%|██████████| 56/56 [00:00<00:00, 16557.24it/s]
+[ 5.12h] real_alpha {'name': 'SimpleStories/SimpleStories-5M', 'prefix': 'Lily and her mom went to the park. It was a sunny day and they saw a', 'seed': 3} -> PASS (72s)
+[ 5.12h] next_token {'name': 'SimpleStories/SimpleStories-5M', 'prefix': 'Lily and her mom went to the park. It was a sunny day and they saw a', 'seed': 3} -> PASS (4s)
+[ 5.13h] stories {'name': 'SimpleStories/SimpleStories-5M', 'seed': 3} -> FAIL (33s)
+[ 5.14h] hyper {'name': 'SimpleStories/SimpleStories-5M', 'prefix': 'Lily and her mom went to the park. It was a sunny day and they saw a', 'seed': 3, 'loc': 'L2.ffn'} -> PASS (32s)
+Loading weights:   0%|          | 0/56 [00:00<?, ?it/s]Loading weights: 100%|██████████| 56/56 [00:00<00:00, 14864.01it/s]
+[ 5.16h] real_alpha {'name': 'SimpleStories/SimpleStories-11M', 'prefix': 'Lily and her mom went to the park. It was a sunny day and they saw a', 'seed': 3} -> PASS (71s)
+[ 5.18h] propagation {'name': 'SimpleStories/SimpleStories-11M', 'prefix': 'Lily and her mom went to the park. It was a sunny day and they saw a', 'seed': 3} -> PASS (53s)
+Loading weights:   0%|          | 0/92 [00:00<?, ?it/s]Loading weights: 100%|██████████| 92/92 [00:00<00:00, 14764.16it/s]
+[ 5.19h] real_alpha {'name': 'SimpleStories/SimpleStories-30M', 'prefix': 'Lily and her mom went to the park. It was a sunny day and they saw a', 'seed': 3} -> FAIL (67s)
+[ 5.20h] determinism {'name': 'SimpleStories/SimpleStories-30M', 'prefix': 'Lily and her mom went to the park. It was a sunny day and they saw a', 'seed': 3} -> PASS (8s)
+[ 5.20h] memory {'name': 'SimpleStories/SimpleStories-30M', 'prefix': 'Lily and her mom went to the park. It was a sunny day and they saw a', 'seed': 3} -> PASS (6s)
+Loading weights:   0%|          | 0/110 [00:00<?, ?it/s]Loading weights: 100%|██████████| 110/110 [00:00<00:00, 16094.24it/s]
+[ 5.22h] real_alpha {'name': 'SimpleStories/SimpleStories-35M', 'prefix': 'Lily and her mom went to the park. It was a sunny day and they saw a', 'seed': 3} -> PASS (66s)
+[ 5.25h] propagation {'name': 'SimpleStories/SimpleStories-35M', 'prefix': 'Lily and her mom went to the park. It was a sunny day and they saw a', 'seed': 3} -> PASS (105s)
+[ 5.25h] next_token {'name': 'SimpleStories/SimpleStories-35M', 'prefix': 'Lily and her mom went to the park. It was a sunny day and they saw a', 'seed': 3} -> PASS (4s)
+[ 5.25h] synthetic {'m': 2, 'D': 64, 'N': 8000, 'seed': 250} -> PASS (8s)
+Loading weights:   0%|          | 0/56 [00:00<?, ?it/s]Loading weights: 100%|██████████| 56/56 [00:00<00:00, 14604.30it/s]
+[ 5.27h] real_alpha {'name': 'SimpleStories/SimpleStories-V2-5M', 'prefix': 'Lily and her mom went to the park. It was a sunny day and they saw a', 'seed': 3} -> PASS (63s)
+[ 5.27h] scaling {'name': 'SimpleStories/SimpleStories-V2-5M', 'prefix': 'Lily and her mom went to the park. It was a sunny day and they saw a', 'seed': 3} -> PASS (4s)
+Loading weights:   0%|          | 0/110 [00:00<?, ?it/s]Loading weights: 100%|██████████| 110/110 [00:00<00:00, 17895.87it/s]
+[ 5.29h] real_alpha {'name': 'SimpleStories/SimpleStories-V2-35M', 'prefix': 'Lily and her mom went to the park. It was a sunny day and they saw a', 'seed': 3} -> PASS (66s)
+[ 5.32h] propagation {'name': 'SimpleStories/SimpleStories-V2-35M', 'prefix': 'Lily and her mom went to the park. It was a sunny day and they saw a', 'seed': 3} -> PASS (105s)
+[transformers] Token indices sequence length is longer than the specified maximum sequence length for this model (547 > 512). Running this sequence through the model will result in indexing errors
+[ 5.34h] stories {'name': 'SimpleStories/SimpleStories-V2-35M', 'seed': 3} -> FAIL (77s)
+Loading weights:   0%|          | 0/38 [00:00<?, ?it/s]Loading weights: 100%|██████████| 38/38 [00:00<00:00, 18035.93it/s]
+[ 5.36h] real_alpha {'name': 'SimpleStories/SimpleStories-1.25M', 'prefix': 'Lily and her mom went to the park. It was a sunny day and they saw a', 'seed': 3} -> PASS (67s)
+[ 5.36h] next_token {'name': 'SimpleStories/SimpleStories-1.25M', 'prefix': 'Lily and her mom went to the park. It was a sunny day and they saw a', 'seed': 3} -> PASS (4s)
+[ 5.36h] determinism {'name': 'SimpleStories/SimpleStories-1.25M', 'prefix': 'Lily and her mom went to the park. It was a sunny day and they saw a', 'seed': 3} -> PASS (8s)
+[ 5.37h] hyper {'name': 'SimpleStories/SimpleStories-1.25M', 'prefix': 'Lily and her mom went to the park. It was a sunny day and they saw a', 'seed': 3, 'loc': 'L2.ffn'} -> PASS (32s)
+Loading weights:   0%|          | 0/56 [00:00<?, ?it/s]Loading weights: 100%|██████████| 56/56 [00:00<00:00, 15007.41it/s]
+[ 5.39h] real_alpha {'name': 'SimpleStories/SimpleStories-5M', 'prefix': 'In the morning, the', 'seed': 3} -> PASS (63s)
+[ 5.40h] propagation {'name': 'SimpleStories/SimpleStories-5M', 'prefix': 'In the morning, the', 'seed': 3} -> PASS (51s)
+Loading weights:   0%|          | 0/56 [00:00<?, ?it/s]Loading weights: 100%|██████████| 56/56 [00:00<00:00, 14668.15it/s]
+[ 5.42h] real_alpha {'name': 'SimpleStories/SimpleStories-11M', 'prefix': 'In the morning, the', 'seed': 3} -> PASS (71s)
+Loading weights:   0%|          | 0/92 [00:00<?, ?it/s]Loading weights: 100%|██████████| 92/92 [00:00<00:00, 16056.76it/s]
+[ 5.44h] real_alpha {'name': 'SimpleStories/SimpleStories-30M', 'prefix': 'In the morning, the', 'seed': 3} -> FAIL (77s)
+[ 5.47h] propagation {'name': 'SimpleStories/SimpleStories-30M', 'prefix': 'In the morning, the', 'seed': 3} -> FAIL (87s)
+[ 5.47h] next_token {'name': 'SimpleStories/SimpleStories-30M', 'prefix': 'In the morning, the', 'seed': 3} -> PASS (4s)
+Loading weights:   0%|          | 0/110 [00:00<?, ?it/s]Loading weights: 100%|██████████| 110/110 [00:00<00:00, 16591.39it/s]
+[ 5.49h] real_alpha {'name': 'SimpleStories/SimpleStories-35M', 'prefix': 'In the morning, the', 'seed': 3} -> PASS (72s)
+[ 5.49h] determinism {'name': 'SimpleStories/SimpleStories-35M', 'prefix': 'In the morning, the', 'seed': 3} -> PASS (8s)
+[ 5.50h] stories {'name': 'SimpleStories/SimpleStories-35M', 'seed': 3} -> FAIL (56s)
+[ 5.51h] memory {'name': 'SimpleStories/SimpleStories-35M', 'prefix': 'In the morning, the', 'seed': 3} -> PASS (6s)
+Loading weights:   0%|          | 0/56 [00:00<?, ?it/s]Loading weights: 100%|██████████| 56/56 [00:00<00:00, 16570.09it/s]
+[ 5.53h] real_alpha {'name': 'SimpleStories/SimpleStories-V2-5M', 'prefix': 'In the morning, the', 'seed': 3} -> PASS (77s)
+[ 5.54h] propagation {'name': 'SimpleStories/SimpleStories-V2-5M', 'prefix': 'In the morning, the', 'seed': 3} -> PASS (51s)
+[ 5.54h] scaling {'name': 'SimpleStories/SimpleStories-V2-5M', 'prefix': 'In the morning, the', 'seed': 3} -> PASS (4s)
+Loading weights:   0%|          | 0/110 [00:00<?, ?it/s]Loading weights: 100%|██████████| 110/110 [00:00<00:00, 16066.21it/s]
+[ 5.56h] real_alpha {'name': 'SimpleStories/SimpleStories-V2-35M', 'prefix': 'In the morning, the', 'seed': 3} -> PASS (72s)
+[ 5.56h] next_token {'name': 'SimpleStories/SimpleStories-V2-35M', 'prefix': 'In the morning, the', 'seed': 3} -> PASS (4s)
+[ 5.57h] hyper {'name': 'SimpleStories/SimpleStories-V2-35M', 'prefix': 'In the morning, the', 'seed': 3, 'loc': 'L2.ffn'} -> PASS (33s)
+[ 5.58h] synthetic {'m': 6, 'D': 64, 'N': 10000, 'seed': 259} -> PASS (10s)
+Loading weights:   0%|          | 0/38 [00:00<?, ?it/s]Loading weights: 100%|██████████| 38/38 [00:00<00:00, 14885.92it/s]
+[ 5.60h] real_alpha {'name': 'SimpleStories/SimpleStories-1.25M', 'prefix': 'In the morning, the', 'seed': 3} -> PASS (72s)
+[ 5.61h] propagation {'name': 'SimpleStories/SimpleStories-1.25M', 'prefix': 'In the morning, the', 'seed': 3} -> PASS (37s)
+Loading weights:   0%|          | 0/56 [00:00<?, ?it/s]Loading weights: 100%|██████████| 56/56 [00:00<00:00, 16104.29it/s]
+[ 5.62h] real_alpha {'name': 'SimpleStories/SimpleStories-5M', 'prefix': 'She opened the box and found a', 'seed': 3} -> PASS (63s)
+[ 5.63h] determinism {'name': 'SimpleStories/SimpleStories-5M', 'prefix': 'She opened the box and found a', 'seed': 3} -> PASS (8s)
+Loading weights:   0%|          | 0/56 [00:00<?, ?it/s]Loading weights: 100%|██████████| 56/56 [00:00<00:00, 18370.17it/s]
+[ 5.64h] real_alpha {'name': 'SimpleStories/SimpleStories-11M', 'prefix': 'She opened the box and found a', 'seed': 3} -> PASS (67s)
+[ 5.66h] propagation {'name': 'SimpleStories/SimpleStories-11M', 'prefix': 'She opened the box and found a', 'seed': 3} -> PASS (53s)
+[ 5.66h] next_token {'name': 'SimpleStories/SimpleStories-11M', 'prefix': 'She opened the box and found a', 'seed': 3} -> PASS (4s)
+[ 5.68h] stories {'name': 'SimpleStories/SimpleStories-11M', 'seed': 3} -> PASS (56s)
+Loading weights:   0%|          | 0/92 [00:00<?, ?it/s]Loading weights: 100%|██████████| 92/92 [00:00<00:00, 15299.79it/s]
+[ 5.70h] real_alpha {'name': 'SimpleStories/SimpleStories-30M', 'prefix': 'She opened the box and found a', 'seed': 3} -> FAIL (73s)
+Loading weights:   0%|          | 0/110 [00:00<?, ?it/s]Loading weights: 100%|██████████| 110/110 [00:00<00:00, 16021.58it/s]
+[ 5.72h] real_alpha {'name': 'SimpleStories/SimpleStories-35M', 'prefix': 'She opened the box and found a', 'seed': 3} -> PASS (72s)
+[ 5.74h] propagation {'name': 'SimpleStories/SimpleStories-35M', 'prefix': 'She opened the box and found a', 'seed': 3} -> PASS (103s)
+Loading weights:   0%|          | 0/56 [00:00<?, ?it/s]Loading weights: 100%|██████████| 56/56 [00:00<00:00, 19756.16it/s]
+[ 5.76h] real_alpha {'name': 'SimpleStories/SimpleStories-V2-5M', 'prefix': 'She opened the box and found a', 'seed': 3} -> PASS (62s)
+[ 5.76h] next_token {'name': 'SimpleStories/SimpleStories-V2-5M', 'prefix': 'She opened the box and found a', 'seed': 3} -> PASS (4s)
+[ 5.76h] determinism {'name': 'SimpleStories/SimpleStories-V2-5M', 'prefix': 'She opened the box and found a', 'seed': 3} -> PASS (8s)
+[ 5.77h] hyper {'name': 'SimpleStories/SimpleStories-V2-5M', 'prefix': 'She opened the box and found a', 'seed': 3, 'loc': 'L2.ffn'} -> PASS (32s)
+[ 5.77h] scaling {'name': 'SimpleStories/SimpleStories-V2-5M', 'prefix': 'She opened the box and found a', 'seed': 3} -> PASS (4s)
+[ 5.78h] memory {'name': 'SimpleStories/SimpleStories-V2-5M', 'prefix': 'She opened the box and found a', 'seed': 3} -> PASS (6s)
+Loading weights:   0%|          | 0/110 [00:00<?, ?it/s]Loading weights: 100%|██████████| 110/110 [00:00<00:00, 15916.56it/s]
+[ 5.80h] real_alpha {'name': 'SimpleStories/SimpleStories-V2-35M', 'prefix': 'She opened the box and found a', 'seed': 3} -> PASS (69s)
+[ 5.82h] propagation {'name': 'SimpleStories/SimpleStories-V2-35M', 'prefix': 'She opened the box and found a', 'seed': 3} -> PASS (104s)
+Loading weights:   0%|          | 0/38 [00:00<?, ?it/s]Loading weights: 100%|██████████| 38/38 [00:00<00:00, 17528.16it/s]
+[ 5.84h] real_alpha {'name': 'SimpleStories/SimpleStories-1.25M', 'prefix': 'She opened the box and found a', 'seed': 3} -> PASS (67s)
+[ 5.85h] stories {'name': 'SimpleStories/SimpleStories-1.25M', 'seed': 3} -> FAIL (36s)
+Loading weights:   0%|          | 0/56 [00:00<?, ?it/s]Loading weights: 100%|██████████| 56/56 [00:00<00:00, 17199.84it/s]
+[ 5.87h] real_alpha {'name': 'SimpleStories/SimpleStories-5M', 'prefix': 'Once upon a time, there was a little', 'seed': 4} -> PASS (62s)
+[ 5.88h] propagation {'name': 'SimpleStories/SimpleStories-5M', 'prefix': 'Once upon a time, there was a little', 'seed': 4} -> PASS (51s)
+[ 5.88h] next_token {'name': 'SimpleStories/SimpleStories-5M', 'prefix': 'Once upon a time, there was a little', 'seed': 4} -> PASS (4s)
+[ 5.89h] synthetic {'m': 5, 'D': 64, 'N': 4000, 'seed': 268} -> FAIL (4s)
+Loading weights:   0%|          | 0/56 [00:00<?, ?it/s]Loading weights: 100%|██████████| 56/56 [00:00<00:00, 16118.65it/s]
+[ 5.91h] real_alpha {'name': 'SimpleStories/SimpleStories-11M', 'prefix': 'Once upon a time, there was a little', 'seed': 4} -> PASS (68s)
+[ 5.91h] determinism {'name': 'SimpleStories/SimpleStories-11M', 'prefix': 'Once upon a time, there was a little', 'seed': 4} -> PASS (8s)
+Loading weights:   0%|          | 0/92 [00:00<?, ?it/s]Loading weights: 100%|██████████| 92/92 [00:00<00:00, 15193.16it/s]
+[ 5.93h] real_alpha {'name': 'SimpleStories/SimpleStories-30M', 'prefix': 'Once upon a time, there was a little', 'seed': 4} -> FAIL (72s)
+[ 5.95h] propagation {'name': 'SimpleStories/SimpleStories-30M', 'prefix': 'Once upon a time, there was a little', 'seed': 4} -> PASS (87s)
+Loading weights:   0%|          | 0/110 [00:00<?, ?it/s]Loading weights: 100%|██████████| 110/110 [00:00<00:00, 16230.11it/s]
+[ 5.97h] real_alpha {'name': 'SimpleStories/SimpleStories-35M', 'prefix': 'Once upon a time, there was a little', 'seed': 4} -> PASS (74s)
+[ 5.97h] next_token {'name': 'SimpleStories/SimpleStories-35M', 'prefix': 'Once upon a time, there was a little', 'seed': 4} -> PASS (4s)
+[ 5.98h] hyper {'name': 'SimpleStories/SimpleStories-35M', 'prefix': 'Once upon a time, there was a little', 'seed': 4, 'loc': 'L2.ffn'} -> PASS (33s)
+Loading weights:   0%|          | 0/56 [00:00<?, ?it/s]Loading weights: 100%|██████████| 56/56 [00:00<00:00, 18579.42it/s]
+[ 6.00h] real_alpha {'name': 'SimpleStories/SimpleStories-V2-5M', 'prefix': 'Once upon a time, there was a little', 'seed': 4} -> PASS (61s)
+[ 6.01h] propagation {'name': 'SimpleStories/SimpleStories-V2-5M', 'prefix': 'Once upon a time, there was a little', 'seed': 4} -> PASS (51s)
+[transformers] Token indices sequence length is longer than the specified maximum sequence length for this model (547 > 512). Running this sequence through the model will result in indexing errors
+[ 6.03h] stories {'name': 'SimpleStories/SimpleStories-V2-5M', 'seed': 4} -> FAIL (66s)
+[ 6.03h] scaling {'name': 'SimpleStories/SimpleStories-V2-5M', 'prefix': 'Once upon a time, there was a little', 'seed': 4} -> PASS (4s)
+Loading weights:   0%|          | 0/110 [00:00<?, ?it/s]Loading weights: 100%|██████████| 110/110 [00:00<00:00, 16488.81it/s]
+[ 6.05h] real_alpha {'name': 'SimpleStories/SimpleStories-V2-35M', 'prefix': 'Once upon a time, there was a little', 'seed': 4} -> PASS (73s)
+[ 6.06h] determinism {'name': 'SimpleStories/SimpleStories-V2-35M', 'prefix': 'Once upon a time, there was a little', 'seed': 4} -> PASS (8s)
+[ 6.06h] memory {'name': 'SimpleStories/SimpleStories-V2-35M', 'prefix': 'Once upon a time, there was a little', 'seed': 4} -> PASS (6s)
+Loading weights:   0%|          | 0/38 [00:00<?, ?it/s]Loading weights: 100%|██████████| 38/38 [00:00<00:00, 18432.24it/s]
+[ 6.08h] real_alpha {'name': 'SimpleStories/SimpleStories-1.25M', 'prefix': 'Once upon a time, there was a little', 'seed': 4} -> PASS (75s)
+[ 6.09h] propagation {'name': 'SimpleStories/SimpleStories-1.25M', 'prefix': 'Once upon a time, there was a little', 'seed': 4} -> PASS (37s)
+[ 6.09h] next_token {'name': 'SimpleStories/SimpleStories-1.25M', 'prefix': 'Once upon a time, there was a little', 'seed': 4} -> PASS (4s)
+Loading weights:   0%|          | 0/56 [00:00<?, ?it/s]Loading weights: 100%|██████████| 56/56 [00:00<00:00, 15528.30it/s]
+[ 6.11h] real_alpha {'name': 'SimpleStories/SimpleStories-5M', 'prefix': 'The', 'seed': 4} -> PASS (77s)
+Loading weights:   0%|          | 0/56 [00:00<?, ?it/s]Loading weights: 100%|██████████| 56/56 [00:00<00:00, 15554.00it/s]
+[ 6.13h] real_alpha {'name': 'SimpleStories/SimpleStories-11M', 'prefix': 'The', 'seed': 4} -> PASS (73s)
+[ 6.15h] propagation {'name': 'SimpleStories/SimpleStories-11M', 'prefix': 'The', 'seed': 4} -> PASS (53s)
+Loading weights:   0%|          | 0/92 [00:00<?, ?it/s]Loading weights: 100%|██████████| 92/92 [00:00<00:00, 17679.65it/s]
+[ 6.17h] real_alpha {'name': 'SimpleStories/SimpleStories-30M', 'prefix': 'The', 'seed': 4} -> FAIL (68s)
+[ 6.17h] next_token {'name': 'SimpleStories/SimpleStories-30M', 'prefix': 'The', 'seed': 4} -> PASS (4s)
+[ 6.17h] determinism {'name': 'SimpleStories/SimpleStories-30M', 'prefix': 'The', 'seed': 4} -> PASS (8s)
+[ 6.18h] stories {'name': 'SimpleStories/SimpleStories-30M', 'seed': 4} -> FAIL (55s)
+[ 6.19h] hyper {'name': 'SimpleStories/SimpleStories-30M', 'prefix': 'The', 'seed': 4, 'loc': 'L2.ffn'} -> PASS (33s)
+[ 6.19h] synthetic {'m': 4, 'D': 64, 'N': 6000, 'seed': 277} -> PASS (6s)
+Loading weights:   0%|          | 0/110 [00:00<?, ?it/s]Loading weights: 100%|██████████| 110/110 [00:00<00:00, 15945.72it/s]
+[ 6.21h] real_alpha {'name': 'SimpleStories/SimpleStories-35M', 'prefix': 'The', 'seed': 4} -> PASS (72s)
+[ 6.24h] propagation {'name': 'SimpleStories/SimpleStories-35M', 'prefix': 'The', 'seed': 4} -> PASS (103s)
+Loading weights:   0%|          | 0/56 [00:00<?, ?it/s]Loading weights: 100%|██████████| 56/56 [00:00<00:00, 16624.04it/s]
+[ 6.26h] real_alpha {'name': 'SimpleStories/SimpleStories-V2-5M', 'prefix': 'The', 'seed': 4} -> PASS (63s)
+[ 6.26h] scaling {'name': 'SimpleStories/SimpleStories-V2-5M', 'prefix': 'The', 'seed': 4} -> PASS (4s)
+Loading weights:   0%|          | 0/110 [00:00<?, ?it/s]Loading weights: 100%|██████████| 110/110 [00:00<00:00, 17859.85it/s]
+[ 6.28h] real_alpha {'name': 'SimpleStories/SimpleStories-V2-35M', 'prefix': 'The', 'seed': 4} -> PASS (66s)
+[ 6.31h] propagation {'name': 'SimpleStories/SimpleStories-V2-35M', 'prefix': 'The', 'seed': 4} -> PASS (103s)
+[ 6.31h] next_token {'name': 'SimpleStories/SimpleStories-V2-35M', 'prefix': 'The', 'seed': 4} -> PASS (4s)
+Loading weights:   0%|          | 0/38 [00:00<?, ?it/s]Loading weights: 100%|██████████| 38/38 [00:00<00:00, 15060.34it/s]
+[ 6.33h] real_alpha {'name': 'SimpleStories/SimpleStories-1.25M', 'prefix': 'The', 'seed': 4} -> PASS (68s)
+[ 6.33h] determinism {'name': 'SimpleStories/SimpleStories-1.25M', 'prefix': 'The', 'seed': 4} -> PASS (8s)
+[ 6.33h] memory {'name': 'SimpleStories/SimpleStories-1.25M', 'prefix': 'The', 'seed': 4} -> PASS (6s)
+Loading weights:   0%|          | 0/56 [00:00<?, ?it/s]Loading weights: 100%|██████████| 56/56 [00:00<00:00, 15881.07it/s]
+[ 6.35h] real_alpha {'name': 'SimpleStories/SimpleStories-5M', 'prefix': 'One day, a big dog named Max saw a', 'seed': 4} -> PASS (62s)
+[ 6.36h] propagation {'name': 'SimpleStories/SimpleStories-5M', 'prefix': 'One day, a big dog named Max saw a', 'seed': 4} -> PASS (51s)
+[ 6.38h] stories {'name': 'SimpleStories/SimpleStories-5M', 'seed': 4} -> FAIL (38s)
+Loading weights:   0%|          | 0/56 [00:00<?, ?it/s]Loading weights: 100%|██████████| 56/56 [00:00<00:00, 17575.65it/s]
+[ 6.39h] real_alpha {'name': 'SimpleStories/SimpleStories-11M', 'prefix': 'One day, a big dog named Max saw a', 'seed': 4} -> PASS (68s)
+[ 6.40h] next_token {'name': 'SimpleStories/SimpleStories-11M', 'prefix': 'One day, a big dog named Max saw a', 'seed': 4} -> PASS (4s)
+[ 6.40h] hyper {'name': 'SimpleStories/SimpleStories-11M', 'prefix': 'One day, a big dog named Max saw a', 'seed': 4, 'loc': 'L2.ffn'} -> PASS (33s)
+Loading weights:   0%|          | 0/92 [00:00<?, ?it/s]Loading weights: 100%|██████████| 92/92 [00:00<00:00, 17462.82it/s]
+[ 6.42h] real_alpha {'name': 'SimpleStories/SimpleStories-30M', 'prefix': 'One day, a big dog named Max saw a', 'seed': 4} -> FAIL (67s)
+[ 6.45h] propagation {'name': 'SimpleStories/SimpleStories-30M', 'prefix': 'One day, a big dog named Max saw a', 'seed': 4} -> PASS (87s)
+Loading weights:   0%|          | 0/110 [00:00<?, ?it/s]Loading weights: 100%|██████████| 110/110 [00:00<00:00, 16113.91it/s]
+[ 6.47h] real_alpha {'name': 'SimpleStories/SimpleStories-35M', 'prefix': 'One day, a big dog named Max saw a', 'seed': 4} -> PASS (68s)
+[ 6.47h] determinism {'name': 'SimpleStories/SimpleStories-35M', 'prefix': 'One day, a big dog named Max saw a', 'seed': 4} -> PASS (8s)
+Loading weights:   0%|          | 0/56 [00:00<?, ?it/s]Loading weights: 100%|██████████| 56/56 [00:00<00:00, 17471.07it/s]
+[ 6.49h] real_alpha {'name': 'SimpleStories/SimpleStories-V2-5M', 'prefix': 'One day, a big dog named Max saw a', 'seed': 4} -> PASS (62s)
+[ 6.50h] propagation {'name': 'SimpleStories/SimpleStories-V2-5M', 'prefix': 'One day, a big dog named Max saw a', 'seed': 4} -> PASS (51s)
+[ 6.50h] next_token {'name': 'SimpleStories/SimpleStories-V2-5M', 'prefix': 'One day, a big dog named Max saw a', 'seed': 4} -> PASS (4s)
+[ 6.50h] scaling {'name': 'SimpleStories/SimpleStories-V2-5M', 'prefix': 'One day, a big dog named Max saw a', 'seed': 4} -> PASS (4s)
+[ 6.50h] synthetic {'m': 3, 'D': 64, 'N': 8000, 'seed': 286} -> PASS (8s)
+Loading weights:   0%|          | 0/110 [00:00<?, ?it/s]Loading weights: 100%|██████████| 110/110 [00:00<00:00, 17671.73it/s]
+[ 6.52h] real_alpha {'name': 'SimpleStories/SimpleStories-V2-35M', 'prefix': 'One day, a big dog named Max saw a', 'seed': 4} -> PASS (67s)
+[transformers] Token indices sequence length is longer than the specified maximum sequence length for this model (547 > 512). Running this sequence through the model will result in indexing errors
+[ 6.54h] stories {'name': 'SimpleStories/SimpleStories-V2-35M', 'seed': 4} -> FAIL (61s)
+Loading weights:   0%|          | 0/38 [00:00<?, ?it/s]Loading weights: 100%|██████████| 38/38 [00:00<00:00, 13988.38it/s]
+[ 6.56h] real_alpha {'name': 'SimpleStories/SimpleStories-1.25M', 'prefix': 'One day, a big dog named Max saw a', 'seed': 4} -> PASS (68s)
+[ 6.57h] propagation {'name': 'SimpleStories/SimpleStories-1.25M', 'prefix': 'One day, a big dog named Max saw a', 'seed': 4} -> PASS (37s)
+Loading weights:   0%|          | 0/56 [00:00<?, ?it/s]Loading weights: 100%|██████████| 56/56 [00:00<00:00, 16792.81it/s]
+[ 6.59h] real_alpha {'name': 'SimpleStories/SimpleStories-5M', 'prefix': 'Lily and her mom went to the park. It was a sunny day and they saw a', 'seed': 4} -> PASS (65s)
+[ 6.59h] next_token {'name': 'SimpleStories/SimpleStories-5M', 'prefix': 'Lily and her mom went to the park. It was a sunny day and they saw a', 'seed': 4} -> PASS (4s)
+[ 6.59h] determinism {'name': 'SimpleStories/SimpleStories-5M', 'prefix': 'Lily and her mom went to the park. It was a sunny day and they saw a', 'seed': 4} -> PASS (8s)
+[ 6.60h] hyper {'name': 'SimpleStories/SimpleStories-5M', 'prefix': 'Lily and her mom went to the park. It was a sunny day and they saw a', 'seed': 4, 'loc': 'L2.ffn'} -> PASS (32s)
+[ 6.60h] memory {'name': 'SimpleStories/SimpleStories-5M', 'prefix': 'Lily and her mom went to the park. It was a sunny day and they saw a', 'seed': 4} -> PASS (6s)
+Loading weights:   0%|          | 0/56 [00:00<?, ?it/s]Loading weights: 100%|██████████| 56/56 [00:00<00:00, 17635.03it/s]
+[ 6.62h] real_alpha {'name': 'SimpleStories/SimpleStories-11M', 'prefix': 'Lily and her mom went to the park. It was a sunny day and they saw a', 'seed': 4} -> PASS (68s)
+[ 6.63h] propagation {'name': 'SimpleStories/SimpleStories-11M', 'prefix': 'Lily and her mom went to the park. It was a sunny day and they saw a', 'seed': 4} -> PASS (53s)
+Loading weights:   0%|          | 0/92 [00:00<?, ?it/s]Loading weights: 100%|██████████| 92/92 [00:00<00:00, 15685.38it/s]
+[ 6.65h] real_alpha {'name': 'SimpleStories/SimpleStories-30M', 'prefix': 'Lily and her mom went to the park. It was a sunny day and they saw a', 'seed': 4} -> FAIL (66s)
+Loading weights:   0%|          | 0/110 [00:00<?, ?it/s]Loading weights: 100%|██████████| 110/110 [00:00<00:00, 16121.79it/s]
+[ 6.67h] real_alpha {'name': 'SimpleStories/SimpleStories-35M', 'prefix': 'Lily and her mom went to the park. It was a sunny day and they saw a', 'seed': 4} -> PASS (66s)
+[ 6.70h] propagation {'name': 'SimpleStories/SimpleStories-35M', 'prefix': 'Lily and her mom went to the park. It was a sunny day and they saw a', 'seed': 4} -> PASS (105s)
+[ 6.70h] next_token {'name': 'SimpleStories/SimpleStories-35M', 'prefix': 'Lily and her mom went to the park. It was a sunny day and they saw a', 'seed': 4} -> PASS (4s)
+[ 6.73h] stories {'name': 'SimpleStories/SimpleStories-35M', 'seed': 4} -> FAIL (93s)
+Loading weights:   0%|          | 0/56 [00:00<?, ?it/s]Loading weights: 100%|██████████| 56/56 [00:00<00:00, 17256.71it/s]
+[ 6.75h] real_alpha {'name': 'SimpleStories/SimpleStories-V2-5M', 'prefix': 'Lily and her mom went to the park. It was a sunny day and they saw a', 'seed': 4} -> PASS (73s)
+[ 6.75h] determinism {'name': 'SimpleStories/SimpleStories-V2-5M', 'prefix': 'Lily and her mom went to the park. It was a sunny day and they saw a', 'seed': 4} -> PASS (8s)
+[ 6.75h] scaling {'name': 'SimpleStories/SimpleStories-V2-5M', 'prefix': 'Lily and her mom went to the park. It was a sunny day and they saw a', 'seed': 4} -> PASS (4s)
+Loading weights:   0%|          | 0/110 [00:00<?, ?it/s]Loading weights: 100%|██████████| 110/110 [00:00<00:00, 16445.91it/s]
+[ 6.77h] real_alpha {'name': 'SimpleStories/SimpleStories-V2-35M', 'prefix': 'Lily and her mom went to the park. It was a sunny day and they saw a', 'seed': 4} -> PASS (68s)
+[ 6.80h] propagation {'name': 'SimpleStories/SimpleStories-V2-35M', 'prefix': 'Lily and her mom went to the park. It was a sunny day and they saw a', 'seed': 4} -> PASS (105s)
+Loading weights:   0%|          | 0/38 [00:00<?, ?it/s]Loading weights: 100%|██████████| 38/38 [00:00<00:00, 15797.76it/s]
+[ 6.82h] real_alpha {'name': 'SimpleStories/SimpleStories-1.25M', 'prefix': 'Lily and her mom went to the park. It was a sunny day and they saw a', 'seed': 4} -> PASS (67s)
+[ 6.82h] next_token {'name': 'SimpleStories/SimpleStories-1.25M', 'prefix': 'Lily and her mom went to the park. It was a sunny day and they saw a', 'seed': 4} -> PASS (4s)
+[ 6.83h] hyper {'name': 'SimpleStories/SimpleStories-1.25M', 'prefix': 'Lily and her mom went to the park. It was a sunny day and they saw a', 'seed': 4, 'loc': 'L2.ffn'} -> PASS (32s)
+[ 6.83h] synthetic {'m': 2, 'D': 64, 'N': 10000, 'seed': 295} -> PASS (10s)
+Loading weights:   0%|          | 0/56 [00:00<?, ?it/s]Loading weights: 100%|██████████| 56/56 [00:00<00:00, 16393.15it/s]
+[ 6.85h] real_alpha {'name': 'SimpleStories/SimpleStories-5M', 'prefix': 'In the morning, the', 'seed': 4} -> PASS (67s)
+[ 6.86h] propagation {'name': 'SimpleStories/SimpleStories-5M', 'prefix': 'In the morning, the', 'seed': 4} -> PASS (51s)
+Loading weights:   0%|          | 0/56 [00:00<?, ?it/s]Loading weights: 100%|██████████| 56/56 [00:00<00:00, 13508.23it/s]
+[ 6.88h] real_alpha {'name': 'SimpleStories/SimpleStories-11M', 'prefix': 'In the morning, the', 'seed': 4} -> PASS (67s)
+[ 6.88h] determinism {'name': 'SimpleStories/SimpleStories-11M', 'prefix': 'In the morning, the', 'seed': 4} -> PASS (8s)
+[ 6.89h] stories {'name': 'SimpleStories/SimpleStories-11M', 'seed': 4} -> FAIL (27s)
+[ 6.89h] memory {'name': 'SimpleStories/SimpleStories-11M', 'prefix': 'In the morning, the', 'seed': 4} -> PASS (6s)
+Loading weights:   0%|          | 0/92 [00:00<?, ?it/s]Loading weights: 100%|██████████| 92/92 [00:00<00:00, 17009.43it/s]
+[ 6.91h] real_alpha {'name': 'SimpleStories/SimpleStories-30M', 'prefix': 'In the morning, the', 'seed': 4} -> FAIL (67s)
+[ 6.94h] propagation {'name': 'SimpleStories/SimpleStories-30M', 'prefix': 'In the morning, the', 'seed': 4} -> PASS (87s)
+[ 6.94h] next_token {'name': 'SimpleStories/SimpleStories-30M', 'prefix': 'In the morning, the', 'seed': 4} -> PASS (4s)
+Loading weights:   0%|          | 0/110 [00:00<?, ?it/s]Loading weights: 100%|██████████| 110/110 [00:00<00:00, 16299.49it/s]
+[ 6.96h] real_alpha {'name': 'SimpleStories/SimpleStories-35M', 'prefix': 'In the morning, the', 'seed': 4} -> PASS (67s)
+Loading weights:   0%|          | 0/56 [00:00<?, ?it/s]Loading weights: 100%|██████████| 56/56 [00:00<00:00, 16708.00it/s]
+[ 6.97h] real_alpha {'name': 'SimpleStories/SimpleStories-V2-5M', 'prefix': 'In the morning, the', 'seed': 4} -> PASS (66s)
+[ 6.99h] propagation {'name': 'SimpleStories/SimpleStories-V2-5M', 'prefix': 'In the morning, the', 'seed': 4} -> PASS (51s)
+[ 6.99h] scaling {'name': 'SimpleStories/SimpleStories-V2-5M', 'prefix': 'In the morning, the', 'seed': 4} -> PASS (4s)
+Loading weights:   0%|          | 0/110 [00:00<?, ?it/s]Loading weights: 100%|██████████| 110/110 [00:00<00:00, 16760.15it/s]
+[ 7.01h] real_alpha {'name': 'SimpleStories/SimpleStories-V2-35M', 'prefix': 'In the morning, the', 'seed': 4} -> PASS (68s)
+[ 7.01h] next_token {'name': 'SimpleStories/SimpleStories-V2-35M', 'prefix': 'In the morning, the', 'seed': 4} -> PASS (4s)
+[ 7.01h] determinism {'name': 'SimpleStories/SimpleStories-V2-35M', 'prefix': 'In the morning, the', 'seed': 4} -> PASS (8s)
+[ 7.02h] hyper {'name': 'SimpleStories/SimpleStories-V2-35M', 'prefix': 'In the morning, the', 'seed': 4, 'loc': 'L2.ffn'} -> PASS (33s)
+Loading weights:   0%|          | 0/38 [00:00<?, ?it/s]Loading weights: 100%|██████████| 38/38 [00:00<00:00, 17916.32it/s]
+[ 7.04h] real_alpha {'name': 'SimpleStories/SimpleStories-1.25M', 'prefix': 'In the morning, the', 'seed': 4} -> PASS (67s)
+[ 7.05h] propagation {'name': 'SimpleStories/SimpleStories-1.25M', 'prefix': 'In the morning, the', 'seed': 4} -> PASS (37s)
+[ 7.06h] stories {'name': 'SimpleStories/SimpleStories-1.25M', 'seed': 4} -> FAIL (47s)
+Loading weights:   0%|          | 0/56 [00:00<?, ?it/s]Loading weights: 100%|██████████| 56/56 [00:00<00:00, 16685.45it/s]
+[ 7.08h] real_alpha {'name': 'SimpleStories/SimpleStories-5M', 'prefix': 'She opened the box and found a', 'seed': 4} -> PASS (68s)
+Loading weights:   0%|          | 0/56 [00:00<?, ?it/s]Loading weights: 100%|██████████| 56/56 [00:00<00:00, 15153.61it/s]
+[ 7.10h] real_alpha {'name': 'SimpleStories/SimpleStories-11M', 'prefix': 'She opened the box and found a', 'seed': 4} -> PASS (67s)
+[ 7.11h] propagation {'name': 'SimpleStories/SimpleStories-11M', 'prefix': 'She opened the box and found a', 'seed': 4} -> PASS (53s)
+[ 7.12h] next_token {'name': 'SimpleStories/SimpleStories-11M', 'prefix': 'She opened the box and found a', 'seed': 4} -> PASS (4s)
+[ 7.12h] synthetic {'m': 6, 'D': 64, 'N': 4000, 'seed': 304} -> FAIL (4s)
+Loading weights:   0%|          | 0/92 [00:00<?, ?it/s]Loading weights: 100%|██████████| 92/92 [00:00<00:00, 16551.26it/s]
+[ 7.14h] real_alpha {'name': 'SimpleStories/SimpleStories-30M', 'prefix': 'She opened the box and found a', 'seed': 4} -> FAIL (69s)
+[ 7.14h] determinism {'name': 'SimpleStories/SimpleStories-30M', 'prefix': 'She opened the box and found a', 'seed': 4} -> PASS (8s)
+[ 7.14h] memory {'name': 'SimpleStories/SimpleStories-30M', 'prefix': 'She opened the box and found a', 'seed': 4} -> PASS (6s)
+Loading weights:   0%|          | 0/110 [00:00<?, ?it/s]Loading weights: 100%|██████████| 110/110 [00:00<00:00, 14839.93it/s]
+[ 7.16h] real_alpha {'name': 'SimpleStories/SimpleStories-35M', 'prefix': 'She opened the box and found a', 'seed': 4} -> PASS (66s)
+[ 7.19h] propagation {'name': 'SimpleStories/SimpleStories-35M', 'prefix': 'She opened the box and found a', 'seed': 4} -> PASS (103s)
+Loading weights:   0%|          | 0/56 [00:00<?, ?it/s]Loading weights: 100%|██████████| 56/56 [00:00<00:00, 14383.41it/s]
+[ 7.20h] real_alpha {'name': 'SimpleStories/SimpleStories-V2-5M', 'prefix': 'She opened the box and found a', 'seed': 4} -> PASS (61s)
+[ 7.21h] next_token {'name': 'SimpleStories/SimpleStories-V2-5M', 'prefix': 'She opened the box and found a', 'seed': 4} -> PASS (4s)
+[transformers] Token indices sequence length is longer than the specified maximum sequence length for this model (547 > 512). Running this sequence through the model will result in indexing errors
+[ 7.22h] stories {'name': 'SimpleStories/SimpleStories-V2-5M', 'seed': 4} -> FAIL (36s)
+[ 7.22h] hyper {'name': 'SimpleStories/SimpleStories-V2-5M', 'prefix': 'She opened the box and found a', 'seed': 4, 'loc': 'L2.ffn'} -> PASS (32s)
+[ 7.23h] scaling {'name': 'SimpleStories/SimpleStories-V2-5M', 'prefix': 'She opened the box and found a', 'seed': 4} -> PASS (4s)
+Loading weights:   0%|          | 0/110 [00:00<?, ?it/s]Loading weights: 100%|██████████| 110/110 [00:00<00:00, 15274.23it/s]
+[ 7.24h] real_alpha {'name': 'SimpleStories/SimpleStories-V2-35M', 'prefix': 'She opened the box and found a', 'seed': 4} -> PASS (67s)
+[ 7.27h] propagation {'name': 'SimpleStories/SimpleStories-V2-35M', 'prefix': 'She opened the box and found a', 'seed': 4} -> PASS (104s)
+Loading weights:   0%|          | 0/38 [00:00<?, ?it/s]Loading weights: 100%|██████████| 38/38 [00:00<00:00, 18368.51it/s]
+[ 7.29h] real_alpha {'name': 'SimpleStories/SimpleStories-1.25M', 'prefix': 'She opened the box and found a', 'seed': 4} -> PASS (67s)
+[ 7.29h] determinism {'name': 'SimpleStories/SimpleStories-1.25M', 'prefix': 'She opened the box and found a', 'seed': 4} -> PASS (8s)
+Loading weights:   0%|          | 0/56 [00:00<?, ?it/s]Loading weights: 100%|██████████| 56/56 [00:00<00:00, 18398.95it/s]
+[ 7.31h] real_alpha {'name': 'SimpleStories/SimpleStories-5M', 'prefix': 'Once upon a time, there was a little', 'seed': 5} -> PASS (61s)
+[ 7.32h] propagation {'name': 'SimpleStories/SimpleStories-5M', 'prefix': 'Once upon a time, there was a little', 'seed': 5} -> PASS (51s)
+[ 7.33h] next_token {'name': 'SimpleStories/SimpleStories-5M', 'prefix': 'Once upon a time, there was a little', 'seed': 5} -> PASS (4s)
+Loading weights:   0%|          | 0/56 [00:00<?, ?it/s]Loading weights: 100%|██████████| 56/56 [00:00<00:00, 18439.40it/s]
+[ 7.34h] real_alpha {'name': 'SimpleStories/SimpleStories-11M', 'prefix': 'Once upon a time, there was a little', 'seed': 5} -> PASS (66s)
+Loading weights:   0%|          | 0/92 [00:00<?, ?it/s]Loading weights: 100%|██████████| 92/92 [00:00<00:00, 15940.68it/s]
+[ 7.36h] real_alpha {'name': 'SimpleStories/SimpleStories-30M', 'prefix': 'Once upon a time, there was a little', 'seed': 5} -> FAIL (67s)
+[ 7.39h] propagation {'name': 'SimpleStories/SimpleStories-30M', 'prefix': 'Once upon a time, there was a little', 'seed': 5} -> PASS (87s)
+[ 7.39h] stories {'name': 'SimpleStories/SimpleStories-30M', 'seed': 5} -> FAIL (23s)
+Loading weights:   0%|          | 0/110 [00:00<?, ?it/s]Loading weights: 100%|██████████| 110/110 [00:00<00:00, 17599.60it/s]
+[ 7.41h] real_alpha {'name': 'SimpleStories/SimpleStories-35M', 'prefix': 'Once upon a time, there was a little', 'seed': 5} -> FAIL (67s)
+[ 7.41h] next_token {'name': 'SimpleStories/SimpleStories-35M', 'prefix': 'Once upon a time, there was a little', 'seed': 5} -> PASS (4s)
+[ 7.42h] determinism {'name': 'SimpleStories/SimpleStories-35M', 'prefix': 'Once upon a time, there was a little', 'seed': 5} -> PASS (8s)
+[ 7.42h] hyper {'name': 'SimpleStories/SimpleStories-35M', 'prefix': 'Once upon a time, there was a little', 'seed': 5, 'loc': 'L2.ffn'} -> PASS (33s)
+[ 7.43h] memory {'name': 'SimpleStories/SimpleStories-35M', 'prefix': 'Once upon a time, there was a little', 'seed': 5} -> PASS (6s)
+[ 7.43h] synthetic {'m': 5, 'D': 64, 'N': 6000, 'seed': 313} -> FAIL (6s)
+Loading weights:   0%|          | 0/56 [00:00<?, ?it/s]Loading weights: 100%|██████████| 56/56 [00:00<00:00, 19440.57it/s]
+[ 7.44h] real_alpha {'name': 'SimpleStories/SimpleStories-V2-5M', 'prefix': 'Once upon a time, there was a little', 'seed': 5} -> PASS (61s)
+[ 7.46h] propagation {'name': 'SimpleStories/SimpleStories-V2-5M', 'prefix': 'Once upon a time, there was a little', 'seed': 5} -> PASS (51s)
+[ 7.46h] scaling {'name': 'SimpleStories/SimpleStories-V2-5M', 'prefix': 'Once upon a time, there was a little', 'seed': 5} -> PASS (4s)
+Loading weights:   0%|          | 0/110 [00:00<?, ?it/s]Loading weights: 100%|██████████| 110/110 [00:00<00:00, 16710.98it/s]
+[ 7.48h] real_alpha {'name': 'SimpleStories/SimpleStories-V2-35M', 'prefix': 'Once upon a time, there was a little', 'seed': 5} -> PASS (68s)
+Loading weights:   0%|          | 0/38 [00:00<?, ?it/s]Loading weights: 100%|██████████| 38/38 [00:00<00:00, 16740.21it/s]
+[ 7.50h] real_alpha {'name': 'SimpleStories/SimpleStories-1.25M', 'prefix': 'Once upon a time, there was a little', 'seed': 5} -> PASS (67s)
+[ 7.51h] propagation {'name': 'SimpleStories/SimpleStories-1.25M', 'prefix': 'Once upon a time, there was a little', 'seed': 5} -> PASS (37s)
+[ 7.51h] next_token {'name': 'SimpleStories/SimpleStories-1.25M', 'prefix': 'Once upon a time, there was a little', 'seed': 5} -> PASS (4s)
+Loading weights:   0%|          | 0/56 [00:00<?, ?it/s]Loading weights: 100%|██████████| 56/56 [00:00<00:00, 15037.20it/s]
+[ 7.53h] real_alpha {'name': 'SimpleStories/SimpleStories-5M', 'prefix': 'The', 'seed': 5} -> PASS (61s)
+[ 7.53h] determinism {'name': 'SimpleStories/SimpleStories-5M', 'prefix': 'The', 'seed': 5} -> PASS (8s)
+[ 7.53h] stories {'name': 'SimpleStories/SimpleStories-5M', 'seed': 5} -> FAIL (19s)
+Loading weights:   0%|          | 0/56 [00:00<?, ?it/s]Loading weights: 100%|██████████| 56/56 [00:00<00:00, 15194.79it/s]
+[ 7.55h] real_alpha {'name': 'SimpleStories/SimpleStories-11M', 'prefix': 'The', 'seed': 5} -> PASS (67s)
+[ 7.57h] propagation {'name': 'SimpleStories/SimpleStories-11M', 'prefix': 'The', 'seed': 5} -> PASS (53s)
+Loading weights:   0%|          | 0/92 [00:00<?, ?it/s]Loading weights: 100%|██████████| 92/92 [00:00<00:00, 17049.26it/s]
+[ 7.59h] real_alpha {'name': 'SimpleStories/SimpleStories-30M', 'prefix': 'The', 'seed': 5} -> FAIL (67s)
+[ 7.59h] next_token {'name': 'SimpleStories/SimpleStories-30M', 'prefix': 'The', 'seed': 5} -> PASS (4s)
+[ 7.60h] hyper {'name': 'SimpleStories/SimpleStories-30M', 'prefix': 'The', 'seed': 5, 'loc': 'L2.ffn'} -> PASS (33s)
+Loading weights:   0%|          | 0/110 [00:00<?, ?it/s]Loading weights: 100%|██████████| 110/110 [00:00<00:00, 15960.06it/s]
+[ 7.61h] real_alpha {'name': 'SimpleStories/SimpleStories-35M', 'prefix': 'The', 'seed': 5} -> FAIL (67s)
+[ 7.64h] propagation {'name': 'SimpleStories/SimpleStories-35M', 'prefix': 'The', 'seed': 5} -> FAIL (103s)
+Loading weights:   0%|          | 0/56 [00:00<?, ?it/s]Loading weights: 100%|██████████| 56/56 [00:00<00:00, 16449.40it/s]
+[ 7.66h] real_alpha {'name': 'SimpleStories/SimpleStories-V2-5M', 'prefix': 'The', 'seed': 5} -> PASS (61s)
+[ 7.66h] determinism {'name': 'SimpleStories/SimpleStories-V2-5M', 'prefix': 'The', 'seed': 5} -> PASS (8s)
+[ 7.66h] scaling {'name': 'SimpleStories/SimpleStories-V2-5M', 'prefix': 'The', 'seed': 5} -> PASS (4s)
+[ 7.66h] memory {'name': 'SimpleStories/SimpleStories-V2-5M', 'prefix': 'The', 'seed': 5} -> PASS (6s)
+Loading weights:   0%|          | 0/110 [00:00<?, ?it/s]Loading weights: 100%|██████████| 110/110 [00:00<00:00, 18358.74it/s]
+[ 7.68h] real_alpha {'name': 'SimpleStories/SimpleStories-V2-35M', 'prefix': 'The', 'seed': 5} -> PASS (66s)
+[ 7.71h] propagation {'name': 'SimpleStories/SimpleStories-V2-35M', 'prefix': 'The', 'seed': 5} -> PASS (103s)
+[ 7.71h] next_token {'name': 'SimpleStories/SimpleStories-V2-35M', 'prefix': 'The', 'seed': 5} -> PASS (4s)
+[transformers] Token indices sequence length is longer than the specified maximum sequence length for this model (547 > 512). Running this sequence through the model will result in indexing errors
+[ 7.72h] stories {'name': 'SimpleStories/SimpleStories-V2-35M', 'seed': 5} -> FAIL (24s)
+[ 7.72h] synthetic {'m': 4, 'D': 64, 'N': 8000, 'seed': 322} -> PASS (8s)
+Loading weights:   0%|          | 0/38 [00:00<?, ?it/s]Loading weights: 100%|██████████| 38/38 [00:00<00:00, 16968.33it/s]
+[ 7.74h] real_alpha {'name': 'SimpleStories/SimpleStories-1.25M', 'prefix': 'The', 'seed': 5} -> PASS (67s)
+Loading weights:   0%|          | 0/56 [00:00<?, ?it/s]Loading weights: 100%|██████████| 56/56 [00:00<00:00, 15094.21it/s]
+[ 7.76h] real_alpha {'name': 'SimpleStories/SimpleStories-5M', 'prefix': 'One day, a big dog named Max saw a', 'seed': 5} -> PASS (62s)
+[ 7.77h] propagation {'name': 'SimpleStories/SimpleStories-5M', 'prefix': 'One day, a big dog named Max saw a', 'seed': 5} -> PASS (51s)
+Loading weights:   0%|          | 0/56 [00:00<?, ?it/s]Loading weights: 100%|██████████| 56/56 [00:00<00:00, 15281.78it/s]
+[ 7.79h] real_alpha {'name': 'SimpleStories/SimpleStories-11M', 'prefix': 'One day, a big dog named Max saw a', 'seed': 5} -> PASS (67s)
+[ 7.79h] next_token {'name': 'SimpleStories/SimpleStories-11M', 'prefix': 'One day, a big dog named Max saw a', 'seed': 5} -> PASS (4s)
+[ 7.79h] determinism {'name': 'SimpleStories/SimpleStories-11M', 'prefix': 'One day, a big dog named Max saw a', 'seed': 5} -> PASS (8s)
+[ 7.80h] hyper {'name': 'SimpleStories/SimpleStories-11M', 'prefix': 'One day, a big dog named Max saw a', 'seed': 5, 'loc': 'L2.ffn'} -> PASS (33s)
+Loading weights:   0%|          | 0/92 [00:00<?, ?it/s]Loading weights: 100%|██████████| 92/92 [00:00<00:00, 15584.65it/s]
+[ 7.82h] real_alpha {'name': 'SimpleStories/SimpleStories-30M', 'prefix': 'One day, a big dog named Max saw a', 'seed': 5} -> FAIL (67s)
+[ 7.85h] propagation {'name': 'SimpleStories/SimpleStories-30M', 'prefix': 'One day, a big dog named Max saw a', 'seed': 5} -> PASS (87s)
+Loading weights:   0%|          | 0/110 [00:00<?, ?it/s]Loading weights: 100%|██████████| 110/110 [00:00<00:00, 15544.40it/s]
+[ 7.86h] real_alpha {'name': 'SimpleStories/SimpleStories-35M', 'prefix': 'One day, a big dog named Max saw a', 'seed': 5} -> FAIL (67s)
+[ 7.87h] stories {'name': 'SimpleStories/SimpleStories-35M', 'seed': 5} -> FAIL (24s)
+Loading weights:   0%|          | 0/56 [00:00<?, ?it/s]Loading weights: 100%|██████████| 56/56 [00:00<00:00, 15996.80it/s]
+[ 7.89h] real_alpha {'name': 'SimpleStories/SimpleStories-V2-5M', 'prefix': 'One day, a big dog named Max saw a', 'seed': 5} -> PASS (61s)
+[ 7.90h] propagation {'name': 'SimpleStories/SimpleStories-V2-5M', 'prefix': 'One day, a big dog named Max saw a', 'seed': 5} -> PASS (51s)
+[ 7.90h] next_token {'name': 'SimpleStories/SimpleStories-V2-5M', 'prefix': 'One day, a big dog named Max saw a', 'seed': 5} -> PASS (4s)
+[ 7.90h] scaling {'name': 'SimpleStories/SimpleStories-V2-5M', 'prefix': 'One day, a big dog named Max saw a', 'seed': 5} -> PASS (4s)
+Loading weights:   0%|          | 0/110 [00:00<?, ?it/s]Loading weights: 100%|██████████| 110/110 [00:00<00:00, 15810.21it/s]
+[ 7.92h] real_alpha {'name': 'SimpleStories/SimpleStories-V2-35M', 'prefix': 'One day, a big dog named Max saw a', 'seed': 5} -> PASS (75s)
+[ 7.93h] determinism {'name': 'SimpleStories/SimpleStories-V2-35M', 'prefix': 'One day, a big dog named Max saw a', 'seed': 5} -> PASS (8s)
+[ 7.93h] memory {'name': 'SimpleStories/SimpleStories-V2-35M', 'prefix': 'One day, a big dog named Max saw a', 'seed': 5} -> PASS (6s)
+Loading weights:   0%|          | 0/38 [00:00<?, ?it/s]Loading weights: 100%|██████████| 38/38 [00:00<00:00, 16293.55it/s]
+[ 7.95h] real_alpha {'name': 'SimpleStories/SimpleStories-1.25M', 'prefix': 'One day, a big dog named Max saw a', 'seed': 5} -> PASS (74s)
+[ 7.96h] propagation {'name': 'SimpleStories/SimpleStories-1.25M', 'prefix': 'One day, a big dog named Max saw a', 'seed': 5} -> PASS (37s)
+Loading weights:   0%|          | 0/56 [00:00<?, ?it/s]Loading weights: 100%|██████████| 56/56 [00:00<00:00, 14124.78it/s]
+[ 7.98h] real_alpha {'name': 'SimpleStories/SimpleStories-5M', 'prefix': 'Lily and her mom went to the park. It was a sunny day and they saw a', 'seed': 5} -> PASS (62s)
+[ 7.98h] next_token {'name': 'SimpleStories/SimpleStories-5M', 'prefix': 'Lily and her mom went to the park. It was a sunny day and they saw a', 'seed': 5} -> PASS (4s)
+[ 7.99h] hyper {'name': 'SimpleStories/SimpleStories-5M', 'prefix': 'Lily and her mom went to the park. It was a sunny day and they saw a', 'seed': 5, 'loc': 'L2.ffn'} -> PASS (32s)
+[ 7.99h] synthetic {'m': 3, 'D': 64, 'N': 10000, 'seed': 331} -> PASS (10s)
+Loading weights:   0%|          | 0/56 [00:00<?, ?it/s]Loading weights: 100%|██████████| 56/56 [00:00<00:00, 17781.89it/s]
+[ 8.00h] stories {'name': 'SimpleStories/SimpleStories-11M', 'seed': 5} -> PASS (43s)
+# gmanifold check campaign
+
+674 checks in 8.0 h on one RTX 5090; 597 passed, 77 failed, 0 errored.
+
+| check | runs | passed | failed | errors | models | seconds/run |
+Fatal Python error: PyGILState_Release: thread state 0x733fc8034770 must be current when releasing
+Python runtime state: finalizing (tstate=0x000058884b9e25d0)
+
+Thread 0x0000734423f65600 (most recent call first):
+  <no Python frame>
+experiments/run_campaign.sh: line 4: 278619 Aborted                 python experiments/campaign.py --hours ${1:-8} --out results/checks
+PUSHED
+=== CAMPAIGN_DONE Tue Sep 15 09:22:31 UTC 2026

@@ -1,0 +1,30 @@
+Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
+Loading weights:   0%|          | 0/92 [00:00<?, ?it/s]Loading weights: 100%|██████████| 92/92 [00:00<00:00, 22001.02it/s]
+recheck real_alpha {'name': 'SimpleStories/SimpleStories-30M', 'prefix': 'Once upon a time, there was a little', 'seed': 3} -> PASS (73s)
+recheck propagation {'name': 'SimpleStories/SimpleStories-30M', 'prefix': 'Once upon a time, there was a little', 'seed': 3} -> PASS (86s)
+recheck real_alpha {'name': 'SimpleStories/SimpleStories-30M', 'prefix': 'The', 'seed': 3} -> PASS (66s)
+recheck real_alpha {'name': 'SimpleStories/SimpleStories-30M', 'prefix': 'One day, a big dog named Max saw a', 'seed': 3} -> PASS (66s)
+recheck propagation {'name': 'SimpleStories/SimpleStories-30M', 'prefix': 'One day, a big dog named Max saw a', 'seed': 3} -> PASS (87s)
+recheck real_alpha {'name': 'SimpleStories/SimpleStories-30M', 'prefix': 'Lily and her mom went to the park. It was a sunny day and they saw a', 'seed': 3} -> PASS (65s)
+recheck real_alpha {'name': 'SimpleStories/SimpleStories-30M', 'prefix': 'In the morning, the', 'seed': 3} -> PASS (66s)
+recheck propagation {'name': 'SimpleStories/SimpleStories-30M', 'prefix': 'In the morning, the', 'seed': 3} -> PASS (86s)
+recheck real_alpha {'name': 'SimpleStories/SimpleStories-30M', 'prefix': 'She opened the box and found a', 'seed': 3} -> PASS (66s)
+recheck real_alpha {'name': 'SimpleStories/SimpleStories-30M', 'prefix': 'Once upon a time, there was a little', 'seed': 4} -> PASS (65s)
+recheck real_alpha {'name': 'SimpleStories/SimpleStories-30M', 'prefix': 'The', 'seed': 4} -> PASS (66s)
+recheck real_alpha {'name': 'SimpleStories/SimpleStories-30M', 'prefix': 'One day, a big dog named Max saw a', 'seed': 4} -> PASS (65s)
+recheck real_alpha {'name': 'SimpleStories/SimpleStories-30M', 'prefix': 'Lily and her mom went to the park. It was a sunny day and they saw a', 'seed': 4} -> PASS (64s)
+recheck real_alpha {'name': 'SimpleStories/SimpleStories-30M', 'prefix': 'In the morning, the', 'seed': 4} -> PASS (65s)
+recheck real_alpha {'name': 'SimpleStories/SimpleStories-30M', 'prefix': 'She opened the box and found a', 'seed': 4} -> PASS (65s)
+recheck real_alpha {'name': 'SimpleStories/SimpleStories-30M', 'prefix': 'Once upon a time, there was a little', 'seed': 5} -> PASS (65s)
+Loading weights:   0%|          | 0/110 [00:00<?, ?it/s]Loading weights: 100%|██████████| 110/110 [00:00<00:00, 15362.22it/s]
+recheck real_alpha {'name': 'SimpleStories/SimpleStories-35M', 'prefix': 'Once upon a time, there was a little', 'seed': 5} -> PASS (67s)
+Loading weights:   0%|          | 0/92 [00:00<?, ?it/s]Loading weights: 100%|██████████| 92/92 [00:00<00:00, 18677.44it/s]
+recheck real_alpha {'name': 'SimpleStories/SimpleStories-30M', 'prefix': 'The', 'seed': 5} -> PASS (68s)
+Loading weights:   0%|          | 0/110 [00:00<?, ?it/s]Loading weights: 100%|██████████| 110/110 [00:00<00:00, 16095.36it/s]
+recheck real_alpha {'name': 'SimpleStories/SimpleStories-35M', 'prefix': 'The', 'seed': 5} -> PASS (69s)
+recheck propagation {'name': 'SimpleStories/SimpleStories-35M', 'prefix': 'The', 'seed': 5} -> PASS (103s)
+Loading weights:   0%|          | 0/92 [00:00<?, ?it/s]Loading weights: 100%|██████████| 92/92 [00:00<00:00, 15415.31it/s]
+recheck real_alpha {'name': 'SimpleStories/SimpleStories-30M', 'prefix': 'One day, a big dog named Max saw a', 'seed': 5} -> PASS (67s)
+Loading weights:   0%|          | 0/110 [00:00<?, ?it/s]Loading weights: 100%|██████████| 110/110 [00:00<00:00, 15371.43it/s]
+recheck real_alpha {'name': 'SimpleStories/SimpleStories-35M', 'prefix': 'One day, a big dog named Max saw a', 'seed': 5} -> PASS (67s)
+RECHECK_DONE

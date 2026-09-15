@@ -113,7 +113,7 @@ with calibration bands, sampler/loss ablations, propagation with independent des
 | | |
 |---|---|
 | `GlobalManifold(latent_dim, hidden=(512,256), K=32, K_s=8)` | `fit(X, epochs=300, lr=2e-3, lam_geom=0.1, lam_curv=1e-3, X_val=None)` → self |
-| `sample(n, alpha=0.3, radius="global", n_candidates=8n, anchor_power=m, reweight=True, seed=None)` | → `(X_sample, info)` |
+| `sample(n, alpha=0.3, radius="global", n_candidates=8n, anchor_power=m, reweight=True, min_ess_frac=0.05, seed=None)` | → `(X_sample, info)` |
 | `encode / decode / project / jacobian / log_volume` | the maps and the chart's volume element |
 | `recon_error(Y)`, `nearest_real(Y)`, `coverage(Y)`, `jacobian_rank()` | diagnostics (distances in units of local spacing) |
 | `save(path)` / `GlobalManifold.load(path)` | persistence |

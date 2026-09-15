@@ -134,12 +134,14 @@ class GlobalManifold(nn.Module):
         return torch.cat(logq), torch.cat(cnt)
 
     @torch.no_grad()
-    def sample(self, n, alpha=0.3, radius="global", n_candidates=None, anchor_power=None, reweight=True, seed=None):
+    def sample(self, n, alpha=0.3, radius="global", n_candidates=None, anchor_power=None, reweight=True, min_ess_frac=0.05, seed=None):
         """Approximately volume-uniform samples on G(Omega), Omega = union_i B(z_i, R_i) with R_i from `radii`.
         1. anchor i ~ P(i) ∝ R_i^p (p = m: the proposal is then uniform on Omega up to ball multiplicity);
-        2. z uniform in B(z_i, R_i);  3. importance weight w = sqrt(det J^T J) / q(z) with the exact mixture
-        density q;  4. multinomial resampling of n points;  5. x = G(z).
-        Returns (x, info) with info = z, anchor, multiplicity, ess, anchor participation ratio."""
+        2. z uniform in B(z_i, R_i);  3. importance weight w = sqrt(det J^T J)^tau / q(z) with the exact mixture
+        density q, where tau = 1 unless the weights degenerate: tau is lowered (bisection) until the effective
+        sample size reaches `min_ess_frac` of the candidates, which keeps a few extreme volume elements from
+        absorbing all the mass (tau is reported in info);  4. multinomial resampling of n points;  5. x = G(z).
+        Returns (x, info) with info = z, anchor, multiplicity, ess, tau, anchor participation ratio."""
         g = torch.Generator(device=self.device)
         if seed is not None:
             g.manual_seed(seed)
@@ -150,11 +152,19 @@ class GlobalManifold(nn.Module):
         i = torch.multinomial(anchor_logp.exp(), n_c, replacement=True, generator=g)
         z = self.Z[i] + uniform_ball(n_c, self.m, R[i], g, self.device)
         logq, cnt = self.support_logq(z, R, anchor_logp)
-        logw = self.log_volume(z) - logq if reweight else torch.zeros(n_c, device=self.device)
-        logw = torch.nan_to_num(logw, nan=-float("inf"), posinf=-float("inf"))
-        w = (logw - logw.logsumexp(0)).exp()
+        logvol = torch.nan_to_num(self.log_volume(z), nan=-float("inf"), posinf=-float("inf")) if reweight else torch.zeros(n_c, device=self.device)
+        def weights(tau):
+            lw = tau * logvol - logq if reweight else torch.zeros(n_c, device=self.device)   # no reweighting = the proposal itself
+            lw = torch.nan_to_num(lw, nan=-float("inf"), posinf=-float("inf")); return (lw - lw.logsumexp(0)).exp()
+        tau, w = 1.0, weights(1.0)
+        if reweight and min_ess_frac and float(1 / (w ** 2).sum()) < min_ess_frac * n_c:
+            lo, hi = 0.0, 1.0
+            for _ in range(20):                                   # smallest tempering that restores the ESS floor
+                mid_ = 0.5 * (lo + hi); wm = weights(mid_)
+                lo, hi = (mid_, hi) if float(1 / (wm ** 2).sum()) >= min_ess_frac * n_c else (lo, mid_)
+            tau, w = lo, weights(lo)
         pick = torch.multinomial(w, n, replacement=True, generator=g)
-        info = dict(z=z[pick], anchor=i[pick], multiplicity=cnt[pick], ess=float(1 / (w ** 2).sum()), alpha=alpha, radius=radius, n_candidates=n_c,
+        info = dict(z=z[pick], anchor=i[pick], multiplicity=cnt[pick], ess=float(1 / (w ** 2).sum()), tau=tau, alpha=alpha, radius=radius, n_candidates=n_c,
                     anchor_participation=float(1 / (anchor_logp.exp() ** 2).sum()))
         if info["ess"] < 0.01 * n_c:
             print(f"[gmanifold] warning: ESS {info['ess']:.0f} of {n_c} candidates - a few candidates carry the volume weight; "
