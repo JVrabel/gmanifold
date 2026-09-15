@@ -11,7 +11,8 @@ push the samples through a real Transformer map.** Plain PyTorch; the manifold c
       ┌───────────────────┐
       │  GlobalManifold   │   latent codes z_i = E(x_i),  support Ω = ∪ B(z_i, α·ρ_i)   (ρ_i = 8-th latent neighbour)
       └───────────────────┘
-              │  sample(n, α):  R_i = α·median(ρ) (default) → anchor i ∝ R_i^m → z ~ U(B_i) → weight √det(JᵀJ)/q(z) → resample → x = G(z)
+              │  sample(n, α):  R_i = α·median(ρ) → anchor i ∝ R_i^m → z ~ U(B_i) → weight √det(JᵀJ)^τ / q(z) → resample → x = G(z)
+              │                 (τ = 1 normally; lowered only if a few candidates would take all the weight, reported in info)
               ▼
       samples X_sample ≈ uniform on G(Ω), the tube around the observed states     info: ESS, multiplicity, z, anchors
               │
@@ -66,8 +67,13 @@ gm.support_report(M_out, Y_sample, X_out_heldout, gm.KernelScore(X_out), gm.Tang
   neighbours typically score 1.1–1.2. None of these has an absolute threshold: `support_report` prints them next to
   held-out real states (≈ 1.0 on u) and to real states displaced by 0.5× / 1× their spacing (≈ 0.9 / 0.7 on u), and a
   sample is on-support when it sits with the first row and away from the last two.
-* `info["ess"]` (effective sample size of the importance resampling) should be a sizeable fraction of
-  `8 n` candidates; `M.coverage(X_sample)` says how much of the real cloud the samples reach.
+* **How a sample is made** (all inside `sample`): draw 8n codes uniformly from the balls around the real codes; weight
+  each by √det(JᵀJ) / q(z), the decoder's local stretch divided by the draw density, so that the kept set is uniform in
+  *surface area* rather than in code space; resample n of them; decode. Two readouts tell you whether that went well:
+  `info["ess"]`, the effective sample size (should be a sizeable fraction of the 8n candidates), and `info["tau"]`: if a
+  few candidates with extreme stretch would take all the weight, the weight is softened to √det(JᵀJ)^τ with the largest
+  τ < 1 that keeps ESS ≥ 5 % of the candidates (`min_ess_frac`). τ = 1 is the normal, exact case; τ < 1 means partly
+  corrected. `M.coverage(X_sample)` says how much of the real cloud the samples reach.
 * `radius="global"` (default) gives every anchor the same latent radius α × median ρ: a uniform-thickness neighbourhood of
   the data. Samples are uniform in volume *within that tube* (anchors are equalised, unlike the data density), not in the
   manifold's own volume: sparse regions' large cells are not filled (results summary, item 10). `radius="local"` uses α × ρ_i per anchor; because ball volume scales like ρ^m, the union is
