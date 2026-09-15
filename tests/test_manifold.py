@@ -125,10 +125,20 @@ def test_hub_rule_applies_to_tangent_and_bands():
     assert rep["real + 1x noise"]["nearest_real"] > 1.2 * rep["held-out real"]["nearest_real"]                     # noise bands still separate
 
 
-def test_tempering_restores_ess(sheet, sheet_model):
-    """Degenerate volume weights are tempered (tau < 1) only when needed, and never on a well-behaved cloud."""
+def test_weight_checker_and_auto_tau(sheet, sheet_model):
+    """Default: exact weights (tau = 1) and no warning on a healthy cloud. A forced ESS floor triggers the warning with a
+    suggested tau; auto_tau applies it."""
     M = sheet_model
     x, info = M.sample(2000, alpha=0.5, seed=0)
-    assert info["tau"] == 1.0 and info["ess"] >= 0.05 * info["n_candidates"]
-    x, info = M.sample(2000, alpha=0.5, seed=0, min_ess_frac=0.9)           # an unreachable floor forces tau -> 0 (proposal only)
-    assert info["tau"] < 0.05 and info["ess"] >= 0.5 * info["n_candidates"]
+    assert info["tau"] == 1.0 and info["warning"] is None and info["ess"] >= 0.05 * info["n_candidates"]
+    x, info = M.sample(2000, alpha=0.5, seed=0, min_ess_frac=0.9)             # unreachable floor: checker fires, tau unchanged
+    assert info["tau"] == 1.0 and info["warning"] and info["tau_suggested"] < 0.05
+    x, info = M.sample(2000, alpha=0.5, seed=0, min_ess_frac=0.9, auto_tau=True)
+    assert info["tau"] < 0.05 and info["warning"] is None and info["ess"] >= 0.5 * info["n_candidates"]
+
+
+def test_check_sampling_helper(sheet_model):
+    ok, msg = gm.check_sampling(sheet_model.sample(1000, alpha=0.5, seed=0)[1], verbose=False)
+    assert ok and "ok" not in msg.lower() or ok
+    ok, msg = gm.check_sampling(sheet_model.sample(1000, alpha=0.5, seed=0, min_ess_frac=0.9)[1], verbose=False)
+    assert not ok and "DEGENERATE" in msg and "auto_tau=True" in msg

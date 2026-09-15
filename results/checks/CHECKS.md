@@ -23,7 +23,7 @@
 
 * Story-cloud checks are judged on the kernel score only: on token-clustered clouds held-out states from other stories sit unusually close to training states, so a nearest-real criterion is not meaningful there.
 * Synthetic sheets with m ≥ 5 use a uniformity tolerance of 0.6 (0.4 for m ≤ 4): exact volume-uniformity of the per-anchor-radius sampler degrades with the latent dimension at moderate N; this is a known, mild limitation.
-* SimpleStories-30M/35M embeddings (D = 512) exposed a fragility of the volume weights: for some train/validation splits a few candidates with extreme volume elements absorbed the weight (ESS ≈ 250 of 16k) and samples drifted to 1.1–1.3 spacings. The sampler now tempers the weights (w ∝ √det(JᵀJ)^τ, τ lowered until ESS ≥ 5 % of the candidates, reported as `info['tau']`); the affected configurations were re-run and pass.
+* SimpleStories-30M/35M embeddings (D = 512) exposed a fragility of the volume weights: for some train/validation splits a few candidates with extreme volume elements absorbed the weight (ESS ≈ 250 of 16k) and samples drifted to 1.1–1.3 spacings. The sampler now checks the weights on every call and warns loudly with a suggested τ (w ∝ √det(JᵀJ)^τ, the largest τ with ESS ≥ 5 % of the candidates); with `auto_tau=True` (used by the campaign) it applies that τ, reported as `info['tau']`. The affected configurations were re-run and pass.
 
 
 ## What each check asserts

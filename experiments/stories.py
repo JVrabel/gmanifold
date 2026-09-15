@@ -58,15 +58,15 @@ for loc in locs:
     out["fits"].append(dict(loc=loc, val_recon=M.history[-1]["val_recon_over_spacing"], train_recon=M.history[-1]["recon"], rank=M.jacobian_rank()["rank_median"]))
     bands = {k: v for k, v in gm.support_report(M, Xva, Xva, kernel).items() if k != "samples"}
     for alpha in a.alphas:
-        x, info = M.sample(2000, alpha=alpha, seed=0)
-        out["alpha"].append(dict(loc=loc, alpha=alpha, ess=info["ess"], coverage=M.coverage(x), **gm.support_report(M, x, kernel=kernel)["samples"], bands=bands))
+        x, info = M.sample(2000, alpha=alpha, auto_tau=True, seed=0)
+        out["alpha"].append(dict(loc=loc, alpha=alpha, ess=info["ess"], tau=info["tau"], coverage=M.coverage(x), **gm.support_report(M, x, kernel=kernel)["samples"], bands=bands))
     print(f"[{time.time() - T0:5.0f}s] {loc}: n={len(Xtr)} twonn {d['twonn']:.1f} val recon {out['fits'][-1]['val_recon']:.3f} u@0.3 {next(r['u'] for r in out['alpha'] if r['loc'] == loc and r['alpha'] == 0.3):.3f}", flush=True)
 for k in range(model.config.num_hidden_layers):                                   # FFN maps Lk.attn -> Lk.ffn
     src, dst = f"L{k}.attn", f"L{k}.ffn"
     if src in fits and dst in fits:
         M_in, k_in, Xva_in = fits[src]; M_out, k_out, Xva_out = fits[dst]
         f = tr.make_map(model, src, dst, torch.zeros(1, dtype=torch.long))
-        rows = {f"sample α={al}": gm.support_report(M_out, f(M_in.sample(2000, alpha=al, seed=0)[0]), kernel=k_out)["samples"] for al in (0.3, 0.7, 1.0)}
+        rows = {f"sample α={al}": gm.support_report(M_out, f(M_in.sample(2000, alpha=al, auto_tau=True, seed=0)[0]), kernel=k_out)["samples"] for al in (0.3, 0.7, 1.0)}
         rows["real held-out images"] = gm.support_report(M_out, f(Xva_in), kernel=k_out)["samples"]
         j = gm.knn(M_in.X, 1, Xva_in)[1][:, 0]; nz = torch.randn(Xva_in.shape, device="cuda", generator=torch.Generator(device="cuda").manual_seed(0))
         rows["real + 1x noise images"] = gm.support_report(M_out, f(Xva_in + nz / nz.norm(dim=1, keepdim=True) * M_in.unit(j)[:, None]), kernel=k_out)["samples"]

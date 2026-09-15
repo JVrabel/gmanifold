@@ -37,7 +37,7 @@ def build():
           "Point clouds: a fixed prefix followed by every real token, residual state at the last position, one cloud per residual location; "
           "90 % of the tokens fit the manifold, 10 % are held out. All distances are in units of the local spacing (distance to the 8-th "
           "real neighbour); `u` is the Guidotti kernel score (1 on fitted states); bands = held-out real states and real states displaced by "
-          "0.5× / 1× their spacing. Samples: 2000 per setting, 8× candidates, volume reweighting.\n"]
+          "0.5× / 1× their spacing. Samples: 2000 per setting, 8× candidates, volume reweighting with `auto_tau=True` (τ = 1 unless the ESS would fall below 5 % of the candidates, in which case the weights are tempered to √det(JᵀJ)^τ with the largest τ meeting the floor; the τ column shows where that engaged).\n"]
     md.append("## 0. Runs\n")
     md.append(table([[k, r["model"], r["D"], len(r["locations"]), r["n_states"], f"{r['seconds'] / 60:.0f} min"] for k, r in runs.items()],
                     ["run", "model", "D", "locations", "states", "time"]) + "\n")
@@ -69,11 +69,11 @@ def build():
             if x["m"] == m0:
                 g[x["alpha"]].append(x)
         rows = [[a, mean([x["nearest_real"] for x in v]), mean([x["recon"] for x in v]), mean([x.get("tangent") for x in v]), mean([x["u"] for x in v]), min(x["u"] for x in v),
-                 mean([x["coverage"] for x in v]), mean([x["ess"] for x in v]), mean([x["multiplicity"] for x in v])] for a, v in sorted(g.items())]
+                 mean([x["coverage"] for x in v]), mean([x["ess"] for x in v]), mean([x.get("tau", 1.0) for x in v]), mean([x["multiplicity"] for x in v])] for a, v in sorted(g.items())]
         b = [x["bands"] for x in r["alpha"] if x["m"] == m0]
         for name in ("held-out real", "real + 0.5x noise", "real + 1x noise"):
-            rows.append([name, mean([x[name]["nearest_real"] for x in b]), mean([x[name]["recon"] for x in b]), mean([x[name].get("tangent") for x in b]), mean([x[name]["u"] for x in b]), min(x[name]["u"] for x in b), "–", "–", "–"])
-        md.append(f"**{k}**, m = {m0}\n\n" + table(rows, ["α / band", "nearest real", "recon", "tangent resid", "u (mean)", "u (min over loc)", "coverage", "ESS", "ball multiplicity"]) + "\n")
+            rows.append([name, mean([x[name]["nearest_real"] for x in b]), mean([x[name]["recon"] for x in b]), mean([x[name].get("tangent") for x in b]), mean([x[name]["u"] for x in b]), min(x[name]["u"] for x in b), "–", "–", "–", "–"])
+        md.append(f"**{k}**, m = {m0}\n\n" + table(rows, ["α / band", "nearest real", "recon", "tangent resid", "u (mean)", "u (min over loc)", "coverage", "ESS", "τ (mean)", "ball multiplicity"]) + "\n")
         xs = sorted(g)
         ax[0].plot(xs, [mean([x["u"] for x in g[a]]) for a in xs], "-o", ms=3, color=C[ci % 6], label=k)
         ax[1].plot(xs, [mean([x["nearest_real"] for x in g[a]]) for a in xs], "-o", ms=3, color=C[ci % 6], label=k)

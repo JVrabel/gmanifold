@@ -46,3 +46,24 @@ def support_report(M, samples, X_heldout=None, kernel=None, tangent=None, noise=
             n = torch.randn(Xh.shape, device=M.device, generator=g)
             out[f"real + {f:g}x noise"] = row(Xh + n / n.norm(dim=1, keepdim=True) * (f * M.unit(j))[:, None])
     return out
+
+
+def check_sampling(info, min_ess_frac=0.05, verbose=True):
+    """Inspect the `info` returned by `GlobalManifold.sample` for the degenerate-weights signature (a few candidates with
+    extreme volume elements taking all the importance mass). Returns (ok, message). With verbose=True the message is
+    printed loudly when the check fails, together with the tau that would restore the ESS floor."""
+    n_c = info["n_candidates"]; ess_frac = info["ess"] / n_c
+    mult = info["multiplicity"]; dup = float((mult > 1).float().mean()) if hasattr(mult, "float") else float("nan")
+    ok = ess_frac >= min_ess_frac and info.get("warning") is None
+    msg = (f"ESS {info['ess']:.0f} of {n_c} candidates ({ess_frac:.1%}), tau = {info['tau']:.2f}"
+           + (f", suggested tau = {info['tau_suggested']:.2f}" if info.get("tau_suggested", info["tau"]) != info["tau"] else "")
+           + f", anchors participating ≈ {info['anchor_participation']:.0f}")
+    if not ok:
+        msg = ("DEGENERATE SAMPLING: " + msg + ". A handful of candidates dominate the weights, so the samples are near-copies of a few points. "
+               f"Temper the volume weights: sample(..., tau={info.get('tau_suggested', 0.5):.2f}) or sample(..., auto_tau=True); "
+               "also check the fit (held-out recon error, latent dim, isolated outlier states in X).")
+        if verbose:
+            print("[gmanifold] " + "!" * 20 + "\n[gmanifold] " + msg + "\n[gmanifold] " + "!" * 20)
+    elif verbose:
+        print("[gmanifold] sampling ok: " + msg)
+    return ok, msg

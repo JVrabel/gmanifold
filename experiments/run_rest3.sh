@@ -1,11 +1,9 @@
 #!/bin/bash
-# Full results regeneration: tests, prefix-cloud sweeps (5M/35M/TinyLlama), extra seeds/prefix, story clouds, capacity study, VAE check, downstream, report.
+# Remaining stages of run_all.sh after the sampler API change (5M and 35M sweeps already regenerated with the same behaviour = auto_tau=True).
 cd /workspace/projects/gmanifold && source /venv/main/bin/activate
-mkdir -p results
 run() { echo "=== $(date -u +%H:%M:%S) START $*"; "$@" && echo "=== $(date -u +%H:%M:%S) OK $*" || echo "=== $(date -u +%H:%M:%S) FAIL $*"; }
 run python -m pytest tests -q -x
-run python experiments/sweep.py --model SimpleStories/SimpleStories-5M   --out results/5M   --m 8 16 32 --seeds 0 1 2 --ablation
-run python experiments/sweep.py --model SimpleStories/SimpleStories-35M  --out results/35M  --m 16 --seeds 0 1
+run jupyter nbconvert --to notebook --execute --inplace --ExecutePreprocessor.timeout=3600 --ExecutePreprocessor.kernel_name=venv-main examples/quickstart_simplestories.ipynb
 run python experiments/sweep.py --model TinyLlama/TinyLlama-1.1B-Chat-v1.0 --out results/TinyLlama --m 16 --seeds 0 1 --epochs 150 --locs embed L0.attn L0.ffn L3.ffn L7.ffn L11.ffn L15.ffn L21.ffn
 run python experiments/sweep.py --model TinyLlama/TinyLlama-1.1B-Chat-v1.0 --out results/TinyLlama_m64 --m 64 --seeds 0 --epochs 150 --no-propagation --locs embed L0.ffn L3.ffn L11.ffn L21.ffn
 run python experiments/sweep.py --model SimpleStories/SimpleStories-35M  --out results/35M_seeds --m 16 --seeds 2 3 4 --no-propagation

@@ -2,6 +2,6 @@
 from .geometry import degenerate_mask, intrinsic_dimension, knn, outlier_mask
 from .manifold import GlobalManifold
 from .tangent import TangentCharts
-from .validate import KernelScore, support_report
+from .validate import KernelScore, check_sampling, support_report
 
-__all__ = ["GlobalManifold", "TangentCharts", "KernelScore", "support_report", "intrinsic_dimension", "knn", "degenerate_mask", "outlier_mask"]
+__all__ = ["GlobalManifold", "TangentCharts", "KernelScore", "support_report", "check_sampling", "intrinsic_dimension", "knn", "degenerate_mask", "outlier_mask"]

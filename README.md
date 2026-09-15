@@ -12,9 +12,9 @@ push the samples through a real Transformer map.** Plain PyTorch; the manifold c
       │  GlobalManifold   │   latent codes z_i = E(x_i),  support Ω = ∪ B(z_i, α·ρ_i)   (ρ_i = 8-th latent neighbour)
       └───────────────────┘
               │  sample(n, α):  R_i = α·median(ρ) → anchor i ∝ R_i^m → z ~ U(B_i) → weight √det(JᵀJ)^τ / q(z) → resample → x = G(z)
-              │                 (τ = 1 normally; lowered only if a few candidates would take all the weight, reported in info)
+              │                 (τ = 1 by default = exact weights; the weights are checked and a loud warning names the τ to use if they degenerate; auto_tau=True applies it)
               ▼
-      samples X_sample ≈ uniform on G(Ω), the tube around the observed states     info: ESS, multiplicity, z, anchors
+      samples X_sample ≈ uniform on G(Ω), the tube around the observed states     info: ESS, τ, warning, multiplicity, z, anchors
               │
               ▼  map_fn = the real Transformer stretch (FFN sub-layer, attention under a fixed context, F_{k→k'})
       images  Y_sample = map_fn(X_sample)
@@ -70,10 +70,13 @@ gm.support_report(M_out, Y_sample, X_out_heldout, gm.KernelScore(X_out), gm.Tang
 * **How a sample is made** (all inside `sample`): draw 8n codes uniformly from the balls around the real codes; weight
   each by √det(JᵀJ) / q(z), the decoder's local stretch divided by the draw density, so that the kept set is uniform in
   *surface area* rather than in code space; resample n of them; decode. Two readouts tell you whether that went well:
-  `info["ess"]`, the effective sample size (should be a sizeable fraction of the 8n candidates), and `info["tau"]`: if a
-  few candidates with extreme stretch would take all the weight, the weight is softened to √det(JᵀJ)^τ with the largest
-  τ < 1 that keeps ESS ≥ 5 % of the candidates (`min_ess_frac`). τ = 1 is the normal, exact case; τ < 1 means partly
-  corrected. `M.coverage(X_sample)` says how much of the real cloud the samples reach.
+  `info["ess"]`, the effective sample size (should be a sizeable fraction of the 8n candidates), and `info["warning"]`.
+  Every call checks the weights: if a few candidates with extreme stretch take all the mass (ESS below 5 % of the
+  candidates, `min_ess_frac`), the samples would be near-copies of a few points, so `sample` prints a loud warning and
+  names the fix: temper the weights to √det(JᵀJ)^τ with the largest τ < 1 that restores the ESS floor
+  (`info["tau_suggested"]`). Pass `tau=...` yourself or `auto_tau=True` to have it set automatically (`info["tau"]` then
+  records what was used; τ = 1 is the exact case, τ < 1 partly corrected). `gm.check_sampling(info)` runs the same
+  check on a stored result. `M.coverage(X_sample)` says how much of the real cloud the samples reach.
 * `radius="global"` (default) gives every anchor the same latent radius α × median ρ: a uniform-thickness neighbourhood of
   the data. Samples are uniform in volume *within that tube* (anchors are equalised, unlike the data density), not in the
   manifold's own volume: sparse regions' large cells are not filled (results summary, item 10). `radius="local"` uses α × ρ_i per anchor; because ball volume scales like ρ^m, the union is
@@ -119,10 +122,11 @@ with calibration bands, sampler/loss ablations, propagation with independent des
 | | |
 |---|---|
 | `GlobalManifold(latent_dim, hidden=(512,256), K=32, K_s=8)` | `fit(X, epochs=300, lr=2e-3, lam_geom=0.1, lam_curv=1e-3, X_val=None)` → self |
-| `sample(n, alpha=0.3, radius="global", n_candidates=8n, anchor_power=m, reweight=True, min_ess_frac=0.05, seed=None)` | → `(X_sample, info)` |
+| `sample(n, alpha=0.3, radius="global", n_candidates=8n, anchor_power=m, reweight=True, tau=1.0, auto_tau=False, min_ess_frac=0.05, seed=None)` | → `(X_sample, info)` |
 | `encode / decode / project / jacobian / log_volume` | the maps and the chart's volume element |
 | `recon_error(Y)`, `nearest_real(Y)`, `coverage(Y)`, `jacobian_rank()` | diagnostics (distances in units of local spacing) |
 | `save(path)` / `GlobalManifold.load(path)` | persistence |
+| `check_sampling(info)` | (ok, message): flags degenerate importance weights and names the τ to use |
 | `KernelScore(X, sigma=None, lam=1e-6)(Y)` | Guidotti kernel signature u(Y) as an independent validator (arXiv:2404.00427) |
 | `TangentCharts(X, m, K=max(4m,32))` | local PCA charts: `.residual(Y)` (normal distance to the nearest chart / spacing) as a second validator, `.sample(n, alpha)` as a conservative cross-check sampler |
 | `support_report(M, samples, X_heldout, kernel, tangent)` | medians of all diagnostics with calibration bands |

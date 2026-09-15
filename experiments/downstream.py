@@ -59,7 +59,7 @@ out["next_token"].append(dict(set="held-out real tokens", js_nearest=float(js(lp
                               top1_agree_nearest=float((lp_val.argmax(-1) == lp_real[j2[:, 0]].argmax(-1)).float().mean()), top1_agree_random=float((lp_val.argmax(-1) == lp_real[rnd].argmax(-1)).float().mean())))
 samples = {}
 for alpha in a.alphas:
-    x, info = M_in.sample(a.n, alpha=alpha, seed=0); samples[alpha] = x
+    x, info = M_in.sample(a.n, alpha=alpha, auto_tau=True, seed=0); samples[alpha] = x
     d2, j2 = gm.knn(Xtr_emb, 2, x); lp = logits_at_last(x)
     rnd = torch.randint(len(Xtr_emb), (len(x),), generator=torch.Generator().manual_seed(1)).cuda()
     out["next_token"].append(dict(set=f"samples α={alpha}", js_nearest=float(js(lp, lp_real[j2[:, 0]]).median()), js_second=float(js(lp, lp_real[j2[:, 1]]).median()),

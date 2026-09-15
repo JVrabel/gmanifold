@@ -67,7 +67,7 @@ for loc in ("embed", "L5.ffn"):
         active = int((M.kl_per_dim > 0.01).sum())
         z_prior = torch.randn(2000, 16, device="cuda", generator=torch.Generator(device="cuda").manual_seed(0))
         x_prior = M.decode(z_prior)
-        x_ours, info = M.sample(2000, alpha=0.3, seed=0)
+        x_ours, info = M.sample(2000, alpha=0.3, auto_tau=True, seed=0)
         r = dict(loc=loc, beta=beta, lam_geom=geom, val_recon=float(M.recon_error(Xva).median()), active_units=active, mean_sigma=float((0.5 * M.logvar).exp().mean()),
                  prior=gm.support_report(M, x_prior, kernel=kernel, tangent=T)["samples"], prior_coverage=M.coverage(x_prior),
                  ours=gm.support_report(M, x_ours, kernel=kernel, tangent=T)["samples"], ours_coverage=M.coverage(x_ours), ours_ess=info["ess"])

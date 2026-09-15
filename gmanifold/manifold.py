@@ -134,14 +134,16 @@ class GlobalManifold(nn.Module):
         return torch.cat(logq), torch.cat(cnt)
 
     @torch.no_grad()
-    def sample(self, n, alpha=0.3, radius="global", n_candidates=None, anchor_power=None, reweight=True, min_ess_frac=0.05, seed=None):
+    def sample(self, n, alpha=0.3, radius="global", n_candidates=None, anchor_power=None, reweight=True, tau=1.0, auto_tau=False,
+               min_ess_frac=0.05, seed=None):
         """Approximately volume-uniform samples on G(Omega), Omega = union_i B(z_i, R_i) with R_i from `radii`.
         1. anchor i ~ P(i) ∝ R_i^p (p = m: the proposal is then uniform on Omega up to ball multiplicity);
         2. z uniform in B(z_i, R_i);  3. importance weight w = sqrt(det J^T J)^tau / q(z) with the exact mixture
-        density q, where tau = 1 unless the weights degenerate: tau is lowered (bisection) until the effective
-        sample size reaches `min_ess_frac` of the candidates, which keeps a few extreme volume elements from
-        absorbing all the mass (tau is reported in info);  4. multinomial resampling of n points;  5. x = G(z).
-        Returns (x, info) with info = z, anchor, multiplicity, ess, tau, anchor participation ratio."""
+        density q (tau = 1: exact surface-area weighting);  4. multinomial resampling of n points;  5. x = G(z).
+        The weights are checked every call: if their effective sample size falls below `min_ess_frac` of the
+        candidates (a few candidates with extreme volume elements absorb the mass), a warning is printed with the
+        tau that would restore the floor. With `auto_tau=True` that tau is applied automatically.
+        Returns (x, info) with info = z, anchor, multiplicity, ess, tau, tau_suggested, warning, anchor participation."""
         g = torch.Generator(device=self.device)
         if seed is not None:
             g.manual_seed(seed)
@@ -153,22 +155,29 @@ class GlobalManifold(nn.Module):
         z = self.Z[i] + uniform_ball(n_c, self.m, R[i], g, self.device)
         logq, cnt = self.support_logq(z, R, anchor_logp)
         logvol = torch.nan_to_num(self.log_volume(z), nan=-float("inf"), posinf=-float("inf")) if reweight else torch.zeros(n_c, device=self.device)
-        def weights(tau):
-            lw = tau * logvol - logq if reweight else torch.zeros(n_c, device=self.device)   # no reweighting = the proposal itself
+
+        def weights(t):
+            lw = t * logvol - logq if reweight else torch.zeros(n_c, device=self.device)   # no reweighting = the proposal itself
             lw = torch.nan_to_num(lw, nan=-float("inf"), posinf=-float("inf")); return (lw - lw.logsumexp(0)).exp()
-        tau, w = 1.0, weights(1.0)
-        if reweight and min_ess_frac and float(1 / (w ** 2).sum()) < min_ess_frac * n_c:
-            lo, hi = 0.0, 1.0
-            for _ in range(20):                                   # smallest tempering that restores the ESS floor
-                mid_ = 0.5 * (lo + hi); wm = weights(mid_)
-                lo, hi = (mid_, hi) if float(1 / (wm ** 2).sum()) >= min_ess_frac * n_c else (lo, mid_)
-            tau, w = lo, weights(lo)
+
+        ess = lambda w: float(1 / (w ** 2).sum())
+        w = weights(tau); info = dict(tau=tau, tau_suggested=tau, warning=None)
+        if reweight and min_ess_frac and ess(w) < min_ess_frac * n_c:        # the checker
+            lo, hi = 0.0, tau
+            for _ in range(20):                                               # largest tempering exponent meeting the ESS floor
+                mid_ = 0.5 * (lo + hi); lo, hi = (mid_, hi) if ess(weights(mid_)) >= min_ess_frac * n_c else (lo, mid_)
+            top = float(w.sort(descending=True).values[:10].sum())
+            info["tau_suggested"] = lo
+            if auto_tau:
+                w = weights(lo); info["tau"] = lo
+            else:
+                info["warning"] = (f"degenerate importance weights: ESS {ess(w):.0f} of {n_c} candidates, the 10 heaviest carry {top:.0%} of the mass; "
+                                   f"the samples will be near-copies of a few points. Temper the volume weights with tau≈{lo:.2f} "
+                                   f"(sample(..., tau={lo:.2f}) or auto_tau=True), and check the fit (held-out recon, latent dim, outlier states).")
+                print("[gmanifold] WARNING " + info["warning"])
         pick = torch.multinomial(w, n, replacement=True, generator=g)
-        info = dict(z=z[pick], anchor=i[pick], multiplicity=cnt[pick], ess=float(1 / (w ** 2).sum()), tau=tau, alpha=alpha, radius=radius, n_candidates=n_c,
+        info.update(z=z[pick], anchor=i[pick], multiplicity=cnt[pick], ess=ess(w), alpha=alpha, radius=radius, n_candidates=n_c,
                     anchor_participation=float(1 / (anchor_logp.exp() ** 2).sum()))
-        if info["ess"] < 0.01 * n_c:
-            print(f"[gmanifold] warning: ESS {info['ess']:.0f} of {n_c} candidates - a few candidates carry the volume weight; "
-                  "check X for isolated outlier states (geometry.outlier_mask) before fitting")
         return self.decode(z[pick]), info
 
     # ------------------------------------------------------------------ diagnostics

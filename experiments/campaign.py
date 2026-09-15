@@ -74,9 +74,9 @@ def synthetic(m, D, N, seed):
     M = gm.GlobalManifold(latent_dim=m, hidden=(128, 64)).fit(Xtr, epochs=EP, X_val=Xva, seed=seed)
     target = float((vol(sttr[:, 0]) ** 2).mean() / vol(sttr[:, 0]).mean()); data = float(vol(sttr[:, 0]).mean()); gap = target - data
     def mean_vol(**kw):
-        x, info = M.sample(4000, seed=seed, **kw); return float(vol(sttr[knn(Xtr, 1, x)[1][:, 0]][:, 0]).mean()), info
+        x, info = M.sample(4000, auto_tau=True, seed=seed, **kw); return float(vol(sttr[knn(Xtr, 1, x)[1][:, 0]][:, 0]).mean()), info
     v_loc, info = mean_vol(alpha=0.5, radius="local"); v_glob1, _ = mean_vol(alpha=1.0); v_none, _ = mean_vol(alpha=0.5, anchor_power=0, reweight=False)
-    x, _ = M.sample(2000, alpha=0.3, seed=seed); s, b = bands_and(M, Xva, gm.KernelScore(Xtr), None, x)
+    x, _ = M.sample(2000, alpha=0.3, auto_tau=True, seed=seed); s, b = bands_and(M, Xva, gm.KernelScore(Xtr), None, x)
     r = dict(val_recon=M.history[-1]["val_recon_over_spacing"], rank=M.jacobian_rank()["rank_median"], uniform_local_err=abs(v_loc - target) / gap, uniform_global1_err=abs(v_glob1 - target) / gap,
              density_err=abs(v_none - data) / gap, ess_frac=info["ess"] / info["n_candidates"], u_samples=s["u"], u_real=b["held-out real"]["u"], u_noise=b["real + 1x noise"]["u"])
     r["pass"] = bool(r["val_recon"] < 0.5 and r["rank"] == m and r["uniform_local_err"] < 0.4 and r["uniform_global1_err"] < 0.5 and r["density_err"] < 0.4 and r["ess_frac"] > 0.2 and s["u"] > mid(b, "u") and b["real + 1x noise"]["u"] < b["held-out real"]["u"])
@@ -89,8 +89,8 @@ def determinism(name, prefix, seed):
     for _ in range(2):
         torch.manual_seed(seed); M = gm.GlobalManifold(latent_dim=16).fit(X[tr_i], epochs=EP, seed=seed); fits.append(M)
     p = [torch.cat([q.flatten() for q in M.parameters()]) for M in fits]
-    x1, _ = fits[0].sample(500, 0.3, seed=1); x2, _ = fits[1].sample(500, 0.3, seed=1)
-    path = os.path.join(A.out, "tmp_model.pt"); fits[0].save(path); M2 = gm.GlobalManifold.load(path); x3, _ = M2.sample(500, 0.3, seed=1); os.remove(path)
+    x1, _ = fits[0].sample(500, 0.3, auto_tau=True, seed=1); x2, _ = fits[1].sample(500, 0.3, auto_tau=True, seed=1)
+    path = os.path.join(A.out, "tmp_model.pt"); fits[0].save(path); M2 = gm.GlobalManifold.load(path); x3, _ = M2.sample(500, 0.3, auto_tau=True, seed=1); os.remove(path)
     r = dict(param_diff=float((p[0] - p[1]).abs().max()), sample_diff=float((x1 - x2).abs().max()), saveload_diff=float((x1 - x3).abs().max()))
     r["pass"] = bool(r["param_diff"] < 1e-5 and r["sample_diff"] < 1e-4 and r["saveload_diff"] < 1e-5)
     return r
@@ -106,7 +106,7 @@ def real_alpha(name, prefix, seed, m=16, n_locs=5):
         M = gm.GlobalManifold(latent_dim=m).fit(Xtr, epochs=EP, X_val=Xva, seed=seed); kernel, T = gm.KernelScore(Xtr), gm.TangentCharts(Xtr, m)
         row = dict(val_recon=M.history[-1]["val_recon_over_spacing"], unit=M.spacing_unit, hub=M.hub_share)
         for alpha in (0.3, 0.7, 1.0, 1.5):
-            x, info = M.sample(2000, alpha=alpha, seed=seed); s, b = bands_and(M, Xva, kernel, T, x)
+            x, info = M.sample(2000, alpha=alpha, auto_tau=True, seed=seed); s, b = bands_and(M, Xva, kernel, T, x)
             row[f"a{alpha}"] = dict(u=s["u"], nearest=s["nearest_real"], tangent=s["tangent"], coverage=M.coverage(x), ess=info["ess"])
         row["bands"] = {k: {kk: round(vv, 4) for kk, vv in v.items()} for k, v in b.items()}
         cov_min = 0.5 if M.spacing_unit == "global" else 0.8
@@ -120,7 +120,7 @@ def real_alpha(name, prefix, seed, m=16, n_locs=5):
 def propagation(name, prefix, seed, m=16):
     model, tok, ids, seqs, L, st0 = cloud(name, prefix, ["embed"]); locs = tr.locations(model)
     model, tok, ids, seqs, L, st = cloud(name, prefix, locs); tr_i, va_i = split(len(ids), seed)
-    M_in = gm.GlobalManifold(latent_dim=m).fit(st["embed"][tr_i], epochs=EP, seed=seed); x, _ = M_in.sample(2000, alpha=0.3, seed=seed)
+    M_in = gm.GlobalManifold(latent_dim=m).fit(st["embed"][tr_i], epochs=EP, seed=seed); x, _ = M_in.sample(2000, alpha=0.3, auto_tau=True, seed=seed)
     Xva = st["embed"][va_i]; j = knn(M_in.X, 1, Xva)[1][:, 0]; g = torch.Generator(device="cuda").manual_seed(seed)
     nz = torch.randn(Xva.shape, device="cuda", generator=g); noise = Xva + nz / nz.norm(dim=1, keepdim=True) * M_in.unit(j)[:, None]
     rows, ok = {}, True
@@ -147,7 +147,7 @@ def next_token(name, prefix, seed, m=16):
     def js(p, q):
         mm = 0.5 * (p.exp() + q.exp()); return 0.5 * ((p.exp() * (p - mm.log())).sum(-1) + (q.exp() * (q - mm.log())).sum(-1))
     lpr = lp(X[tr_i]); r = {}
-    for label, x in (("real", X[va_i]), ("samples", M.sample(2000, alpha=0.3, seed=seed)[0])):
+    for label, x in (("real", X[va_i]), ("samples", M.sample(2000, alpha=0.3, auto_tau=True, seed=seed)[0])):
         l = lp(x); j2 = knn(X[tr_i], 2, x)[1]; rnd = torch.randint(len(tr_i), (len(x),), generator=torch.Generator().manual_seed(1)).cuda()
         r[label] = dict(js_nearest=float(js(l, lpr[j2[:, 0]]).median()), js_random=float(js(l, lpr[rnd]).median()), top1=float((l.argmax(-1) == lpr[j2[:, 0]].argmax(-1)).float().mean()))
     r["pass"] = bool(r["samples"]["js_nearest"] < r["real"]["js_nearest"] and r["samples"]["js_nearest"] < 0.6 * r["samples"]["js_random"] and r["samples"]["top1"] > r["real"]["top1"])
@@ -158,7 +158,7 @@ def scaling(name, prefix, seed, loc="embed"):
     model, tok, ids, seqs, L, st = cloud(name, prefix, [loc]); X = st[loc]; tr_i, va_i = split(len(ids), seed)
     M = gm.GlobalManifold(latent_dim=16).fit(X[tr_i], epochs=EP, seed=seed); r = {}
     for n in (500, 2000, 8000, 32000):
-        x, info = M.sample(n, alpha=0.3, seed=seed); r[str(n)] = dict(coverage=M.coverage(x), ess_frac=info["ess"] / info["n_candidates"], nearest=float(M.nearest_real(x).median()))
+        x, info = M.sample(n, alpha=0.3, auto_tau=True, seed=seed); r[str(n)] = dict(coverage=M.coverage(x), ess_frac=info["ess"] / info["n_candidates"], nearest=float(M.nearest_real(x).median()))
     covs = [r[k]["coverage"] for k in ("500", "2000", "8000", "32000")]
     r["pass"] = bool(all(covs[i] <= covs[i + 1] + 0.02 for i in range(3)) and max(r[k]["ess_frac"] for k in r if k != "pass") / max(1e-9, min(r[k]["ess_frac"] for k in r if k != "pass")) < 3)
     return r
@@ -169,7 +169,7 @@ def hyper(name, prefix, seed, loc="embed"):
     kernel = gm.KernelScore(Xtr); r = {}
     for label, kw, skw in (("default", {}, {}), ("K16", dict(K=16), {}), ("K64", dict(K=64), {}), ("Ks4", dict(K_s=4), {}), ("Ks16", dict(K_s=16), {}),
                            ("cand4n", {}, dict(n_candidates=8000)), ("cand16n", {}, dict(n_candidates=32000)), ("hidden256", dict(hidden=(256, 128)), {})):
-        M = gm.GlobalManifold(latent_dim=16, **kw).fit(Xtr, epochs=EP, X_val=Xva, seed=seed); x, info = M.sample(2000, alpha=0.3, seed=seed, **skw)
+        M = gm.GlobalManifold(latent_dim=16, **kw).fit(Xtr, epochs=EP, X_val=Xva, seed=seed); x, info = M.sample(2000, alpha=0.3, auto_tau=True, seed=seed, **skw)
         s = gm.support_report(M, x, kernel=kernel)["samples"]; r[label] = dict(val_recon=M.history[-1]["val_recon_over_spacing"], u=s["u"], nearest=s["nearest_real"], coverage=M.coverage(x), ess_frac=info["ess"] / info["n_candidates"])
     u0 = r["default"]["u"]; r["pass"] = bool(all(abs(v["u"] - u0) < 0.08 and v["coverage"] > 0.7 for k, v in r.items() if k not in ("pass",)))
     return r
@@ -178,7 +178,7 @@ def hyper(name, prefix, seed, loc="embed"):
 def memory(name, prefix, seed):
     model, tok, ids, seqs, L, st = cloud(name, prefix, ["embed"]); X = st["embed"]; peaks = []
     for i in range(12):
-        torch.cuda.reset_peak_memory_stats(); M = gm.GlobalManifold(latent_dim=16).fit(X, epochs=max(5, EP // 10), seed=seed + i); M.sample(2000, 0.3, seed=i); del M; torch.cuda.empty_cache()
+        torch.cuda.reset_peak_memory_stats(); M = gm.GlobalManifold(latent_dim=16).fit(X, epochs=max(5, EP // 10), seed=seed + i); M.sample(2000, 0.3, auto_tau=True, seed=i); del M; torch.cuda.empty_cache()
         peaks.append(torch.cuda.max_memory_allocated() / 1e9)
     return dict(peak_first=peaks[0], peak_last=peaks[-1], allocated_after=torch.cuda.memory_allocated() / 1e9, **{"pass": bool(peaks[-1] < 1.5 * peaks[0] + 0.5)})
 
@@ -204,7 +204,7 @@ def stories(name, seed, n=10000, locs=("L1.attn", "L1.ffn", "L3.ffn")):
     for loc in locs:
         X = st[loc].cuda(); Xtr, Xva = X[~is_val], X[is_val]; Xtr = Xtr[~gm.degenerate_mask(Xtr) & ~gm.outlier_mask(Xtr)]
         M = gm.GlobalManifold(latent_dim=16).fit(Xtr, epochs=max(20, EP // 3), X_val=Xva, seed=seed); kernel = gm.KernelScore(Xtr)
-        x, info = M.sample(2000, alpha=0.3, seed=seed); s, b = bands_and(M, Xva, kernel, None, x)
+        x, info = M.sample(2000, alpha=0.3, auto_tau=True, seed=seed); s, b = bands_and(M, Xva, kernel, None, x)
         rows[loc] = dict(val_recon=M.history[-1]["val_recon_over_spacing"], u=s["u"], nearest=s["nearest_real"], u_mid=mid(b, "u"), nearest_noise=b["real + 0.5x noise"]["nearest_real"], ess=info["ess"],
                          pass_=bool(s["u"] > mid(b, "u") and s["nearest_real"] < b["real + 0.5x noise"]["nearest_real"]))
         ok &= rows[loc]["pass_"]; del M, kernel; torch.cuda.empty_cache()

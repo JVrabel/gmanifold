@@ -59,7 +59,15 @@ resampling of n from 8n candidates, x = G(z). `info` returns ESS, ball multiplic
   (`tests/test_manifold.py::test_volume_uniform_sampling`): with local radii the samples reproduce E_volume[vol] to
   within the test tolerance; with the global radius they sit between the data density and the volume target at
   α = 0.5 and reach it at α = 1; the un-reweighted variant reproduces the data density.
-* A warning is printed when ESS < 1 % of the candidates (the outlier signature).
+* **Weight check and tempering.** Every call computes the ESS of the importance weights. If it falls below `min_ess_frac`
+  (5 %) of the candidates, a few candidates with extreme volume elements hold the mass and the resampled set is a
+  handful of near-copies (seen on SimpleStories-30M/35M embeddings for some splits: ESS ≈ 250 of 16k, samples drifting
+  to 1.1–1.3 spacings). The sampler then prints a loud warning with the largest tempering exponent τ < 1 for which
+  w ∝ √det(JᵀJ)^τ / q(z) meets the floor (found by bisection, `info['tau_suggested']`). The default keeps τ = 1 (exact
+  surface-area weighting, never silently changed); `tau=` sets it by hand and `auto_tau=True` applies the suggested
+  value. All experiment scripts run with `auto_tau=True` and record τ, so the tables show where tempering engaged
+  (SimpleStories-5M: never at m = 8/16, 0.7–1.0 at m = 32). `validate.check_sampling(info)` repeats the check on a
+  stored result.
 
 **Validators** (never used for sampling).
 * `KernelScore`: Guidotti's kernel signature (arXiv:2404.00427), u(x) = (1/N)Σ Λ_j K_σ(x, x_j) with

@@ -79,9 +79,9 @@ for loc in locs:
                                     rank=jr["rank_median"], jac_sv=jr["singular_values"][:m].tolist(), seconds=time.time() - t))
             bands = gm.support_report(M, Xva, Xva, kernel, T)            # bands: held-out real, 0.5x, 1x noise
             for alpha in a.alphas:
-                x, info = M.sample(a.n, alpha=alpha, seed=seed)
+                x, info = M.sample(a.n, alpha=alpha, auto_tau=True, seed=seed)
                 rep = gm.support_report(M, x, kernel=kernel, tangent=T)["samples"]
-                out["alpha"].append(dict(loc=loc, m=m, seed=seed, alpha=alpha, ess=info["ess"], anchor_participation=info["anchor_participation"], multiplicity=float(info["multiplicity"].float().mean()),
+                out["alpha"].append(dict(loc=loc, m=m, seed=seed, alpha=alpha, ess=info["ess"], tau=info["tau"], anchor_participation=info["anchor_participation"], multiplicity=float(info["multiplicity"].float().mean()),
                                          coverage=M.coverage(x), **rep, bands={k: v for k, v in bands.items() if k != "samples"}))
             print(f"[{time.time() - T0:6.0f}s] {loc} m={m} seed={seed}: val recon {out['fits'][-1]['val_recon']:.3f}, "
                   f"alpha 0.3 -> u {next(r['u'] for r in out['alpha'] if r['loc'] == loc and r['m'] == m and r['seed'] == seed and r['alpha'] == 0.3):.3f}", flush=True)
@@ -92,18 +92,18 @@ if a.ablation:                                                          # sample
     for loc in [locs[0], locs[len(locs) // 2], locs[-1]]:
         X = states[loc].cuda(); Xtr, Xva = X[tr_i], X[va_i]; kernel = gm.KernelScore(Xtr)
         M, _ = fits[(loc, a.m[0], a.seeds[0])]; T = gm.TangentCharts(Xtr, a.m[0])
-        xt, _ = T.sample(a.n, alpha=0.3, seed=0)
+        xt, _ = T.sample(a.n, alpha=0.3, auto_tau=True, seed=0)
         out["ablation"].append(dict(loc=loc, kind="sampler", variant="tangent charts (cross-check)", ess=float(a.n), anchors=None, coverage=M.coverage(xt),
                                     **gm.support_report(M, xt, kernel=kernel, tangent=T)["samples"]))
         for radius, p_, rw in (("global", None, True), ("global", 0, False), ("local", None, True), ("local", 0, True), ("local", 0, False)):
-            x, info = M.sample(a.n, alpha=0.3, radius=radius, anchor_power=p_, reweight=rw, seed=0)
-            out["ablation"].append(dict(loc=loc, kind="sampler", variant=f"radius={radius}, p={'m' if p_ is None else p_}, reweight={rw}", ess=info["ess"], anchors=info["anchor_participation"], coverage=M.coverage(x),
+            x, info = M.sample(a.n, alpha=0.3, radius=radius, anchor_power=p_, reweight=rw, auto_tau=True, seed=0)
+            out["ablation"].append(dict(loc=loc, kind="sampler", variant=f"radius={radius}, p={'m' if p_ is None else p_}, reweight={rw}", ess=info["ess"], tau=info["tau"], anchors=info["anchor_participation"], coverage=M.coverage(x),
                                         **gm.support_report(M, x, kernel=kernel)["samples"]))
         for name, kw in (("default", {}), ("no_geom", dict(lam_geom=0.0)), ("no_curv", dict(lam_curv=0.0)), ("strong_geom", dict(lam_geom=1.0)),
                          ("wide", dict()), ("epochs_900", dict(epochs=900))):
             hidden = (1024, 512) if name == "wide" else (512, 256)
             Mv = gm.GlobalManifold(latent_dim=a.m[0], hidden=hidden).fit(Xtr, X_val=Xva, seed=0, **{"epochs": a.epochs, **kw})
-            x, info = Mv.sample(a.n, alpha=0.3, seed=0)
+            x, info = Mv.sample(a.n, alpha=0.3, auto_tau=True, seed=0)
             out["ablation"].append(dict(loc=loc, kind="loss", variant=name, val_recon=Mv.history[-1]["val_recon_over_spacing"], train_recon=Mv.history[-1]["recon"],
                                         ess=info["ess"], coverage=Mv.coverage(x), **gm.support_report(Mv, x, kernel=kernel)["samples"]))
         print(f"[{time.time() - T0:6.0f}s] ablation {loc} done", flush=True)
@@ -111,7 +111,7 @@ if a.ablation:                                                          # sample
 if not a.no_propagation and locs[0] == "embed":
     dsts = list(dict.fromkeys(locs[i] for i in (1, 2, len(locs) // 2, len(locs) - 1) if 0 < i < len(locs)))
     M_in, k_in = fits[("embed", a.m[0], a.seeds[0])]
-    samples = {alpha: M_in.sample(a.n, alpha=alpha, seed=0)[0] for alpha in (0.25, 0.5, 1.0)}
+    samples = {alpha: M_in.sample(a.n, alpha=alpha, auto_tau=True, seed=0)[0] for alpha in (0.25, 0.5, 1.0)}
     Xva_in = states["embed"][va_i].cuda()
     for dst in dsts:
         f = tr.make_map(model, "embed", dst, seqs[0], pos=len(prefix))

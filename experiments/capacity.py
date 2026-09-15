@@ -48,11 +48,11 @@ for loc in a.locs:
             M = gm.GlobalManifold(latent_dim=m, hidden=hidden).fit(Xtr, epochs=epochs, X_val=Xva, seed=0, log_every=25, **kw)
             curve = [(h["epoch"], h["val_recon_over_spacing"]) for h in M.history if "val_recon_over_spacing" in h]
             best_ep, best_val = min(curve, key=lambda e: e[1])
-            x, info = M.sample(2000, alpha=0.3, seed=0)
+            x, info = M.sample(2000, alpha=0.3, auto_tau=True, seed=0)
             rep = gm.support_report(M, x, kernel=kernel)["samples"]
             rows.append(dict(loc=loc, m=m, hidden=list(hidden), epochs=epochs, **{k: v for k, v in kw.items()}, params=sum(p.numel() for p in M.parameters()),
                              val_recon_final=curve[-1][1], val_recon_best=best_val, best_epoch=best_ep, train_recon=M.history[-1]["recon"],
-                             u=rep["u"], nearest=rep["nearest_real"], recon_gap=rep["recon"], coverage=M.coverage(x), ess=info["ess"], seconds=time.time() - t))
+                             u=rep["u"], nearest=rep["nearest_real"], recon_gap=rep["recon"], coverage=M.coverage(x), ess=info["ess"], tau=info["tau"], seconds=time.time() - t))
             print(f"[{time.time() - T0:5.0f}s] {loc} m={m} {cfg}: val {curve[-1][1]:.3f} (best {best_val:.3f}@{best_ep}) u {rep['u']:.3f} cov {rows[-1]['coverage']:.2f} ess {info['ess']:.0f}", flush=True)
     torch.cuda.empty_cache()
 json.dump(rows, open(os.path.join(a.out, "capacity.json"), "w"), indent=1); print("saved", f"({(time.time() - T0) / 60:.1f} min)")
