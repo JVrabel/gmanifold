@@ -15,7 +15,10 @@ TinyLlama-1.1B (prefix + every real token; also real story occurrences), then sa
   token density), not in the manifold's own volume; the per-anchor rule that would fill sparse regions collapses.
 * The fit is limited by the latent dimension, not by the network or the optimiser (63-fit capacity study); a VAE
   would be worse for this purpose.
-* Two robustness rules matter: drop degenerate and isolated states first, and use the global support radius.
+* Two robustness rules matter: drop degenerate and isolated states first, and use the global support radius. The
+  importance weights can still degenerate on wide embeddings (SimpleStories-30M/35M, ESS a few % of the candidates):
+  every `sample` call checks this, warns loudly with the tempering exponent τ that restores ESS ≥ 5 %, and applies it
+  under `auto_tau=True` (all tables here use that flag; the τ column shows where it engaged; `checks/ship_check.md`).
 * Retracted negative: the TinyLlama embedding matrix looked "not chartable" (6 spacings) only because five hub
   tokens with tiny spacing dominate the per-anchor unit; in raw or global-median units it behaves like the small
   models (details in the last section). The library now detects such hub-dominated clouds.
@@ -128,15 +131,15 @@ is lower (0.60 vs ≥ 0.97 elsewhere); with the corrected unit all four validato
 Use `intrinsic_dimension`, the held-out reconstruction and the reported hub share before trusting samples on a new cloud.
 
 
-Point clouds: a fixed prefix followed by every real token, residual state at the last position, one cloud per residual location; 90 % of the tokens fit the manifold, 10 % are held out. All distances are in units of the local spacing (distance to the 8-th real neighbour); `u` is the Guidotti kernel score (1 on fitted states); bands = held-out real states and real states displaced by 0.5× / 1× their spacing. Samples: 2000 per setting, 8× candidates, volume reweighting.
+Point clouds: a fixed prefix followed by every real token, residual state at the last position, one cloud per residual location; 90 % of the tokens fit the manifold, 10 % are held out. All distances are in units of the local spacing (distance to the 8-th real neighbour); `u` is the Guidotti kernel score (1 on fitted states); bands = held-out real states and real states displaced by 0.5× / 1× their spacing. Samples: 2000 per setting, 8× candidates, volume reweighting with `auto_tau=True` (τ = 1 unless the ESS would fall below 5 % of the candidates, in which case the weights are tempered to √det(JᵀJ)^τ with the largest τ meeting the floor; the τ column shows where that engaged).
 
 ## 0. Runs
 
 | run | model | D | locations | states | time |
 |---|---|---|---|---|---|
-| 35M | SimpleStories/SimpleStories-35M | 512 | 25 | 3964 | 5 min |
+| 35M | SimpleStories/SimpleStories-35M | 512 | 25 | 3964 | 11 min |
 | 35M_seeds | SimpleStories/SimpleStories-35M | 512 | 25 | 3964 | 8 min |
-| 5M | SimpleStories/SimpleStories-5M | 256 | 13 | 3940 | 17 min |
+| 5M | SimpleStories/SimpleStories-5M | 256 | 13 | 3940 | 28 min |
 | 5M_prefix2 | SimpleStories/SimpleStories-5M | 256 | 13 | 3940 | 6 min |
 | TinyLlama | TinyLlama/TinyLlama-1.1B-Chat-v1.0 | 2048 | 8 | 31885 | 13 min |
 | TinyLlama_all | TinyLlama/TinyLlama-1.1B-Chat-v1.0 | 2048 | 45 | 31885 | 34 min |
@@ -327,108 +330,108 @@ Point clouds: a fixed prefix followed by every real token, residual state at the
 
 **35M**, m = 16
 
-| α / band | nearest real | recon | tangent resid | u (mean) | u (min over loc) | coverage | ESS | ball multiplicity |
-|---|---|---|---|---|---|---|---|---|
-| 0.100 | 0.617 | 0.127 | 0.567 | 1.114 | 1.004 | 0.992 | 2724 | 1.088 |
-| 0.200 | 0.621 | 0.130 | 0.571 | 1.120 | 1.009 | 0.989 | 2697 | 1.200 |
-| 0.300 | 0.622 | 0.136 | 0.568 | 1.117 | 1.095 | 0.985 | 2638 | 1.278 |
-| 0.500 | 0.662 | 0.169 | 0.596 | 1.093 | 1.069 | 0.980 | 2479 | 1.337 |
-| 0.700 | 0.731 | 0.222 | 0.649 | 1.052 | 1.021 | 0.973 | 2283 | 1.322 |
-| 1.000 | 0.868 | 0.344 | 0.761 | 0.958 | 0.922 | 0.929 | 1926 | 1.421 |
-| 1.500 | 1.181 | 0.698 | 1.024 | 0.721 | 0.680 | 0.119 | 1288 | 1.866 |
-| held-out real | 0.896 | 0.752 | 0.808 | 0.997 | 0.990 | – | – | – |
-| real + 0.5x noise | 1.022 | 0.909 | 0.945 | 0.905 | 0.901 | – | – | – |
-| real + 1x noise | 1.330 | 1.270 | 1.265 | 0.674 | 0.666 | – | – | – |
+| α / band | nearest real | recon | tangent resid | u (mean) | u (min over loc) | coverage | ESS | τ (mean) | ball multiplicity |
+|---|---|---|---|---|---|---|---|---|---|
+| 0.100 | 0.608 | 0.117 | 0.559 | 1.126 | 1.107 | 0.992 | 2760 | 0.983 | 1.056 |
+| 0.200 | 0.610 | 0.123 | 0.560 | 1.125 | 1.104 | 0.989 | 2722 | 0.991 | 1.163 |
+| 0.300 | 0.615 | 0.134 | 0.562 | 1.119 | 1.095 | 0.985 | 2652 | 0.995 | 1.233 |
+| 0.500 | 0.661 | 0.169 | 0.596 | 1.093 | 1.069 | 0.981 | 2481 | 0.999 | 1.329 |
+| 0.700 | 0.731 | 0.222 | 0.649 | 1.052 | 1.021 | 0.973 | 2283 | 1.000 | 1.322 |
+| 1.000 | 0.868 | 0.344 | 0.761 | 0.958 | 0.922 | 0.929 | 1926 | 1.000 | 1.421 |
+| 1.500 | 1.180 | 0.698 | 1.024 | 0.722 | 0.680 | 0.119 | 1289 | 1.000 | 1.864 |
+| held-out real | 0.896 | 0.752 | 0.808 | 0.997 | 0.990 | – | – | – | – |
+| real + 0.5x noise | 1.022 | 0.909 | 0.945 | 0.905 | 0.901 | – | – | – | – |
+| real + 1x noise | 1.330 | 1.270 | 1.265 | 0.674 | 0.666 | – | – | – | – |
 
 **35M_seeds**, m = 16
 
-| α / band | nearest real | recon | tangent resid | u (mean) | u (min over loc) | coverage | ESS | ball multiplicity |
-|---|---|---|---|---|---|---|---|---|
-| 0.100 | 0.616 | 0.128 | 0.566 | 1.114 | 1.006 | 0.992 | 2817 | 1.073 |
-| 0.200 | 0.622 | 0.130 | 0.571 | 1.118 | 1.015 | 0.989 | 2790 | 1.172 |
-| 0.300 | 0.621 | 0.136 | 0.567 | 1.118 | 1.096 | 0.985 | 2732 | 1.234 |
-| 0.500 | 0.660 | 0.168 | 0.595 | 1.093 | 1.071 | 0.980 | 2564 | 1.282 |
-| 0.700 | 0.729 | 0.221 | 0.648 | 1.053 | 1.027 | 0.973 | 2338 | 1.310 |
-| 1.000 | 0.865 | 0.339 | 0.758 | 0.961 | 0.923 | 0.932 | 1966 | 1.384 |
-| 1.500 | 1.175 | 0.685 | 1.019 | 0.726 | 0.683 | 0.122 | 1324 | 1.881 |
-| held-out real | 0.896 | 0.751 | 0.808 | 0.997 | 0.990 | – | – | – |
-| real + 0.5x noise | 1.022 | 0.908 | 0.945 | 0.905 | 0.901 | – | – | – |
-| real + 1x noise | 1.330 | 1.268 | 1.265 | 0.674 | 0.666 | – | – | – |
+| α / band | nearest real | recon | tangent resid | u (mean) | u (min over loc) | coverage | ESS | τ (mean) | ball multiplicity |
+|---|---|---|---|---|---|---|---|---|---|
+| 0.100 | 0.616 | 0.128 | 0.566 | 1.114 | 1.006 | 0.992 | 2817 | – | 1.073 |
+| 0.200 | 0.622 | 0.130 | 0.571 | 1.118 | 1.015 | 0.989 | 2790 | – | 1.172 |
+| 0.300 | 0.621 | 0.136 | 0.567 | 1.118 | 1.096 | 0.985 | 2732 | – | 1.234 |
+| 0.500 | 0.660 | 0.168 | 0.595 | 1.093 | 1.071 | 0.980 | 2564 | – | 1.282 |
+| 0.700 | 0.729 | 0.221 | 0.648 | 1.053 | 1.027 | 0.973 | 2338 | – | 1.310 |
+| 1.000 | 0.865 | 0.339 | 0.758 | 0.961 | 0.923 | 0.932 | 1966 | – | 1.384 |
+| 1.500 | 1.175 | 0.685 | 1.019 | 0.726 | 0.683 | 0.122 | 1324 | – | 1.881 |
+| held-out real | 0.896 | 0.751 | 0.808 | 0.997 | 0.990 | – | – | – | – |
+| real + 0.5x noise | 1.022 | 0.908 | 0.945 | 0.905 | 0.901 | – | – | – | – |
+| real + 1x noise | 1.330 | 1.268 | 1.265 | 0.674 | 0.666 | – | – | – | – |
 
 **5M**, m = 8
 
-| α / band | nearest real | recon | tangent resid | u (mean) | u (min over loc) | coverage | ESS | ball multiplicity |
-|---|---|---|---|---|---|---|---|---|
-| 0.100 | 0.656 | 0.092 | 0.605 | 1.160 | 1.139 | 0.995 | 5757 | 1.017 |
-| 0.200 | 0.657 | 0.093 | 0.606 | 1.159 | 1.136 | 0.994 | 5661 | 1.034 |
-| 0.300 | 0.664 | 0.097 | 0.612 | 1.158 | 1.136 | 0.992 | 5536 | 1.047 |
-| 0.500 | 0.683 | 0.108 | 0.625 | 1.151 | 1.129 | 0.988 | 5103 | 1.113 |
-| 0.700 | 0.710 | 0.127 | 0.646 | 1.135 | 1.112 | 0.983 | 4222 | 1.244 |
-| 1.000 | 0.770 | 0.184 | 0.697 | 1.081 | 1.049 | 0.976 | 2575 | 1.695 |
-| 1.500 | 0.949 | 0.354 | 0.853 | 0.919 | 0.866 | 0.950 | 1106 | 3.039 |
-| held-out real | 0.914 | 0.784 | 0.863 | 0.998 | 0.994 | – | – | – |
-| real + 0.5x noise | 1.033 | 0.934 | 0.987 | 0.913 | 0.910 | – | – | – |
-| real + 1x noise | 1.320 | 1.278 | 1.280 | 0.694 | 0.685 | – | – | – |
+| α / band | nearest real | recon | tangent resid | u (mean) | u (min over loc) | coverage | ESS | τ (mean) | ball multiplicity |
+|---|---|---|---|---|---|---|---|---|---|
+| 0.100 | 0.656 | 0.092 | 0.605 | 1.160 | 1.139 | 0.995 | 5757 | 1.000 | 1.017 |
+| 0.200 | 0.657 | 0.093 | 0.606 | 1.159 | 1.136 | 0.994 | 5661 | 1.000 | 1.034 |
+| 0.300 | 0.664 | 0.097 | 0.612 | 1.158 | 1.136 | 0.992 | 5536 | 1.000 | 1.047 |
+| 0.500 | 0.683 | 0.108 | 0.625 | 1.151 | 1.129 | 0.988 | 5103 | 1.000 | 1.113 |
+| 0.700 | 0.710 | 0.127 | 0.646 | 1.135 | 1.112 | 0.983 | 4222 | 1.000 | 1.244 |
+| 1.000 | 0.770 | 0.184 | 0.697 | 1.081 | 1.049 | 0.976 | 2575 | 1.000 | 1.695 |
+| 1.500 | 0.949 | 0.354 | 0.853 | 0.919 | 0.866 | 0.950 | 1106 | 1.000 | 3.039 |
+| held-out real | 0.914 | 0.784 | 0.863 | 0.998 | 0.994 | – | – | – | – |
+| real + 0.5x noise | 1.033 | 0.934 | 0.987 | 0.913 | 0.910 | – | – | – | – |
+| real + 1x noise | 1.320 | 1.278 | 1.280 | 0.694 | 0.685 | – | – | – | – |
 
 **5M_prefix2**, m = 16
 
-| α / band | nearest real | recon | tangent resid | u (mean) | u (min over loc) | coverage | ESS | ball multiplicity |
-|---|---|---|---|---|---|---|---|---|
-| 0.100 | 0.590 | 0.109 | 0.545 | 1.119 | 1.099 | 0.992 | 3369 | 1.028 |
-| 0.200 | 0.598 | 0.114 | 0.550 | 1.116 | 1.096 | 0.989 | 3361 | 1.052 |
-| 0.300 | 0.613 | 0.123 | 0.559 | 1.109 | 1.089 | 0.986 | 3335 | 1.065 |
-| 0.500 | 0.664 | 0.154 | 0.592 | 1.086 | 1.067 | 0.976 | 3212 | 1.094 |
-| 0.700 | 0.735 | 0.204 | 0.643 | 1.049 | 1.029 | 0.967 | 3013 | 1.124 |
-| 1.000 | 0.876 | 0.320 | 0.749 | 0.962 | 0.938 | 0.932 | 2462 | 1.258 |
-| 1.500 | 1.198 | 0.667 | 1.010 | 0.730 | 0.683 | 0.111 | 1374 | 1.914 |
-| held-out real | 0.920 | 0.733 | 0.823 | 0.998 | 0.993 | – | – | – |
-| real + 0.5x noise | 1.038 | 0.888 | 0.951 | 0.913 | 0.910 | – | – | – |
-| real + 1x noise | 1.330 | 1.241 | 1.251 | 0.695 | 0.686 | – | – | – |
+| α / band | nearest real | recon | tangent resid | u (mean) | u (min over loc) | coverage | ESS | τ (mean) | ball multiplicity |
+|---|---|---|---|---|---|---|---|---|---|
+| 0.100 | 0.590 | 0.109 | 0.545 | 1.119 | 1.099 | 0.992 | 3369 | – | 1.028 |
+| 0.200 | 0.598 | 0.114 | 0.550 | 1.116 | 1.096 | 0.989 | 3361 | – | 1.052 |
+| 0.300 | 0.613 | 0.123 | 0.559 | 1.109 | 1.089 | 0.986 | 3335 | – | 1.065 |
+| 0.500 | 0.664 | 0.154 | 0.592 | 1.086 | 1.067 | 0.976 | 3212 | – | 1.094 |
+| 0.700 | 0.735 | 0.204 | 0.643 | 1.049 | 1.029 | 0.967 | 3013 | – | 1.124 |
+| 1.000 | 0.876 | 0.320 | 0.749 | 0.962 | 0.938 | 0.932 | 2462 | – | 1.258 |
+| 1.500 | 1.198 | 0.667 | 1.010 | 0.730 | 0.683 | 0.111 | 1374 | – | 1.914 |
+| held-out real | 0.920 | 0.733 | 0.823 | 0.998 | 0.993 | – | – | – | – |
+| real + 0.5x noise | 1.038 | 0.888 | 0.951 | 0.913 | 0.910 | – | – | – | – |
+| real + 1x noise | 1.330 | 1.241 | 1.251 | 0.695 | 0.686 | – | – | – | – |
 
 **TinyLlama**, m = 16
 
-| α / band | nearest real | recon | tangent resid | u (mean) | u (min over loc) | coverage | ESS | ball multiplicity |
-|---|---|---|---|---|---|---|---|---|
-| 0.100 | 0.671 | 0.080 | 0.588 | 1.225 | 1.135 | 0.898 | 789 | 1.000 |
-| 0.200 | 0.678 | 0.085 | 0.595 | 1.223 | 1.131 | 0.897 | 796 | 1.000 |
-| 0.300 | 0.690 | 0.092 | 0.606 | 1.218 | 1.125 | 0.896 | 806 | 1.001 |
-| 0.500 | 0.725 | 0.114 | 0.642 | 1.206 | 1.110 | 0.890 | 849 | 1.016 |
-| 0.700 | 0.771 | 0.144 | 0.687 | 1.190 | 1.085 | 0.880 | 888 | 1.066 |
-| 1.000 | 0.860 | 0.205 | 0.771 | 1.144 | 1.005 | 0.817 | 835 | 1.281 |
-| 1.500 | 1.067 | 0.374 | 0.968 | 1.015 | 0.764 | 0.443 | 497 | 2.075 |
-| held-out real | 0.920 | 0.840 | 0.865 | 0.998 | 0.996 | – | – | – |
-| real + 0.5x noise | 1.048 | 0.981 | 0.999 | 0.912 | 0.904 | – | – | – |
-| real + 1x noise | 1.361 | 1.315 | 1.321 | 0.693 | 0.675 | – | – | – |
+| α / band | nearest real | recon | tangent resid | u (mean) | u (min over loc) | coverage | ESS | τ (mean) | ball multiplicity |
+|---|---|---|---|---|---|---|---|---|---|
+| 0.100 | 0.714 | 0.078 | 0.629 | 1.248 | 1.154 | 0.905 | 1140 | 0.840 | 1.000 |
+| 0.200 | 0.723 | 0.082 | 0.635 | 1.246 | 1.152 | 0.904 | 1146 | 0.841 | 1.000 |
+| 0.300 | 0.730 | 0.088 | 0.643 | 1.242 | 1.149 | 0.903 | 1153 | 0.843 | 1.001 |
+| 0.500 | 0.762 | 0.107 | 0.674 | 1.231 | 1.135 | 0.900 | 1187 | 0.851 | 1.013 |
+| 0.700 | 0.803 | 0.133 | 0.713 | 1.216 | 1.100 | 0.890 | 1214 | 0.859 | 1.056 |
+| 1.000 | 0.885 | 0.192 | 0.791 | 1.176 | 1.005 | 0.838 | 1161 | 0.862 | 1.273 |
+| 1.500 | 1.099 | 0.353 | 0.995 | 1.057 | 0.764 | 0.497 | 861 | 0.825 | 2.156 |
+| held-out real | 0.920 | 0.840 | 0.865 | 0.998 | 0.996 | – | – | – | – |
+| real + 0.5x noise | 1.048 | 0.981 | 0.999 | 0.912 | 0.904 | – | – | – | – |
+| real + 1x noise | 1.361 | 1.315 | 1.321 | 0.693 | 0.675 | – | – | – | – |
 
 **TinyLlama_all**, m = 16
 
-| α / band | nearest real | recon | tangent resid | u (mean) | u (min over loc) | coverage | ESS | ball multiplicity |
-|---|---|---|---|---|---|---|---|---|
-| 0.100 | 0.741 | 0.076 | 0.633 | 1.192 | 1.139 | 0.966 | 762 | 1.000 |
-| 0.200 | 0.748 | 0.081 | 0.641 | 1.190 | 1.134 | 0.966 | 778 | 1.000 |
-| 0.300 | 0.761 | 0.088 | 0.655 | 1.185 | 1.131 | 0.964 | 807 | 1.002 |
-| 0.500 | 0.799 | 0.108 | 0.694 | 1.170 | 1.112 | 0.960 | 901 | 1.018 |
-| 0.700 | 0.847 | 0.135 | 0.744 | 1.146 | 1.086 | 0.948 | 1025 | 1.077 |
-| 1.000 | 0.944 | 0.191 | 0.837 | 1.086 | 1.024 | 0.878 | 1085 | 1.315 |
-| 1.500 | 1.179 | 0.348 | 1.058 | 0.910 | 0.778 | 0.422 | 654 | 2.267 |
-| held-out real | 0.879 | 0.793 | 0.806 | 0.999 | 0.996 | – | – | – |
-| real + 0.5x noise | 1.011 | 0.939 | 0.947 | 0.911 | 0.904 | – | – | – |
-| real + 1x noise | 1.329 | 1.281 | 1.280 | 0.687 | 0.666 | – | – | – |
+| α / band | nearest real | recon | tangent resid | u (mean) | u (min over loc) | coverage | ESS | τ (mean) | ball multiplicity |
+|---|---|---|---|---|---|---|---|---|---|
+| 0.100 | 0.741 | 0.076 | 0.633 | 1.192 | 1.139 | 0.966 | 762 | – | 1.000 |
+| 0.200 | 0.748 | 0.081 | 0.641 | 1.190 | 1.134 | 0.966 | 778 | – | 1.000 |
+| 0.300 | 0.761 | 0.088 | 0.655 | 1.185 | 1.131 | 0.964 | 807 | – | 1.002 |
+| 0.500 | 0.799 | 0.108 | 0.694 | 1.170 | 1.112 | 0.960 | 901 | – | 1.018 |
+| 0.700 | 0.847 | 0.135 | 0.744 | 1.146 | 1.086 | 0.948 | 1025 | – | 1.077 |
+| 1.000 | 0.944 | 0.191 | 0.837 | 1.086 | 1.024 | 0.878 | 1085 | – | 1.315 |
+| 1.500 | 1.179 | 0.348 | 1.058 | 0.910 | 0.778 | 0.422 | 654 | – | 2.267 |
+| held-out real | 0.879 | 0.793 | 0.806 | 0.999 | 0.996 | – | – | – | – |
+| real + 0.5x noise | 1.011 | 0.939 | 0.947 | 0.911 | 0.904 | – | – | – | – |
+| real + 1x noise | 1.329 | 1.281 | 1.280 | 0.687 | 0.666 | – | – | – | – |
 
 **TinyLlama_m64**, m = 64
 
-| α / band | nearest real | recon | tangent resid | u (mean) | u (min over loc) | coverage | ESS | ball multiplicity |
-|---|---|---|---|---|---|---|---|---|
-| 0.100 | 0.742 | 0.062 | 0.639 | 1.226 | 1.114 | 0.793 | 1718 | 1.000 |
-| 0.200 | 0.757 | 0.066 | 0.653 | 1.223 | 1.108 | 0.770 | 1667 | 1.000 |
-| 0.300 | 0.776 | 0.070 | 0.668 | 1.216 | 1.094 | 0.769 | 1596 | 1.000 |
-| 0.500 | 0.838 | 0.088 | 0.719 | 1.194 | 1.059 | 0.709 | 1419 | 1.000 |
-| 0.700 | 0.923 | 0.111 | 0.788 | 1.160 | 1.011 | 0.576 | 1234 | 1.001 |
-| 1.000 | 1.056 | 0.156 | 0.894 | 1.093 | 0.916 | 0.270 | 991 | 1.002 |
-| 1.500 | 1.182 | 0.254 | 0.986 | 0.924 | 0.667 | 0.035 | 646 | 1.057 |
-| held-out real | 0.938 | 0.788 | 0.824 | 0.998 | 0.996 | – | – | – |
-| real + 0.5x noise | 1.064 | 0.935 | 0.962 | 0.915 | 0.905 | – | – | – |
-| real + 1x noise | 1.376 | 1.277 | 1.289 | 0.700 | 0.678 | – | – | – |
+| α / band | nearest real | recon | tangent resid | u (mean) | u (min over loc) | coverage | ESS | τ (mean) | ball multiplicity |
+|---|---|---|---|---|---|---|---|---|---|
+| 0.100 | 0.746 | 0.056 | 0.644 | 1.245 | 1.127 | 0.850 | 2140 | 0.782 | 1.000 |
+| 0.200 | 0.755 | 0.059 | 0.650 | 1.240 | 1.121 | 0.868 | 2095 | 0.777 | 1.000 |
+| 0.300 | 0.774 | 0.064 | 0.666 | 1.235 | 1.111 | 0.863 | 2029 | 0.772 | 1.000 |
+| 0.500 | 0.826 | 0.077 | 0.708 | 1.216 | 1.087 | 0.807 | 1859 | 0.762 | 1.000 |
+| 0.700 | 0.901 | 0.095 | 0.770 | 1.185 | 1.039 | 0.737 | 1677 | 0.753 | 1.000 |
+| 1.000 | 1.036 | 0.134 | 0.878 | 1.127 | 0.933 | 0.491 | 1487 | 0.726 | 1.003 |
+| 1.500 | 1.310 | 0.230 | 1.104 | 0.978 | 0.698 | 0.048 | 1220 | 0.673 | 1.064 |
+| held-out real | 0.938 | 0.788 | 0.824 | 0.998 | 0.996 | – | – | – | – |
+| real + 0.5x noise | 1.064 | 0.935 | 0.962 | 0.915 | 0.905 | – | – | – | – |
+| real + 1x noise | 1.376 | 1.277 | 1.289 | 0.700 | 0.678 | – | – | – | – |
 
 ![alpha](figs/alpha.png)
 
@@ -438,8 +441,8 @@ Point clouds: a fixed prefix followed by every real token, residual state at the
 
 | m | α | u mean | u range (loc × seed) | nearest real | coverage | ESS | val recon range |
 |---|---|---|---|---|---|---|---|
-| 16 | 0.300 | 1.117 | 1.095–1.205 | 0.622 | 0.985 | 2638 | 0.711–0.892 |
-| 16 | 0.500 | 1.093 | 1.069–1.191 | 0.662 | 0.980 | 2479 | 0.711–0.892 |
+| 16 | 0.300 | 1.119 | 1.095–1.205 | 0.615 | 0.985 | 2652 | 0.711–0.892 |
+| 16 | 0.500 | 1.093 | 1.069–1.191 | 0.661 | 0.981 | 2481 | 0.711–0.892 |
 | 16 | 1.000 | 0.958 | 0.922–1.080 | 0.868 | 0.929 | 1926 | 0.711–0.892 |
 
 ## 3. Latent dimension and seed sensitivity (35M_seeds)
@@ -460,9 +463,9 @@ Point clouds: a fixed prefix followed by every real token, residual state at the
 | 16 | 0.300 | 1.110 | 1.094–1.172 | 0.614 | 0.988 | 3436 | 0.704–0.816 |
 | 16 | 0.500 | 1.087 | 1.071–1.152 | 0.662 | 0.979 | 3336 | 0.704–0.816 |
 | 16 | 1.000 | 0.965 | 0.944–1.025 | 0.867 | 0.944 | 2574 | 0.704–0.816 |
-| 32 | 0.300 | 1.058 | 1.039–1.110 | 0.535 | 0.958 | 1490 | 0.607–0.768 |
-| 32 | 0.500 | 1.010 | 0.993–1.061 | 0.628 | 0.927 | 1138 | 0.607–0.768 |
-| 32 | 1.000 | 0.786 | 0.760–0.827 | 1.001 | 0.241 | 569 | 0.607–0.768 |
+| 32 | 0.300 | 1.059 | 1.039–1.114 | 0.535 | 0.960 | 1522 | 0.607–0.768 |
+| 32 | 0.500 | 1.011 | 0.993–1.068 | 0.629 | 0.934 | 1185 | 0.607–0.768 |
+| 32 | 1.000 | 0.800 | 0.767–0.858 | 0.993 | 0.292 | 818 | 0.607–0.768 |
 
 ## 3. Latent dimension and seed sensitivity (5M_prefix2)
 
@@ -476,9 +479,9 @@ Point clouds: a fixed prefix followed by every real token, residual state at the
 
 | m | α | u mean | u range (loc × seed) | nearest real | coverage | ESS | val recon range |
 |---|---|---|---|---|---|---|---|
-| 16 | 0.300 | 1.218 | 1.125–1.375 | 0.690 | 0.896 | 806 | 0.761–0.978 |
-| 16 | 0.500 | 1.206 | 1.110–1.388 | 0.725 | 0.890 | 849 | 0.761–0.978 |
-| 16 | 1.000 | 1.144 | 1.005–1.418 | 0.860 | 0.817 | 835 | 0.761–0.978 |
+| 16 | 0.300 | 1.242 | 1.149–1.389 | 0.730 | 0.903 | 1153 | 0.761–0.978 |
+| 16 | 0.500 | 1.231 | 1.135–1.393 | 0.762 | 0.900 | 1187 | 0.761–0.978 |
+| 16 | 1.000 | 1.176 | 1.005–1.424 | 0.885 | 0.838 | 1161 | 0.761–0.978 |
 
 ## 4. Sampler variants and loss ablation (5M, α = 0.3)
 
@@ -490,7 +493,7 @@ Sampler variants (same decoder): support radius rule (global = α × median ρ f
 | embed | radius=global, p=m, reweight=True | 3546 | 4898 | 0.991 | 0.710 | 0.107 | 1.215 |
 | embed | radius=global, p=0, reweight=False | 3546 | 16000 | 0.992 | 0.775 | 0.069 | 1.241 |
 | embed | radius=local, p=m, reweight=True | 336 | 8555 | 0.960 | 0.668 | 0.134 | 1.193 |
-| embed | radius=local, p=0, reweight=True | 3546 | 432 | 0.958 | 0.666 | 0.132 | 1.183 |
+| embed | radius=local, p=0, reweight=True | 3546 | 800 | 0.966 | 0.688 | 0.125 | 1.201 |
 | embed | radius=local, p=0, reweight=False | 3546 | 16000 | 0.997 | 0.774 | 0.068 | 1.240 |
 | L2.ffn | tangent charts (cross-check) | – | 2000 | 0.866 | 0.274 | 0.770 | 0.971 |
 | L2.ffn | radius=global, p=m, reweight=True | 3546 | 6063 | 0.991 | 0.663 | 0.093 | 1.148 |
@@ -502,7 +505,7 @@ Sampler variants (same decoder): support radius rule (global = α × median ρ f
 | L5.ffn | radius=global, p=m, reweight=True | 3546 | 6780 | 0.995 | 0.694 | 0.073 | 1.165 |
 | L5.ffn | radius=global, p=0, reweight=False | 3546 | 16000 | 0.995 | 0.725 | 0.052 | 1.201 |
 | L5.ffn | radius=local, p=m, reweight=True | 104 | 4807 | 0.964 | 0.384 | 0.126 | 1.055 |
-| L5.ffn | radius=local, p=0, reweight=True | 3546 | 40.125 | 0.973 | 0.437 | 0.153 | 1.090 |
+| L5.ffn | radius=local, p=0, reweight=True | 3546 | 800 | 0.979 | 0.655 | 0.086 | 1.167 |
 | L5.ffn | radius=local, p=0, reweight=False | 3546 | 16000 | 0.996 | 0.724 | 0.052 | 1.201 |
 
 Loss / architecture variants (each refitted, then sampled at α = 0.3).
@@ -536,7 +539,7 @@ Samples at the embedding are pushed through the real Transformer stretch `embed 
 
 | set | nearest real | recon | tangent resid | u |
 |---|---|---|---|---|
-| sample α=0.25 | 0.833 | 0.425 | 0.793 | 1.173 |
+| sample α=0.25 | 0.810 | 0.408 | 0.774 | 1.176 |
 | sample α=0.5 | 0.729 | 0.420 | 0.690 | 1.173 |
 | sample α=1.0 | 0.880 | 0.649 | 0.822 | 1.056 |
 | real held-out images | 1.028 | 0.892 | 0.981 | 0.990 |
@@ -550,7 +553,7 @@ Samples at the embedding are pushed through the real Transformer stretch `embed 
 
 | set | nearest real | recon | tangent resid | u |
 |---|---|---|---|---|
-| sample α=0.25 | 0.843 | 0.814 | 0.759 | 1.009 |
+| sample α=0.25 | 0.830 | 0.792 | 0.752 | 1.010 |
 | sample α=0.5 | 0.756 | 0.662 | 0.682 | 1.046 |
 | sample α=1.0 | 0.820 | 0.653 | 0.749 | 1.070 |
 | real held-out images | 0.937 | 0.802 | 0.878 | 0.996 |
@@ -564,7 +567,7 @@ Samples at the embedding are pushed through the real Transformer stretch `embed 
 
 | set | nearest real | recon | tangent resid | u |
 |---|---|---|---|---|
-| sample α=0.25 | 0.837 | 0.656 | 0.741 | 1.012 |
+| sample α=0.25 | 0.808 | 0.647 | 0.717 | 1.012 |
 | sample α=0.5 | 0.745 | 0.594 | 0.646 | 1.039 |
 | sample α=1.0 | 0.802 | 0.579 | 0.699 | 1.080 |
 | real held-out images | 0.867 | 0.734 | 0.784 | 0.996 |
@@ -578,7 +581,7 @@ Samples at the embedding are pushed through the real Transformer stretch `embed 
 
 | set | nearest real | recon | tangent resid | u |
 |---|---|---|---|---|
-| sample α=0.25 | 0.882 | 0.670 | 0.752 | 1.003 |
+| sample α=0.25 | 0.859 | 0.655 | 0.726 | 1.002 |
 | sample α=0.5 | 0.805 | 0.629 | 0.682 | 1.009 |
 | sample α=1.0 | 0.863 | 0.628 | 0.745 | 1.018 |
 | real held-out images | 0.900 | 0.714 | 0.790 | 0.998 |
@@ -704,9 +707,9 @@ Samples at the embedding are pushed through the real Transformer stretch `embed 
 
 | set | nearest real | recon | tangent resid | u |
 |---|---|---|---|---|
-| sample α=0.25 | 0.691 | 0.582 | 0.681 | 1.158 |
-| sample α=0.5 | 0.705 | 0.595 | 0.694 | 1.160 |
-| sample α=1.0 | 0.758 | 0.637 | 0.741 | 1.191 |
+| sample α=0.25 | 0.699 | 0.610 | 0.686 | 1.168 |
+| sample α=0.5 | 0.711 | 0.607 | 0.697 | 1.179 |
+| sample α=1.0 | 0.748 | 0.628 | 0.734 | 1.204 |
 | real held-out images | 0.978 | 0.930 | 0.969 | 0.996 |
 | real + 0.5x noise images | 1.090 | 1.052 | 1.081 | 0.901 |
 | real + 1x noise images | 1.376 | 1.351 | 1.367 | 0.674 |
@@ -718,9 +721,9 @@ Samples at the embedding are pushed through the real Transformer stretch `embed 
 
 | set | nearest real | recon | tangent resid | u |
 |---|---|---|---|---|
-| sample α=0.25 | 1.807 | 1.465 | 1.706 | 1.011 |
-| sample α=0.5 | 1.778 | 1.417 | 1.670 | 1.018 |
-| sample α=1.0 | 1.828 | 1.483 | 1.715 | 1.038 |
+| sample α=0.25 | 1.898 | 1.595 | 1.796 | 1.012 |
+| sample α=0.5 | 1.880 | 1.556 | 1.777 | 1.014 |
+| sample α=1.0 | 1.942 | 1.570 | 1.827 | 1.040 |
 | real held-out images | 1.053 | 0.974 | 1.016 | 0.998 |
 | real + 0.5x noise images | 1.281 | 1.183 | 1.232 | 0.954 |
 | real + 1x noise images | 2.772 | 2.603 | 2.710 | 0.795 |
@@ -732,9 +735,9 @@ Samples at the embedding are pushed through the real Transformer stretch `embed 
 
 | set | nearest real | recon | tangent resid | u |
 |---|---|---|---|---|
-| sample α=0.25 | 0.974 | 0.735 | 0.885 | 1.008 |
-| sample α=0.5 | 0.968 | 0.735 | 0.877 | 1.007 |
-| sample α=1.0 | 0.980 | 0.741 | 0.883 | 1.002 |
+| sample α=0.25 | 0.992 | 0.738 | 0.908 | 1.010 |
+| sample α=0.5 | 0.987 | 0.743 | 0.902 | 1.006 |
+| sample α=1.0 | 0.991 | 0.742 | 0.906 | 1.002 |
 | real held-out images | 0.858 | 0.764 | 0.798 | 0.999 |
 | real + 0.5x noise images | 0.891 | 0.761 | 0.833 | 1.006 |
 | real + 1x noise images | 0.985 | 0.780 | 0.938 | 1.020 |
@@ -746,9 +749,9 @@ Samples at the embedding are pushed through the real Transformer stretch `embed 
 
 | set | nearest real | recon | tangent resid | u |
 |---|---|---|---|---|
-| sample α=0.25 | 0.877 | 0.688 | 0.737 | 1.012 |
-| sample α=0.5 | 0.879 | 0.686 | 0.744 | 1.014 |
-| sample α=1.0 | 0.887 | 0.678 | 0.752 | 1.014 |
+| sample α=0.25 | 0.892 | 0.686 | 0.766 | 1.013 |
+| sample α=0.5 | 0.895 | 0.681 | 0.760 | 1.016 |
+| sample α=1.0 | 0.905 | 0.679 | 0.782 | 1.014 |
 | real held-out images | 0.864 | 0.761 | 0.755 | 0.998 |
 | real + 0.5x noise images | 0.880 | 0.763 | 0.778 | 1.000 |
 | real + 1x noise images | 0.935 | 0.758 | 0.838 | 1.007 |

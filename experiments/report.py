@@ -69,7 +69,7 @@ def build():
             if x["m"] == m0:
                 g[x["alpha"]].append(x)
         rows = [[a, mean([x["nearest_real"] for x in v]), mean([x["recon"] for x in v]), mean([x.get("tangent") for x in v]), mean([x["u"] for x in v]), min(x["u"] for x in v),
-                 mean([x["coverage"] for x in v]), mean([x["ess"] for x in v]), mean([x.get("tau", 1.0) for x in v]), mean([x["multiplicity"] for x in v])] for a, v in sorted(g.items())]
+                 mean([x["coverage"] for x in v]), mean([x["ess"] for x in v]), (mean([x["tau"] for x in v]) if all("tau" in x for x in v) else "–"), mean([x["multiplicity"] for x in v])] for a, v in sorted(g.items())]
         b = [x["bands"] for x in r["alpha"] if x["m"] == m0]
         for name in ("held-out real", "real + 0.5x noise", "real + 1x noise"):
             rows.append([name, mean([x[name]["nearest_real"] for x in b]), mean([x[name]["recon"] for x in b]), mean([x[name].get("tangent") for x in b]), mean([x[name]["u"] for x in b]), min(x[name]["u"] for x in b), "–", "–", "–", "–"])

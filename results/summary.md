@@ -13,7 +13,10 @@ TinyLlama-1.1B (prefix + every real token; also real story occurrences), then sa
   token density), not in the manifold's own volume; the per-anchor rule that would fill sparse regions collapses.
 * The fit is limited by the latent dimension, not by the network or the optimiser (63-fit capacity study); a VAE
   would be worse for this purpose.
-* Two robustness rules matter: drop degenerate and isolated states first, and use the global support radius.
+* Two robustness rules matter: drop degenerate and isolated states first, and use the global support radius. The
+  importance weights can still degenerate on wide embeddings (SimpleStories-30M/35M, ESS a few % of the candidates):
+  every `sample` call checks this, warns loudly with the tempering exponent τ that restores ESS ≥ 5 %, and applies it
+  under `auto_tau=True` (all tables here use that flag; the τ column shows where it engaged; `checks/ship_check.md`).
 * Retracted negative: the TinyLlama embedding matrix looked "not chartable" (6 spacings) only because five hub
   tokens with tiny spacing dominate the per-anchor unit; in raw or global-median units it behaves like the small
   models (details in the last section). The library now detects such hub-dominated clouds.
