@@ -1,3 +1,5 @@
+This repository develops a smooth local surrogate for parameterizing the manifold structure suggested by the observed support.
+
 # gmanifold
 
 **Learn a smooth low-dimensional parameterisation G: R^m → R^D of a finite set of real states X ⊂ R^D, sample
