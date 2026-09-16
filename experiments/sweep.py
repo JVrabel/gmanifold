@@ -23,6 +23,7 @@ ap.add_argument("--n", type=int, default=2000); ap.add_argument("--epochs", type
 ap.add_argument("--prefix", default="Once upon a time, there was a little"); ap.add_argument("--locs", nargs="*")
 ap.add_argument("--ablation", action="store_true"); ap.add_argument("--no-propagation", action="store_true")
 ap.add_argument("--max-tokens", type=int, default=None, help="use only the first N real tokens (large vocabularies)")
+ap.add_argument("--fit-batch", type=int, default=8, help="locations fitted at once with gm.fit_many (1 = one fit at a time)")
 a = ap.parse_args()
 os.makedirs(a.out, exist_ok=True)
 T0 = time.time()
@@ -64,19 +65,41 @@ def medians(M, Y, kernel, Xh=None):
     return {k: v for k, v in r.items()}
 
 
+K_nn = max(32, *(4 * m for m in a.m))                                  # one neighbour search per location serves the dimension estimate, the fits and the tangent charts
+nns = {}
+for loc in locs:
+    Xtr = states[loc][tr_i].cuda()
+    nn = gm.knn(Xtr, K_nn); nns[loc] = tuple(t.cpu() for t in nn)
+    out["dim"].append(dict(loc=loc, **gm.intrinsic_dimension(Xtr, nn=nn)))
+    del Xtr, nn
+models, fit_seconds = {}, {}
+for m in a.m:                                                            # fits: --fit-batch locations at a time in one vmapped loop
+    for seed in a.seeds:
+        for group in [locs[i:i + a.fit_batch] for i in range(0, len(locs), a.fit_batch)]:
+            t = time.time()
+            Ms = [gm.GlobalManifold(latent_dim=m) for _ in group]
+            Xtrs, Xvas = [states[l][tr_i].cuda() for l in group], [states[l][va_i].cuda() for l in group]
+            if len(group) == 1:
+                Ms[0].fit(Xtrs[0], epochs=a.epochs, X_val=Xvas[0], seed=seed, nn=nns[group[0]])
+            else:
+                gm.fit_many(Ms, Xtrs, epochs=a.epochs, X_vals=Xvas, seed=seed, nn=[nns[l] for l in group])
+            for l, M in zip(group, Ms):
+                models[(l, m, seed)] = M; fit_seconds[(l, m, seed)] = (time.time() - t) / len(group)
+            print(f"[{time.time() - T0:6.0f}s] fitted m={m} seed={seed} {group[0]}..{group[-1]} ({len(group)} locations, {time.time() - t:.0f}s): "
+                  + ", ".join(f"{M.history[-1]['val_recon_over_spacing']:.3f}" for M in Ms), flush=True)
+            torch.cuda.empty_cache()
+
 for loc in locs:
     X = states[loc].cuda(); Xtr, Xva = X[tr_i], X[va_i]
-    d = gm.intrinsic_dimension(Xtr); out["dim"].append(dict(loc=loc, **d))
     kernel = gm.KernelScore(Xtr)
     for m in a.m:
-        T = gm.TangentCharts(Xtr, m)
+        T = gm.TangentCharts(Xtr, m, nn=nns[loc])
         for seed in a.seeds:
-            t = time.time()
-            M = gm.GlobalManifold(latent_dim=m).fit(Xtr, epochs=a.epochs, X_val=Xva, seed=seed)
+            M = models.pop((loc, m, seed))
             fits[(loc, m, seed)] = (M, kernel)
             jr = M.jacobian_rank()
             out["fits"].append(dict(loc=loc, m=m, seed=seed, spacing_unit=M.spacing_unit, hub_share=M.hub_share, val_recon=M.history[-1]["val_recon_over_spacing"], train_recon=M.history[-1]["recon"],
-                                    rank=jr["rank_median"], jac_sv=jr["singular_values"][:m].tolist(), seconds=time.time() - t))
+                                    rank=jr["rank_median"], jac_sv=jr["singular_values"][:m].tolist(), seconds=fit_seconds[(loc, m, seed)]))
             bands = gm.support_report(M, Xva, Xva, kernel, T)            # bands: held-out real, 0.5x, 1x noise
             for alpha in a.alphas:
                 x, info = M.sample(a.n, alpha=alpha, auto_tau=True, seed=seed)

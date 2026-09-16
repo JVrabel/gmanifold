@@ -10,12 +10,18 @@ from .geometry import knn, uniform_ball
 
 
 class TangentCharts:
-    def __init__(self, X, m, K=None, K_s=8):
+    def __init__(self, X, m, K=None, K_s=8, nn=None):
+        """`nn = knn(X, K')` with K' >= K reuses a neighbour search already done for X."""
         self.X, self.m, self.K_s = X.float(), m, K_s
         self.K = K or max(4 * m, 32)
         if self.K <= m:
             raise ValueError(f"K={self.K} neighbours cannot span an m={m} tangent space (need K > m)")
-        dist, self.idx = knn(self.X, self.K)
+        if nn is None:
+            dist, self.idx = knn(self.X, self.K)
+        else:
+            if len(nn[0]) != len(X) or nn[0].shape[1] < self.K:
+                raise ValueError(f"nn must be knn(X, K) with K >= {self.K}: got shape {tuple(nn[0].shape)} for {len(X)} rows")
+            dist, self.idx = nn[0][:, :self.K].to(self.X.device), nn[1][:, :self.K].to(self.X.device)
         self.r = dist[:, K_s - 1]                                   # local spacing of each anchor
         hub = float(self.r[self.idx[:, 0]].median()) < 0.5 * float(self.r.median())   # hub-dominated cloud (see GlobalManifold)
         self.r_unit = self.r.median().expand_as(self.r) if hub else self.r      # length unit for residuals

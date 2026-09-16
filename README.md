@@ -123,7 +123,8 @@ with calibration bands, sampler/loss ablations, propagation with independent des
 
 | | |
 |---|---|
-| `GlobalManifold(latent_dim, hidden=(512,256), K=32, K_s=8)` | `fit(X, epochs=300, lr=2e-3, lam_geom=0.1, lam_curv=1e-3, X_val=None)` → self |
+| `GlobalManifold(latent_dim, hidden=(512,256), K=32, K_s=8)` | `fit(X, epochs=300, lr=2e-3, lam_geom=0.1, lam_curv=1e-3, X_val=None, nn=None)` → self |
+| `fit_many(models, Xs, ..., X_vals=None, nn=None)` | the same fit for several clouds at once in one vmapped loop (stacked MLPs, one batched matmul per step): use it to keep the GPU busy when fitting many small clouds, e.g. 8–16 locations at a time |
 | `sample(n, alpha=0.3, radius="global", n_candidates=8n, anchor_power=m, reweight=True, tau=1.0, auto_tau=False, min_ess_frac=0.05, seed=None)` | → `(X_sample, info)` |
 | `encode / decode / project / jacobian / log_volume` | the maps and the chart's volume element |
 | `recon_error(Y)`, `nearest_real(Y)`, `coverage(Y)`, `jacobian_rank()` | diagnostics (distances in units of local spacing) |
@@ -133,6 +134,7 @@ with calibration bands, sampler/loss ablations, propagation with independent des
 | `TangentCharts(X, m, K=max(4m,32))` | local PCA charts: `.residual(Y)` (normal distance to the nearest chart / spacing) as a second validator, `.sample(n, alpha)` as a conservative cross-check sampler |
 | `support_report(M, samples, X_heldout, kernel, tangent)` | medians of all diagnostics with calibration bands |
 | `intrinsic_dimension(X)`, `degenerate_mask(X)`, `outlier_mask(X)` | TwoNN / MLE estimates (to choose `latent_dim`); near-duplicate and isolated rows to drop |
+| `knn(X, K)` → `(dist, idx)`; `nn=` | the one N×N neighbour search of the pipeline: pass its result as `nn=` to `intrinsic_dimension`, the masks, `fit` / `fit_many` and `TangentCharts` instead of letting each repeat it |
 | `transformer.vocab_states / collect_states / make_map / locations` | optional Hugging Face helpers for Llama-style (`model.model.layers`) and GPT-2/GPT-Neo-style (`model.transformer.h`) models; hooks verified exact |
 
 **Architecture and hyper-parameters.** A capacity study (`experiments/capacity.py`, §7 of the results) shows the fit at

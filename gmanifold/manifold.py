@@ -2,6 +2,7 @@
 near the observed support. Knows nothing about Transformers."""
 from __future__ import annotations
 
+import copy
 import math
 
 import torch
@@ -61,19 +62,20 @@ class GlobalManifold(nn.Module):
         return torch.cat(out)
 
     # ------------------------------------------------------------------ fitting
-    def fit(self, X, epochs=300, batch_size=512, lr=2e-3, lam_geom=0.1, lam_curv=1e-3, curv_delta=0.5, seed=0,
-            X_val=None, log_every=50, verbose=False):
-        """L = recon + lam_geom * local-distance preservation (K Euclidean neighbours) + lam_curv * second
-        differences along random latent directions. The geometry term ties latent distances to ambient
-        distances; that is what makes the latent balls (and alpha) meaningful."""
-        torch.manual_seed(seed)
-        X = X.to(self.device).float()
+    def _prepare(self, X, nn=None):
+        """Centre/scale, K-neighbourhoods, spacing, hub check and fresh networks for a fit on X (already on device).
+        Returns (Xn, idx): the normalised states and the (N, K) neighbour indices."""
         D, N = X.shape[1], len(X)
         self.enc, self.dec = _mlp([D, *self.hidden, self.m]).to(self.device), _mlp([self.m, *reversed(self.hidden), D]).to(self.device)
         self.center = X.mean(0)
         self.scale = ((X - self.center) ** 2).sum(1).mean().sqrt()
-        Xn = (X - self.center) / self.scale
-        dist, idx = knn(X, self.K)
+        if nn is None:
+            dist, idx = knn(X, self.K)
+        else:
+            dist, idx = nn
+            if len(dist) != N or dist.shape[1] < self.K:
+                raise ValueError(f"nn must be knn(X, K) with K >= {self.K}: got shape {tuple(dist.shape)} for {N} rows")
+            dist, idx = dist[:, :self.K].to(self.device), idx[:, :self.K].to(self.device)
         self.spacing = dist[:, self.K_s - 1]
         self.X = X
         counts = torch.bincount(idx[:, 0], minlength=N).float()
@@ -82,6 +84,41 @@ class GlobalManifold(nn.Module):
             self.spacing_unit = "global"
             print(f"[gmanifold] hub-dominated cloud (top-5 anchors are the nearest neighbour of {self.hub_share:.0%} of the points): "
                   "distances are reported in units of the global median spacing")
+        return (X - self.center) / self.scale, idx
+
+    @staticmethod
+    def _terms(enc, dec, x, nb, lam_geom, lam_curv, curv_delta):
+        """Loss terms of one batch: x (B, D), nb (B, K, D) normalised states and their K neighbours; enc/dec callables."""
+        B, K, D = nb.shape
+        z, zn = enc(x), enc(nb.reshape(-1, D)).reshape(B, K, -1)
+        xr = dec(z)
+        dx, dz = (nb - x[:, None]).norm(dim=2), (zn - z[:, None]).norm(dim=2)
+        terms = {"recon": ((xr - x) ** 2).sum(1).mean(), "geom": ((dz - dx) ** 2).mean() / (dx ** 2).mean()}
+        if lam_curv > 0:
+            d = torch.randn_like(z); d = d / d.norm(dim=1, keepdim=True) * (curv_delta * dz.detach().mean(1, keepdim=True))
+            sec = dec(z + d) - 2 * xr + dec(z - d)
+            terms["curv"] = ((sec ** 2).sum(1) / (d ** 2).sum(1)).mean()
+        loss = terms["recon"] + lam_geom * terms["geom"] + lam_curv * terms.get("curv", 0.0)
+        return loss, terms
+
+    def _finish(self, X):
+        self.eval()
+        with torch.no_grad():
+            self.Z = self.encode(X)
+            self.rho = knn(self.Z, self.K_s)[0][:, self.K_s - 1]
+        return self
+
+    def fit(self, X, epochs=300, batch_size=512, lr=2e-3, lam_geom=0.1, lam_curv=1e-3, curv_delta=0.5, seed=0,
+            X_val=None, log_every=50, verbose=False, nn=None):
+        """L = recon + lam_geom * local-distance preservation (K Euclidean neighbours) + lam_curv * second
+        differences along random latent directions. The geometry term ties latent distances to ambient
+        distances; that is what makes the latent balls (and alpha) meaningful.
+        `nn = knn(X, K')` with K' >= K reuses a neighbour search already done for X (e.g. by `intrinsic_dimension`
+        or the masks) instead of repeating the N x N pass here."""
+        torch.manual_seed(seed)
+        X = X.to(self.device).float()
+        N = len(X)
+        Xn, idx = self._prepare(X, nn)
         opt = torch.optim.Adam(self.parameters(), lr=lr)
         sched = torch.optim.lr_scheduler.OneCycleLR(opt, lr, total_steps=epochs * math.ceil(N / batch_size), pct_start=0.05)
         self.train()
@@ -89,16 +126,7 @@ class GlobalManifold(nn.Module):
             perm, losses = torch.randperm(N, device=self.device), {}
             for s in range(0, N, batch_size):
                 b = perm[s:s + batch_size]
-                x, nb = Xn[b], Xn[idx[b]]                                     # (B,D), (B,K,D)
-                z, zn = self.enc(x), self.enc(nb.reshape(-1, D)).reshape(len(b), self.K, self.m)
-                xr = self.dec(z)
-                dx, dz = (nb - x[:, None]).norm(dim=2), (zn - z[:, None]).norm(dim=2)
-                terms = {"recon": ((xr - x) ** 2).sum(1).mean(), "geom": ((dz - dx) ** 2).mean() / (dx ** 2).mean()}
-                if lam_curv > 0:
-                    d = torch.randn_like(z); d = d / d.norm(dim=1, keepdim=True) * (curv_delta * dz.detach().mean(1, keepdim=True))
-                    sec = self.dec(z + d) - 2 * xr + self.dec(z - d)
-                    terms["curv"] = ((sec ** 2).sum(1) / (d ** 2).sum(1)).mean()
-                loss = terms["recon"] + lam_geom * terms["geom"] + lam_curv * terms.get("curv", 0.0)
+                loss, terms = self._terms(self.enc, self.dec, Xn[b], Xn[idx[b]], lam_geom, lam_curv, curv_delta)
                 opt.zero_grad(set_to_none=True); loss.backward(); opt.step(); sched.step()
                 for k, v in terms.items():
                     losses[k] = losses.get(k, 0.0) + float(v.detach())
@@ -108,11 +136,7 @@ class GlobalManifold(nn.Module):
             self.history.append(rec)
             if verbose and (ep % log_every == 0 or ep == epochs - 1):
                 print({k: round(v, 4) if isinstance(v, float) else v for k, v in rec.items()})
-        self.eval()
-        with torch.no_grad():
-            self.Z = self.encode(X)
-            self.rho = knn(self.Z, self.K_s)[0][:, self.K_s - 1]
-        return self
+        return self._finish(X)
 
     # ------------------------------------------------------------------ sampling
     def radii(self, alpha, radius="global"):
@@ -223,3 +247,74 @@ class GlobalManifold(nn.Module):
         M.load_state_dict(s["state"]); M.to(M.device); M.X = s["X"].to(M.device); M.history = s["history"]
         M.spacing_unit, M.hub_share = s.get("spacing_unit", "anchor"), s.get("hub_share", 0.0)
         return M.eval()
+
+
+def fit_many(models, Xs, epochs=300, batch_size=512, lr=2e-3, lam_geom=0.1, lam_curv=1e-3, curv_delta=0.5, seed=0,
+             X_vals=None, log_every=50, verbose=False, nn=None):
+    """Fit several GlobalManifolds at once (one per cloud) with a single vmapped training loop: the same loss,
+    optimiser and schedule as `fit`, but the C small MLPs are stacked so every step runs one batched matmul instead of
+    C launches of a 512-row one, which is what keeps a GPU busy. Adam is elementwise and each model only receives the
+    gradient of its own cloud, so the C fits are exactly independent; only the batch sampling differs from `fit` (each
+    epoch has ceil(max N_c / batch_size) steps, clouds with fewer points wrap around their permutation).
+    All models must share latent_dim, hidden and K, all clouds the ambient dimension D; N may differ.
+    `nn[c] = knn(Xs[c], K')` reuses neighbour searches; `X_vals[c]` gives the held-out recon logged every `log_every`.
+    Memory per step is C x batch_size x (K + 1) x D floats, so batch ~8-16 clouds at D = 1024-2048."""
+    from torch.func import functional_call, stack_module_state, vmap
+    C = len(models)
+    if len(Xs) != C or (X_vals is not None and len(X_vals) != C) or (nn is not None and len(nn) != C):
+        raise ValueError("models, Xs, X_vals and nn must have one entry per cloud")
+    M0 = models[0]
+    if any((M.m, M.hidden, M.K, M.K_s, M.device) != (M0.m, M0.hidden, M0.K, M0.K_s, M0.device) for M in models):
+        raise ValueError("all models must share latent_dim, hidden, K, K_s and device")
+    dev = M0.device
+    torch.manual_seed(seed)
+    Xs = [X.to(dev).float() for X in Xs]
+    if any(X.shape[1] != Xs[0].shape[1] for X in Xs):
+        raise ValueError("all clouds must have the same ambient dimension")
+    prep = [M._prepare(X, None if nn is None else nn[c]) for c, (M, X) in enumerate(zip(models, Xs))]
+    Xn, idx, Ns = [p[0] for p in prep], [p[1] for p in prep], [len(X) for X in Xs]
+    steps = math.ceil(max(Ns) / batch_size)
+    P_enc, _ = stack_module_state([M.enc for M in models]); P_dec, _ = stack_module_state([M.dec for M in models])
+    enc0, dec0 = copy.deepcopy(M0.enc).to("meta"), copy.deepcopy(M0.dec).to("meta")
+
+    def one(p_enc, p_dec, x, nb):
+        return GlobalManifold._terms(lambda t: functional_call(enc0, p_enc, (t,)), lambda t: functional_call(dec0, p_dec, (t,)),
+                                     x, nb, lam_geom, lam_curv, curv_delta)
+    step_fn = vmap(one, randomness="different")
+
+    def write_back():
+        with torch.no_grad():
+            for P, part in ((P_enc, "enc"), (P_dec, "dec")):
+                for name, v in P.items():
+                    for c, M in enumerate(models):
+                        getattr(M, part).get_parameter(name).copy_(v[c])
+
+    params = list(P_enc.values()) + list(P_dec.values())
+    opt = torch.optim.Adam(params, lr=lr)
+    sched = torch.optim.lr_scheduler.OneCycleLR(opt, lr, total_steps=epochs * steps, pct_start=0.05)
+    ar = torch.arange(batch_size, device=dev)
+    for M in models:
+        M.train()
+    for ep in range(epochs):
+        perms, losses = [torch.randperm(N, device=dev) for N in Ns], {}
+        for s in range(steps):
+            b = [perms[c][(s * batch_size + ar) % Ns[c]] for c in range(C)]
+            x, nb = torch.stack([Xn[c][b[c]] for c in range(C)]), torch.stack([Xn[c][idx[c][b[c]]] for c in range(C)])
+            loss, terms = step_fn(P_enc, P_dec, x, nb)
+            opt.zero_grad(set_to_none=True); loss.sum().backward(); opt.step(); sched.step()
+            for k, v in terms.items():
+                losses[k] = losses.get(k, 0.0) + v.detach()
+        log = ep % log_every == 0 or ep == epochs - 1
+        if log:
+            write_back()
+        for c, M in enumerate(models):
+            rec = {k: float(v[c]) / steps for k, v in losses.items()} | {"epoch": ep}
+            if X_vals is not None and log:
+                M.eval(); rec["val_recon_over_spacing"] = float(M.recon_error(X_vals[c]).median()); M.train()
+            M.history.append(rec)
+            if verbose and log:
+                print({"cloud": c} | {k: round(v, 4) if isinstance(v, float) else v for k, v in rec.items()})
+    write_back()
+    for M, X in zip(models, Xs):
+        M._finish(X)
+    return models

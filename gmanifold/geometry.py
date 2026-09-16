@@ -25,11 +25,25 @@ def uniform_ball(n, m, radius, generator=None, device=None):
     return g * (radius.to(device) * torch.rand(n, device=device, generator=generator) ** (1.0 / m))[:, None]
 
 
+def _self_nn(X, k, nn):
+    """Distances to the k nearest neighbours of each row of X (self excluded): the first k columns of a precomputed
+    `nn = knn(X, K)` result (K >= k) when given, else computed here."""
+    if nn is None:
+        return knn(X, k)[0]
+    dist = nn[0]
+    if len(dist) != len(X) or dist.shape[1] < k:
+        raise ValueError(f"nn must be knn(X, K) with K >= {k}: got shape {tuple(dist.shape)} for {len(X)} rows")
+    return dist[:, :k]
+
+
 @torch.no_grad()
-def intrinsic_dimension(X, K=32):
-    """TwoNN (Facco et al. 2017) and Levina-Bickel MLE estimates; duplicates removed first."""
-    X = torch.unique(X, dim=0)
-    dist, _ = knn(X, K)
+def intrinsic_dimension(X, K=32, nn=None):
+    """TwoNN (Facco et al. 2017) and Levina-Bickel MLE estimates; duplicates removed first.
+    `nn = knn(X, K')` with K' >= K reuses a precomputed neighbour search; X is then taken as duplicate-free
+    (as it is after `degenerate_mask`)."""
+    if nn is None:
+        X = torch.unique(X, dim=0)
+    dist = _self_nn(X, K, nn)
     mu = (dist[:, 1] / dist[:, 0].clamp_min(1e-12)).sort().values
     keep = int(len(mu) * 0.9); mu = mu[:keep]
     F = torch.arange(1, keep + 1, dtype=mu.dtype, device=mu.device) / len(X)
@@ -39,18 +53,19 @@ def intrinsic_dimension(X, K=32):
 
 
 @torch.no_grad()
-def degenerate_mask(X, rel_tol=0.05):
+def degenerate_mask(X, rel_tol=0.05, nn=None):
     """True for rows whose nearest neighbour is closer than rel_tol x the median nearest-neighbour distance
     (near-duplicate states, e.g. never-trained embedding rows). Such rows make the local spacing meaningless and
-    should be dropped before fitting."""
-    d = knn(X, 1)[0][:, 0]
+    should be dropped before fitting. `nn = knn(X, K)` reuses a precomputed neighbour search."""
+    d = _self_nn(X, 1, nn)[:, 0]
     return d < rel_tol * d.median()
 
 
 @torch.no_grad()
-def outlier_mask(X, rel_tol=10.0):
+def outlier_mask(X, rel_tol=10.0, nn=None):
     """True for isolated rows whose nearest neighbour is farther than rel_tol x the median nearest-neighbour
     distance (e.g. massive-activation states in deep Llama layers). Such points dominate a volume-uniform
-    sampler (the decoder must stretch enormously to reach them) and should be dropped before fitting."""
-    d = knn(X, 1)[0][:, 0]
+    sampler (the decoder must stretch enormously to reach them) and should be dropped before fitting.
+    `nn = knn(X, K)` reuses a precomputed neighbour search."""
+    d = _self_nn(X, 1, nn)[:, 0]
     return d > rel_tol * d.median()
